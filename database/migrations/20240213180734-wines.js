@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('wines', { 
+    await queryInterface.createTable('Wines',  { 
       id: {
       allowNull: false,
       autoIncrement: true,
@@ -28,19 +28,99 @@ module.exports = {
       allowNull: false,
       unique: true
     },
+    vintage: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      unique: true
+    },
     cellar_id: {
       type: Sequelize.INTEGER,
       allowNull: false,
       references: {
-        model: 'cellars',
+        model: 'Cellars',
         key: 'id'
       }
-    }
+    },
+    soil_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Soils',
+        key: 'id'
+      }
+    },
+    country_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Countries',
+        key: 'id'
+      }
+    },
+    region_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Regions',
+        key: 'id'
+      }
+    },
+    winwType_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'WineTypes',
+        key: 'id'
+      }
+    },
   }); 
+  await queryInterface.createTable('WinesGrapes', {
+    grape_id: {
+      allowNull: false,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Grapes',
+        key: 'id'
+      }
+    },
+    wine_id: {
+      allowNull: false,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Wines',
+        key: 'id'
+      }
+    },
+  })
+  await queryInterface.createTable('WinesLogos', {
+    logo_id: {
+      allowNull: false,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Logos',
+        key: 'id'
+      }
+    },
+    wine_id: {
+      allowNull: false,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Wines',
+        key: 'id'
+      }
+    },
+  })
   },
 
-  async down (queryInterface, Sequelize) {  
-    await queryInterface.dropTable('wines');
-  
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTable('WinesGrapes')
+    await queryInterface.dropTable('WinesLogos')  
+    await queryInterface.dropTable('Wines');  
   }
-};
+}
+
+    

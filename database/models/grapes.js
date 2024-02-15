@@ -11,9 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Grapes.belongsToMany(models.Wines, {
-        through: 'WinesGrapes',
-    })
-    }
+        through: 'WineGrapes', // Sequelize creará automáticamente esta tabla
+        foreignKey: 'grapeId',
+        otherKey: 'wineId'
+  });
+}
   };
   Grapes.init({
     id: {

@@ -11,9 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Wines.belongsToMany(models.Grapes, {
-        through: 'WinesGrapes',
-    })
-    }
+        through: 'WineGrapes', // Sequelize creará automáticamente esta tabla
+        foreignKey: 'wineId',
+        otherKey: 'grapeId'
+  });
+}
   };
   Wines.init({
     id: {
@@ -40,6 +42,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
+    vintage: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     cellar_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -48,9 +54,41 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
+    soil_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Solis',
+        key: 'id'
+      }
+    },
+    country_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Countries',
+        key: 'id'
+      }
+    },
+    region_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Regions',
+        key: 'id'
+      }
+    },
+    winwType_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'WineTypes',
+        key: 'id'
+      }
+    },  
   }, {
     sequelize,
-    modelName: 'Soils',
+    modelName: 'Wines',
   });
-  return Soils;
+  return Wines;
 };

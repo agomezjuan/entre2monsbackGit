@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    soil_type: {
+    region: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true

@@ -3,14 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('regions', {
+    await queryInterface.createTable('Regions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER, 
       },
-      soil_type: {
+      region: {
         type: Sequelize.STRING, 
         allowNull: false,
         unique: true,
@@ -22,6 +22,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('regions');
+    await queryInterface.dropTable('Regions');
   }
 };
