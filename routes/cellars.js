@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const {Cellars} = require('../database/models');
-const { getAllCellars } = require('../controllers/cellars');
+const { getAllCellars, postCellar } = require('../controllers/cellars');
 
-// GET all cellars
 router.get('/',getAllCellars)
+
+router.post('/', postCellar)
 
 module.exports = router;

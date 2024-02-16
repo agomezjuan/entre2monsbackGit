@@ -12,8 +12,8 @@ const soilsRouter = require('./routes/soils')
 const countriesRouter = require('./routes/countries') 
 const wineTypesRouter = require('./routes/wineTypes') 
 const winesRouter = require('./routes/wines')      
-// const grapesRouter = require('./routes/grapes')      
-// const logosRouter = require('./routes/grapes')
+const grapesRouter = require('./routes/grapes')      
+const logosRouter = require('./routes/logos')
 
 const app = express();
 
@@ -35,8 +35,8 @@ app.use('/soils', soilsRouter)
 app.use('/countries', countriesRouter)
 app.use('/wineTypes', wineTypesRouter)
 app.use('/wines', winesRouter)
-// app.use('/grapes', grapesRouter)
-// app.use('/logos', logosRouter)
+app.use('/grapes', grapesRouter)
+app.use('/logos', logosRouter)
 
 
 

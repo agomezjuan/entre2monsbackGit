@@ -8,15 +8,16 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER, // Cambiado de DataTypes.INTEGER a Sequelize.INTEGER
+        type: Sequelize.INTEGER, 
       },
       logo: {
-        type: Sequelize.STRING, // Cambiado de DataTypes.STRING a Sequelize.STRING
+        type: Sequelize.STRING, 
         allowNull: false,
         unique: true,
       },
       description: {
-        type: Sequelize.STRING, // Cambiado de DataTypes.STRING a Sequelize.STRING
+        type: Sequelize.STRING, 
+        allowNull: false
       },
       createdAt: {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

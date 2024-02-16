@@ -1,4 +1,7 @@
 'use strict';
+
+const { sequelize } = require("../models");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Grapes', {
@@ -8,8 +11,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      grape_types: {
+      grape_type: {
         type: Sequelize.STRING
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
