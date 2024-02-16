@@ -11,11 +11,17 @@ module.exports = {
       soil_type: {
         type: Sequelize.STRING
       },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       createdAt: {
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
         type: Sequelize.DATE
       },
       updatedAt: {
+        defaultValue: Sequelize.literal( 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP' ),
         allowNull: false,
         type: Sequelize.DATE
       }

@@ -5,7 +5,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
      await queryInterface.bulkInsert('Regions', [{
        region: 'Boredeux',
-       desription: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+       description: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
      }], {});
     
   },

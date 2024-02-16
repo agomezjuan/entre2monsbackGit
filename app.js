@@ -8,6 +8,12 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const regionsRouter = require('./routes/regions')
 const cellarsRouter = require('./routes/cellars') 
+const soilsRouter = require('./routes/soils') 
+const countriesRouter = require('./routes/countries') 
+const wineTypesRouter = require('./routes/wineTypes') 
+const winesRouter = require('./routes/wines')      
+// const grapesRouter = require('./routes/grapes')      
+// const logosRouter = require('./routes/grapes')
 
 const app = express();
 
@@ -25,6 +31,14 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/regions', regionsRouter)
 app.use('/cellars', cellarsRouter)
+app.use('/soils', soilsRouter)
+app.use('/countries', countriesRouter)
+app.use('/wineTypes', wineTypesRouter)
+app.use('/wines', winesRouter)
+// app.use('/grapes', grapesRouter)
+// app.use('/logos', logosRouter)
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
