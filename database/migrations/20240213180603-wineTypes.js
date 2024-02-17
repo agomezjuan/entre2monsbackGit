@@ -10,7 +10,7 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    wine_type: {
+    wineType: {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true

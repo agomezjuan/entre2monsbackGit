@@ -1,17 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {WineTypes} = require('../database/models');
+const { getAllWineTypes, postWineType, deleteWineType, updateWineType } = require('../controllers/wineTypes');
 
-// GET all cellars
-router.get('/', async (req, res, next) => {
-  try {
-    const wineTypes = await WineTypes.findAll();
-    console.log("All wineTypes:", JSON.stringify(wineTypes, null, 2));
-    res.json(wineTypes);
-  }catch (error) {
-    console.error("Error retrieving wineTypes:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+router.get('/', getAllWineTypes)
+router.post('/', postWineType)
+router.delete('/:id', deleteWineType)
+router.put('/:id', updateWineType)
 
 module.exports = router;

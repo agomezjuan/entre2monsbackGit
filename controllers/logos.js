@@ -1,6 +1,7 @@
-const { Logo } = require('../database/models'); // Asegúrate de que el modelo se llama 'Logo'
+const { Logo } = require('../database/models'); 
 
 module.exports = {
+  
   // GET
   getAllLogos: async (req, res, next) => {
     try {
@@ -15,29 +16,69 @@ module.exports = {
 
   // POST
   postLogo: async (req, res, next) => {
-    const { logo, description } = req.body; // Corregido para coincidir con los nombres de las propiedades esperadas
+    const { logo, description } = req.body; 
     console.log(req.body);
 
-    // Corrección: Cambia 'region' por 'logo' para la validación requerida
-    if (!logo) { // Debes verificar 'logo', no 'region'
+    if (!logo) { 
       return res.status(400).json({ error: "Logo is required" });
     }
 
     try {
-      // Cambia 'Logos.create' por 'Logo.create' para coincidir con la importación correcta
-      const createdLogo = await Logo.create({ // Debe ser 'createdLogo', no 'createdRegion'
+      
+      const createdLogo = await Logo.create({ 
         logo,
         description
       });
       console.log('created logo', createdLogo);
-      // Corrige la respuesta JSON para que use 'createdLogo' en lugar de 'region'
       res.status(201).json({ message: 'Logo created successfully', logo: createdLogo });
     } catch (error) {
       console.error("Error creating logo:", error);
       if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(400).json({ error: "Logo must be unique" }); // Mensaje de error ajustado para reflejar la unicidad del 'logo'
+        return res.status(400).json({ error: "Logo must be unique" }); 
       }
       res.status(500).json({ error: "Internal Server Error" });
     }
+  },
+
+  //DELETE
+  deleteLogo: async (req, res) => {
+    const { id } = req.params; 
+    try {
+      const logo = await Logo.findByPk(id); 
+      if (!logo) {
+        return res.status(404).json({ error: "Logo not found" }); 
+      }
+      await logo.destroy(); 
+      console.log(`Deleted logo with ID: ${id}`);
+      res.json({ message: `Logo with ID: ${id} deleted successfully` }); 
+    } catch (error) {
+      console.error("Error deleting logo:", error);
+      res.status(500).json({ error: "Internal Server Error" }); 
+    }
+  },
+  // PUT
+
+updateLogo: async (req, res) => {
+  const { id } = req.params; 
+  const { logo: newLogo, description: newDescription } = req.body;
+
+  try {
+    const logoToUpdate = await Logo.findByPk(id);
+    if (!logoToUpdate) {
+      return res.status(404).json({ error: "Logo not found" }); 
+    }
+
+    await logoToUpdate.update({
+      logo: newLogo,
+      description: newDescription, 
+    });
+
+    console.log(`Updated logo with ID: ${id}`); 
+    res.json({ message: `Logo with ID: ${id} updated successfully`, logo: logoToUpdate }); 
+  } catch (error) {
+    console.error("Error updating logo:", error);
+    res.status(500).json({ error: "Internal Server Error" }); 
   }
+}
+
 };

@@ -34,5 +34,45 @@ module.exports = {
       }
       res.status(500).json({ error: "Internal Server Error" });
     }
+  },
+
+  // DELETE
+  deleteSoil: async (req, res) => {
+    const { id } = req.params; 
+    try {
+      const soil = await Soils.findByPk(id); 
+      if (!soil) {
+        return res.status(404).json({ error: "Soil not found" }); 
+      }
+      await soil.destroy(); 
+      console.log(`Deleted soil with ID: ${id}`);
+      res.json({ message: `Soil with ID: ${id} deleted successfully` }); 
+    } catch (error) {
+      console.error("Error deleting soil:", error);
+      res.status(500).json({ error: "Internal Server Error" }); 
+    }
+  },
+
+   // PUT
+  updateSoil: async (req, res) => {
+    const { id } = req.params;
+    const { soil_type: newSoilType, description: newDescription } = req.body;
+
+    try {
+      const soilToUpdate = await Soils.findByPk(id);
+      if (!soilToUpdate) {
+        return res.status(404).json({ error: "Soil not found" });
+      }
+
+      await soilToUpdate.update({
+        soil_type: newSoilType,
+        description: newDescription,
+      });
+
+      res.json({ message: `Soil with ID: ${id} updated successfully`, soil: soilToUpdate });
+    } catch (error) {
+      console.error("Error updating soil:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 };

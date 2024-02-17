@@ -25,7 +25,7 @@ module.exports = {
       soil_id,
       country_id,
       region_id,
-      wineType_id, // Corregido de 'winwType_id' a 'wineType_id' para que coincida con un nombre más lógico
+      wineType_id, 
     } = req.body;
     console.log(req.body);
 
@@ -34,8 +34,8 @@ module.exports = {
     }
 
     try {
-      const createdWine = await Wines.create({ // Corregido de 'createdRegion' a 'createdWine' para reflejar correctamente lo que se está creando
-        wine_name, // Corregido para usar 'wine_name' en lugar de 'region'
+      const createdWine = await Wines.create({ 
+        wine_name, 
         description,
         price, 
         img, 
@@ -44,16 +44,35 @@ module.exports = {
         soil_id,
         country_id,
         region_id,
-        wineType_id, // Asegurarse de que este campo coincida con cómo está definido en tu modelo
+        wineType_id, 
       });
       console.log('created wine', createdWine);
       res.status(201).json({ message: 'Wine created successfully', wine: createdWine });
     } catch (error) {
       console.error("Error creating wine:", error);
       if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(400).json({ error: "Wine must be unique" }); // Ajustado el mensaje de error para generalidad, ya que podría ser por cualquier campo único
+        return res.status(400).json({ error: "Wine must be unique" }); 
       }
       res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  // DELETE
+  deleteWine: async (req, res) => {
+    const { id } = req.params; 
+
+    try {
+      const wine = await Wines.findByPk(id); 
+      if (!wine) {
+        return res.status(404).json({ error: "Wine not found" }); 
+      }
+
+      await wine.destroy(); 
+      console.log(`Deleted wine with ID: ${id}`);
+      res.json({ message: `Wine with ID: ${id} deleted successfully` }); 
+    } catch (error) {
+      console.error("Error deleting wine:", error);
+      res.status(500).json({ error: "Internal Server Error" }); 
     }
   }
 };

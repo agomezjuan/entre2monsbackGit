@@ -37,5 +37,49 @@ module.exports = {
       }
       res.status(500).json({ error: "Internal Server Error" });
     }
+  },
+
+  // DELETE
+  deleteCellar: async (req, res) => {
+    const { id } = req.params; 
+
+    try {
+      const cellar = await Cellars.findByPk(id); 
+      if (!cellar) {
+        return res.status(404).json({ error: "Cellar not found" }); 
+      }
+
+      await cellar.destroy(); 
+      console.log(`Deleted cellar with ID: ${id}`);
+      res.json({ message: `Cellar with ID: ${id} deleted successfully` }); 
+    } catch (error) {
+      console.error("Error deleting cellar:", error);
+      res.status(500).json({ error: "Internal Server Error" }); 
+    }
+  },
+
+  // PUT
+  updateCellar: async (req, res) => {
+    const { id } = req.params; 
+    const { cellar_name, description } = req.body; 
+
+    try {
+      const cellar = await Cellars.findByPk(id); 
+      if (!cellar) {
+        return res.status(404).json({ error: "Cellar not found" }); 
+      }
+
+      await cellar.update({
+        cellar_name,
+        description
+      });
+
+      console.log(`Updated cellar with ID: ${id}`);
+      res.json({ message: `Cellar with ID: ${id} updated successfully`, cellar: cellar }); 
+    } catch (error) {
+      console.error("Error updating cellar:", error);
+      res.status(500).json({ error: "Internal Server Error" }); 
+    }
   }
 };
+
