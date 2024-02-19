@@ -1,43 +1,36 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Cellars', {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('cellars', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-    },
-    cellar_name: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      unique: true
-    }, 
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DATE
-    },
-    createdAt: {
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      allowNull: false,
-      type: Sequelize.DATE
-    },
-    updatedAt: {
-      defaultValue: Sequelize.literal( 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP' ),
-      allowNull: false,
-      type: Sequelize.DATE
-    },
-    description: Sequelize.STRING
-  });
+      },
+      cellar_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
+      description: {
+        type: Sequelize.STRING
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+      }
+    });
   },
 
-  async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('Cellars');
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('cellars');
   }
 };

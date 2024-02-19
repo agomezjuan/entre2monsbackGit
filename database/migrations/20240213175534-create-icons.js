@@ -3,14 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Logos', {
+    await queryInterface.createTable('icons', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER, 
       },
-      logo: {
+      icon: {
         type: Sequelize.STRING, 
         allowNull: false,
         unique: true,
@@ -19,12 +19,12 @@ module.exports = {
         type: Sequelize.STRING, 
         allowNull: false
       },
-      createdAt: {
+      created_at: {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         defaultValue: Sequelize.literal( 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP' ),
         allowNull: false,
         type: Sequelize.DATE
@@ -33,6 +33,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Logos');
+    await queryInterface.dropTable('icons');
   }
 };

@@ -3,31 +3,39 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class WineTypes extends Model {
+  class Cellar extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // Asociación con Wine
+      Cellar.hasMany(models.Wine, {
+        foreignKey: 'cellarId',
+        as: 'wine'
+      });
     }
   };
-  WineTypes.init({
+  Cellar.init({
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    wineType: {
+    cellarName: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
+    description: {
+      type: DataTypes.STRING
+    }
   }, {
     sequelize,
-    modelName: 'WineTypes',
+    modelName: 'Cellar',
+    underscored: true
   });
-  return WineTypes;
+  return Cellar;
 };

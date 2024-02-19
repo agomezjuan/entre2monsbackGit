@@ -1,30 +1,34 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class Wines extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class Wine extends Model {
     static associate(models) {
-      Wines.belongsToMany(models.Grapes, {
-        through: 'WineGrapes', // Sequelize creará automáticamente esta tabla
+      // Define la relación muchos a muchos con Grape
+      Wine.belongsToMany(models.Grape, {
+        through: 'WineGrape',
+        as: 'grapes',
         foreignKey: 'wineId',
         otherKey: 'grapeId'
-  });
-}
-  };
-  Wines.init({
+      });
+      // Define la relación muchos a muchos con Icon
+      Wine.belongsToMany(models.Icon, {
+        through: 'WineIcon',
+        as: 'icons',
+        foreignKey: 'wineId',
+        otherKey: 'iconId'
+      });
+    }
+  }
+
+  Wine.init({
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    wine_name: {
+    wineName: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
@@ -46,49 +50,52 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    cellar_id: {
+    cellarId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Cellars',
+        model: 'Cellars', // Asegúrate de que el nombre de la tabla esté en plural
         key: 'id'
       }
     },
-    soil_id: {
+    soilId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Solis',
+        model: 'Soils', // Asegúrate de que el nombre de la tabla esté en plural
         key: 'id'
       }
     },
-    country_id: {
+    countryId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Countries',
+        model: 'Countries', // Asegúrate de que el nombre de la tabla esté en plural
         key: 'id'
       }
     },
-    region_id: {
+    regionId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Regions',
+        model: 'Regions', // Asegúrate de que el nombre de la tabla esté en plural
         key: 'id'
       }
     },
-    winwType_id: {
+    wineTypeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'WineTypes',
+        model: 'WineTypes', // Asegúrate de que el nombre de la tabla esté en plural
         key: 'id'
       }
-    },  
+    }
   }, {
     sequelize,
-    modelName: 'Wines',
+    modelName: 'Wine',
+    tableName: 'Wines', // Asegúrate de que el nombre de la tabla esté en plural
+    underscored: true,
   });
-  return Wines;
+
+  return Wine;
 };

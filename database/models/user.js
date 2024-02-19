@@ -2,8 +2,8 @@
 const {
   Model
 } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Soils extends Model {
+module.exports = (sequelize, Sequelize) => {
+  class User extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,22 +13,34 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  Soils.init({
+  User.init({
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: Sequelize.INTEGER
     },
-    soil_type: {
-      type: DataTypes.STRING,
+    username: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    userSurnames: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    password: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    email: {
+      type: Sequelize.STRING,
       allowNull: false,
       unique: true
-    },
-    description: DataTypes.STRING, 
+    }
   }, {
     sequelize,
-    modelName: 'Soils',
+    modelName: 'User',
+    underscored: true
   });
-  return Soils;
+  return User;
 };
