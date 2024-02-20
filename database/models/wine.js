@@ -1,22 +1,24 @@
 'use strict';
-const { Model } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Wine extends Model {
     static associate(models) {
-      // Define la relación muchos a muchos con Grape
       Wine.belongsToMany(models.Grape, {
         through: 'WineGrape',
         as: 'grapes',
         foreignKey: 'wineId',
         otherKey: 'grapeId'
       });
-      // Define la relación muchos a muchos con Icon
       Wine.belongsToMany(models.Icon, {
         through: 'WineIcon',
         as: 'icons',
         foreignKey: 'wineId',
         otherKey: 'iconId'
+      });
+      Wine.hasOne(models.Stock, {
+        foreignKey: 'wineId',
+        as: 'stock'
       });
     }
   }
@@ -54,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Cellars', // Asegúrate de que el nombre de la tabla esté en plural
+        model: 'cellars',
         key: 'id'
       }
     },
@@ -62,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Soils', // Asegúrate de que el nombre de la tabla esté en plural
+        model: 'soils',
         key: 'id'
       }
     },
@@ -70,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Countries', // Asegúrate de que el nombre de la tabla esté en plural
+        model: 'countries',
         key: 'id'
       }
     },
@@ -78,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Regions', // Asegúrate de que el nombre de la tabla esté en plural
+        model: 'regions',
         key: 'id'
       }
     },
@@ -86,14 +88,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'WineTypes', // Asegúrate de que el nombre de la tabla esté en plural
+        model: 'wineTypes',
         key: 'id'
       }
     }
   }, {
     sequelize,
     modelName: 'Wine',
-    tableName: 'Wines', // Asegúrate de que el nombre de la tabla esté en plural
+    tableName: 'wines',
     underscored: true,
   });
 

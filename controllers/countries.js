@@ -1,11 +1,11 @@
-const {Countries} = require('../database/models')
+const {Country} = require('../database/models')
 
 module.exports ={
 
   // GET
   getAllCountries: async (req, res, next) => {
     try {
-      const countries = await Countries.findAll();
+      const countries = await Country.findAll();
       console.log("All countries:", JSON.stringify(countries, null, 2));
       res.json(countries);
     }catch (error) {
@@ -16,22 +16,22 @@ module.exports ={
 
   // POST
   postCountrie: async (req, res, next) => {
-    const { countrie, description } = req.body;
+    const { country, description } = req.body;
     console.log(req.body);
-    console.log(JSON.stringify(Countries))
-    if (!countrie) {
+    console.log(JSON.stringify(Country))
+    if (!country) {
       return res.status(400).json({ error: "Countrie is required" });
     }
     try {
-      const createdCountrie = await Countries.create({
-        countrie,
+      const createdCountrie = await Country.create({
+        country,
       });
-      console.log('created countrie', createdCountrie)
-      res.status(201).json({message: 'Countrie created succesfully', countrie: createdCountrie});
+      console.log('created country', createdCountrie)
+      res.status(201).json({message: 'Country created succesfully', countrie: createdCountrie});
     } catch (error) {
-      console.error("Error creating countrie:", error);
+      console.error("Error creating country:", error);
       if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(400).json({ error: "Countrie type must be unique" });
+        return res.status(400).json({ error: "Country type must be unique" });
       }
       res.status(500).json({ error: "Internal Server Error" });
     }
@@ -42,16 +42,16 @@ module.exports ={
     const { id } = req.params; 
 
     try {
-      const countrie = await Countries.findByPk(id); 
-      if (!countrie) {
-        return res.status(404).json({ error: "Countrie is not found" }); 
+      const country = await Country.findByPk(id); 
+      if (!country) {
+        return res.status(404).json({ error: "Country is not found" }); 
       }
 
-      await countrie.destroy(); 
-      console.log(`Deleted countrie with ID: ${id}`);
-      res.json({ message: `Countrie with ID: ${id} deleted successfully` }); 
+      await country.destroy(); 
+      console.log(`Deleted country with ID: ${id}`);
+      res.json({ message: `Country with ID: ${id} deleted successfully` }); 
     } catch (error) {
-      console.error("Error deleting countrie:", error);
+      console.error("Error deleting country:", error);
       res.status(500).json({ error: "Internal Server Error" }); 
     }
   },
@@ -59,21 +59,21 @@ module.exports ={
   // PUT
   updateCountrie: async (req, res) => {
     const { id } = req.params;
-    const { countrie: newCountrieName } = req.body; 
+    const { country: newCountrieName } = req.body; 
     try {
-      const countrieToUpdate = await Countries.findByPk(id); // 
+      const countrieToUpdate = await Country.findByPk(id); // 
       if (!countrieToUpdate) {
-        return res.status(404).json({ error: "Countrie not found" });
+        return res.status(404).json({ error: "Country not found" });
       }
 
       await countrieToUpdate.update({
-        countrie: newCountrieName, 
+        country: newCountrieName, 
       });
 
-      console.log(`Updated countrie with ID: ${id}`);
-      res.json({ message: `Countrie with ID: ${id} updated successfully`, countrie: countrieToUpdate }); 
+      console.log(`Updated country with ID: ${id}`);
+      res.json({ message: `Country with ID: ${id} updated successfully`, country: countrieToUpdate }); 
     } catch (error) {
-      console.error("Error updating countrie:", error);
+      console.error("Error updating country:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }

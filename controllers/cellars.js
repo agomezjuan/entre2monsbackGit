@@ -1,10 +1,10 @@
-const { Cellars } = require('../database/models');
+const { Cellar } = require('../database/models');
 
 module.exports = {
   // GET
   getAllCellars: async (req, res) => {
     try {
-      const cellars = await Cellars.findAll();
+      const cellars = await Cellar.findAll();
       console.log("All cellars:", JSON.stringify(cellars, null, 2));
       res.json(cellars);
     } catch (error) {
@@ -16,16 +16,16 @@ module.exports = {
   // POST
   postCellar: async (req, res) => {
     // Asegúrate de que la desestructuración aquí coincide con los campos enviados en la solicitud
-    const { cellar_name, description } = req.body; // Corregido para usar cellar_name en lugar de cellar
+    const { cellarName, description } = req.body; // Corregido para usar cellar_name en lugar de cellar
     console.log(req.body);
 
-    if (!cellar_name) { // Asegurándose de que cellar_name está presente
+    if (!cellarName) { // Asegurándose de que cellar_name está presente
       return res.status(400).json({ error: "Cellar name is required" });
     }
 
     try {
-      const createdCellar = await Cellars.create({
-        cellar_name,
+      const createdCellar = await Cellar.create({
+        cellarName,
         description
       });
       console.log('created cellar', createdCellar);
@@ -44,7 +44,7 @@ module.exports = {
     const { id } = req.params; 
 
     try {
-      const cellar = await Cellars.findByPk(id); 
+      const cellar = await Cellar.findByPk(id); 
       if (!cellar) {
         return res.status(404).json({ error: "Cellar not found" }); 
       }
@@ -61,16 +61,16 @@ module.exports = {
   // PUT
   updateCellar: async (req, res) => {
     const { id } = req.params; 
-    const { cellar_name, description } = req.body; 
+    const { cellarName, description } = req.body; 
 
     try {
-      const cellar = await Cellars.findByPk(id); 
-      if (!cellar) {
+      const cellar = await Cellar.findByPk(id); 
+      if (!cellarName) {
         return res.status(404).json({ error: "Cellar not found" }); 
       }
 
       await cellar.update({
-        cellar_name,
+        cellarName,
         description
       });
 

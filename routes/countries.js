@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Countries} = require('../database/models');
+const {Country} = require('../database/models');
 const { getAllCountries, postCountrie, deleteCountry, updateCountrie } = require('../controllers/countries');
 
 
