@@ -1,4 +1,6 @@
 'use strict';
+
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('soils', {
@@ -11,7 +13,7 @@ module.exports = {
       soil_type: {
         type: Sequelize.STRING
       },
-      description: {
+      effect: {
         type: Sequelize.STRING,
         allowNull: false
       },

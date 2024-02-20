@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
     }
   };
   Country.init({
@@ -20,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    countrie: {
+    country: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
@@ -28,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Country',
+    tableName: 'countries',
     underscoredq: true
   });
   return Country;

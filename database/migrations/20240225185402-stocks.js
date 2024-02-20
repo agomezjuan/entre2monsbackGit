@@ -36,9 +36,7 @@ module.exports = {
         references: {
           model: 'wines', 
           key: 'id'
-        },
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE'
+        }
       },
       created_at: {
         allowNull: false,
@@ -51,12 +49,10 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
       }
     });
-
-    await queryInterface.addIndex('stocks', ['wine_id']);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeIndex('stocks', ['wine_id']);
+
     await queryInterface.dropTable('stocks');
   }
 };

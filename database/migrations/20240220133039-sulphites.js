@@ -2,30 +2,24 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('regions', {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('sulphites', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER, 
+        type: Sequelize.INTEGER
       },
-      region: {
-        type: Sequelize.STRING, 
+      img: {
+        type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
+        unique: true        
       },
       description: {
-        type: Sequelize.STRING, 
-      },
-      countryId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: 'countries',
-          key: 'id'
-      }
-    },
+        unique: true
+      },
       created_at: {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
@@ -37,9 +31,10 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+    
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('regions');
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTable('sulphites');
   }
 };

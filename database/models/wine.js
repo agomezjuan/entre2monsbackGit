@@ -5,13 +5,13 @@ module.exports = (sequelize) => {
   class Wine extends Model {
     static associate(models) {
       Wine.belongsToMany(models.Grape, {
-        through: 'WineGrape',
+        through: 'wines_grapes',
         as: 'grapes',
         foreignKey: 'wineId',
         otherKey: 'grapeId'
       });
       Wine.belongsToMany(models.Icon, {
-        through: 'WineIcon',
+        through: 'wines_icons',
         as: 'icons',
         foreignKey: 'wineId',
         otherKey: 'iconId'
@@ -39,10 +39,6 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    price: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     img: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -52,11 +48,34 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    vineyardAlttitude: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    production:{
+      type: DataTypes.STRING,
+    },
     cellarId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'cellars',
+        key: 'id'
+      }
+    },
+    grapeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'grapes',
+        key: 'id'
+      }
+    },
+    iconId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'icons',
         key: 'id'
       }
     },
@@ -67,15 +86,7 @@ module.exports = (sequelize) => {
         model: 'soils',
         key: 'id'
       }
-    },
-    countryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'countries',
-        key: 'id'
-      }
-    },
+    },  
     regionId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -91,7 +102,15 @@ module.exports = (sequelize) => {
         model: 'wineTypes',
         key: 'id'
       }
-    }
+    },
+    sulphiteId:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'sulphites',
+        key: 'id'
+      }
+    },
   }, {
     sequelize,
     modelName: 'Wine',

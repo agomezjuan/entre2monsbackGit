@@ -8,10 +8,10 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER, // Cambiado de DataTypes.INTEGER a Sequelize.INTEGER
+        type: Sequelize.INTEGER, 
       },
-      countrie: {
-        type: Sequelize.STRING, // Cambiado de DataTypes.STRING a Sequelize.STRING
+      country: {
+        type: Sequelize.STRING, 
         allowNull: false,
         unique: true,
       },

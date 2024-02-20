@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   };
+  //! Add cellar distance
   Cellar.init({
     id: {
       allowNull: false,
@@ -31,6 +32,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.STRING
+    },
+    distance: {
+      type: DataTypes.INTEGER,
     }
   }, {
     sequelize,
