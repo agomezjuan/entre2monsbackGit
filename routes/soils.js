@@ -1,11 +1,12 @@
 const express = require('express');
-const router = express.Router();
-const {Soils} = require('../database/models');
-const { getAllSoils, postSoil, deleteSoil, updateSoil } = require('../controllers/soils');
+const { getAllSoils, createSoil, getSoilById, updateSoil, deleteSoil } = require('../controllers/soils');
 
-router.get('/', getAllSoils)
-router.post('/', postSoil)
-router.delete('/:id', deleteSoil)
-router.put('/:id', updateSoil)
+const router = express.Router();
+
+router.get('/', getAllSoils);
+router.post('/', createSoil);
+router.get('/:id', getSoilById);
+router.put('/:id', updateSoil);
+router.delete('/:id', deleteSoil);
 
 module.exports = router;

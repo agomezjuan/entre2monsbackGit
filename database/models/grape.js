@@ -4,7 +4,6 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Grape extends Model {
     static associate(models) {
-      // Define la relación muchos a muchos con Wine
       Grape.belongsToMany(models.Wine, {
         through: 'WineGrape',
         as: 'wines',
@@ -21,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    grapeType: {
+    grapeType: { 
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
@@ -32,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Grape',
-    tableName: 'grapes', 
+    tableName: 'grapes',
     underscored: true,
   });
 

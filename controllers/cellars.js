@@ -14,7 +14,7 @@ module.exports = {
   },
 
   // POST
-  postCellar: async (req, res) => {
+  createCellar: async (req, res) => {
     try {
       const { cellarName, description } = req.body;
       console.log(req.body);

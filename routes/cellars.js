@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const {Cellars} = require('../database/models');
-const { getAllCellars, postCellar, deleteCellar, updateCellar } = require('../controllers/cellars');
+const { getAllCellars, deleteCellar, updateCellar, createCellar } = require('../controllers/cellars');
 
 router.get('/',getAllCellars)
-router.post('/', postCellar)
+router.post('/', createCellar)
 router.delete('/:id', deleteCellar)
 router.put('/:id', updateCellar)
 

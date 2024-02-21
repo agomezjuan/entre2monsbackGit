@@ -3,13 +3,13 @@ const router = express.Router();
 const {Regions} = require('../database/models');
 const {
   getAllRegions,
-  postRegion,
   deleteRegion,
-  updateRegion
+  updateRegion,
+  createRegion
 } = require('../controllers/regions')
 
 router.get('/', getAllRegions);
-router.post('/', postRegion)
+router.post('/', createRegion)
 router.delete('/:id', deleteRegion)
 router.put('/:id', updateRegion)
 

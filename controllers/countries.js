@@ -15,7 +15,7 @@ module.exports ={
   },
 
   // POST
-  postCountrie: async (req, res, next) => {
+  createCountrie: async (req, res, next) => {
     const { country, description } = req.body;
     console.log(req.body);
     console.log(JSON.stringify(Country))

@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const {Country} = require('../database/models');
-const { getAllCountries, postCountrie, deleteCountry, updateCountrie } = require('../controllers/countries');
+const { getAllCountries, deleteCountry, updateCountrie, createCountrie } = require('../controllers/countries');
 
 
 router.get('/', getAllCountries)
-router.post('/', postCountrie)
+router.post('/', createCountrie)
 router.delete("/:id", deleteCountry)
 router.put('/:id', updateCountrie)
 

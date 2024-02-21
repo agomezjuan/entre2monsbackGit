@@ -1,80 +1,61 @@
-const {Regions} = require('../database/models');
+const { Region, Country } = require('../database/models');
 
 module.exports = {
-
-  // GET
-  getAllRegions: async (req, res, next) => {
+  // Obtener todas las regiones con el país asociado
+  getAllRegions: async (req, res) => {
     try {
-      const regions = await Regions.findAll();
-      console.log("All regions:", JSON.stringify(regions, null, 2));
+      const regions = await Region.findAll({
+        include: [{ model: Country, as: 'country' }]
+      });
       res.json(regions);
-    }catch (error) {
+    } catch (error) {
       console.error("Error retrieving regions:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
-  // POST
-  postRegion: async (req, res, next) => {
-    const { region, description } = req.body;
-    console.log(req.body);
-    console.log(JSON.stringify(Regions))
-    if (!region) {
-      return res.status(400).json({ error: "Region is required" });
-    }
+  // Crear una nueva región
+  createRegion: async (req, res) => {
+    const { region, countryId, description } = req.body;
     try {
-      const createdRegion = await Regions.create({
-        region,
-        description
-      });
-      console.log('created region', createdRegion)
-      res.status(201).json({message: 'Region created succesfully', region: createdRegion});
+      const newRegion = await Region.create({ region, countryId, description });
+      res.status(201).json({ message: 'Region created successfully', data: newRegion });
     } catch (error) {
       console.error("Error creating region:", error);
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(400).json({ error: "Region type must be unique" });
-      }
       res.status(500).json({ error: "Internal Server Error" });
-    }
-  },  
-
-  // DELETE
-  deleteRegion: async (req, res) => {
-    const { id } = req.params; 
-    try {
-      const region = await Regions.findByPk(id); 
-      if (!region) {
-        return res.status(404).json({ error: "Region not found" }); 
-      }
-      await region.destroy(); 
-      console.log(`Deleted region with ID: ${id}`);
-      res.json({ message: `Region with ID: ${id} deleted successfully` }); 
-    } catch (error) {
-      console.error("Error deleting region:", error);
-      res.status(500).json({ error: "Internal Server Error" }); 
     }
   },
 
+  // Actualizar una región por ID
   updateRegion: async (req, res) => {
     const { id } = req.params;
-    const { region: newRegion, description: newDescription } = req.body;
-
+    const { region, countryId, description } = req.body;
     try {
-      const regionToUpdate = await Regions.findByPk(id);
+      const regionToUpdate = await Region.findByPk(id);
       if (!regionToUpdate) {
         return res.status(404).json({ error: "Region not found" });
       }
-
-      await regionToUpdate.update({
-        region: newRegion,
-        description: newDescription,
-      });
-
-      res.json({ message: `Region with ID: ${id} updated successfully`, region: regionToUpdate });
+      await regionToUpdate.update({ region, countryId, description });
+      res.json({ message: `Region with ID: ${id} updated successfully`, data: regionToUpdate });
     } catch (error) {
       console.error("Error updating region:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
+  },
+
+  // Eliminar una región por ID
+  deleteRegion: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const regionToDelete = await Region.findByPk(id);
+      if (!regionToDelete) {
+        return res.status(404).json({ error: "Region not found" });
+      }
+      await regionToDelete.destroy();
+      res.json({ message: `Region with ID: ${id} deleted successfully` });
+    } catch (error) {
+      console.error("Error deleting region:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 };
-

@@ -11,7 +11,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       soil_type: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false, 
+        unique: true
       },
       effect: {
         type: Sequelize.STRING,
