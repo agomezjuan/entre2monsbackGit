@@ -1,7 +1,7 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, Sequelize) => {
   class User extends Model {
     /**
@@ -12,7 +12,12 @@ module.exports = (sequelize, Sequelize) => {
     static associate(models) {
       // define association here
     }
-  };
+    
+    // Método para verificar la contraseña
+    verifyPassword(password) {
+      return bcrypt.compareSync(password, this.password);
+    }
+  }
   User.init({
     id: {
       allowNull: false,
@@ -40,7 +45,14 @@ module.exports = (sequelize, Sequelize) => {
   }, {
     sequelize,
     modelName: 'User',
-    underscored: true
+    underscored: true,
+    hooks: {
+      beforeSave: async (user) => {
+        if (user.password) {
+          user.password = await bcrypt.hash(user.password, 10);
+        }
+      }
+    }
   });
   return User;
 };

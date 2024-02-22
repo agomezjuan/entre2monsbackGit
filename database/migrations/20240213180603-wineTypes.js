@@ -30,6 +30,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('WineTypes');
+    await queryInterface.dropTable('wineTypes');
   }
 };

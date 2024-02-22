@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   };
-  //! Add cellar distance
   Cellar.init({
     id: {
       allowNull: false,

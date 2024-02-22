@@ -1,10 +1,10 @@
-const { WineTypes } = require('../database/models');
+const { WineType } = require('../database/models');
 
 module.exports = {
   // GET
   getAllWineTypes: async (req, res) => { 
     try {
-      const wineTypes = await WineTypes.findAll();
+      const wineTypes = await WineType.findAll();
       console.log("All wineTypes:", JSON.stringify(wineTypes, null, 2));
       res.json(wineTypes);
     } catch (error) { 
@@ -22,7 +22,7 @@ module.exports = {
     }
 
     try {
-      const createdWineType = await WineTypes.create({
+      const createdWineType = await WineType.create({
         wineType
       });
       console.log('Created wine type', createdWineType); 
