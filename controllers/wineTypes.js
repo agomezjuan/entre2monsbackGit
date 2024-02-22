@@ -15,15 +15,15 @@ module.exports = {
 
   // POST
   postWineType: async (req, res) => { 
-    const { wineType } = req.body;
+    const { type } = req.body;
     console.log(req.body);
-    if (!wineType) {
+    if (!type) {
       return res.status(400).json({ error: "Wine type is required" });
     }
 
     try {
       const createdWineType = await WineType.create({
-        wineType
+        type
       });
       console.log('Created wine type', createdWineType); 
       res.status(201).json({ message: 'Wine type created successfully', wineType: createdWineType });

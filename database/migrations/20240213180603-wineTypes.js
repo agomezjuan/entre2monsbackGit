@@ -3,14 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('wineTypes', {
+    await queryInterface.createTable('wine_types', {
       id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    wineType: {
+    type: {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true
@@ -30,6 +30,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('wineTypes');
+    await queryInterface.dropTable('wine_types');
   }
 };

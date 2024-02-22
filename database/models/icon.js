@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Icon',
-    underscored: true
+    tableName: 'icons',
   });
   return Icon;
 };

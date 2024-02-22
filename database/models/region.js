@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Region',
-    underscored: true,
+    tableName: 'regions',
   });
   return Region;
 };
