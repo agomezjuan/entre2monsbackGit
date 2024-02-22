@@ -1,10 +1,17 @@
 const { Stock } = require('../database/models'); 
 
 module.exports = {
-    // CREATE
+  // CREATE
   createStocks: async (req, res) => {
+    const { sku, price_restaurant, price_ecommerce, price_cost, amount } = req.body;
     try {
-      const stock = await Stock.create(req.body);
+      const stock = await Stock.create({
+        sku,
+        price_restaurant,
+        price_ecommerce,
+        price_cost,
+        amount
+      });
       res.status(201).json(stock);
     } catch (error) {
       console.error(error);
@@ -42,8 +49,15 @@ module.exports = {
   // UPDATE
   updateStock: async (req, res) => {
     const stockId = req.params.id;
+    const { sku, price_restaurant, price_ecommerce, price_cost, amount } = req.body;
     try {
-      const [updatedRows] = await Stock.update(req.body, {
+      const [updatedRows] = await Stock.update({
+        sku,
+        price_restaurant,
+        price_ecommerce,
+        price_cost,
+        amount
+      }, {
         where: { id: stockId }
       });
       if (updatedRows > 0) {

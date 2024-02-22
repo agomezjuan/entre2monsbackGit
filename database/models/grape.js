@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    grapeType: { 
+    grape_type: { 
       type: DataTypes.STRING,
       allowNull: false,
       unique: true

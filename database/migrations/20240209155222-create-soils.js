@@ -15,6 +15,10 @@ module.exports = {
         allowNull: false, 
         unique: true
       },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       effect: {
         type: Sequelize.STRING,
         allowNull: false

@@ -19,10 +19,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      price: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       img: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -34,6 +30,13 @@ module.exports = {
       },
       vineyardAlttitude: {
         type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      production: {
+        type: Sequelize.INTEGER,
+      },
+      outstanding: {
+        type: Sequelize.BOOLEAN,
         allowNull: false
       },
       sulphiteId: {
@@ -74,6 +77,22 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'wine_types',
+          key: 'id'
+        }
+      },
+      iconId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'icons',
+          key: 'id'
+        }  
+      },
+      grapeId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'grapes',
           key: 'id'
         }
       },

@@ -20,10 +20,14 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    soilType: {
+    soil_type: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     effect: DataTypes.STRING, 
   }, {

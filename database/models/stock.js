@@ -25,15 +25,15 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    priceRestaurant: {
+    price_restaurant: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     },
-    priceEcommerce: {
+    price_ecommerce: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     },
-    priceCost: {
+    price_cost: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       unique: true

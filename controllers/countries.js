@@ -27,7 +27,7 @@ module.exports ={
         country,
       });
       console.log('created country', createdCountrie)
-      res.status(201).json({message: 'Country created succesfully', countrie: createdCountrie});
+      res.status(201).json({message: 'Country created succesfully', countie: createdCountrie});
     } catch (error) {
       console.error("Error creating country:", error);
       if (error.name === 'SequelizeUniqueConstraintError') {

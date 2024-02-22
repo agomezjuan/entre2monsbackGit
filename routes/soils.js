@@ -1,5 +1,11 @@
 const express = require('express');
-const { getAllSoils, createSoil, getSoilById, updateSoil, deleteSoil } = require('../controllers/soils');
+const {
+  getAllSoils, 
+  createSoil, 
+  getSoilById, 
+  updateSoil, 
+  deleteSoil 
+} = require('../controllers/soils');
 
 const router = express.Router();
 

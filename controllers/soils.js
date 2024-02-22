@@ -7,22 +7,23 @@ const soilController = {
       const soils = await Soil.findAll();
       res.status(200).json(soils);
     } catch (error) {
-      console.error("Error retrieving soils:", error);
+      console.error("Error getting soils:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
-
+  
   // Crear un nuevo suelo
   createSoil: async (req, res) => {
-    const { soilType, effect } = req.body;
+    const { soil_type, description, effect } = req.body; // Cambiado a soil_type para alinearse con el modelo
     try {
-      const newSoil = await Soil.create({ soilType, effect });
+      const newSoil = await Soil.create({ soil_type, description, effect });
       res.status(201).json(newSoil);
     } catch (error) {
       console.error("Error creating soil:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
 
   // Obtener un suelo por ID
   getSoilById: async (req, res) => {
@@ -42,13 +43,13 @@ const soilController = {
   // Actualizar un suelo por ID
   updateSoil: async (req, res) => {
     const { id } = req.params;
-    const { soilType, effect } = req.body;
+    const { soil_type, description, effect } = req.body; // Cambiado a soil_type para alinearse con el modelo
     try {
       const soil = await Soil.findByPk(id);
       if (!soil) {
         return res.status(404).json({ error: "Soil not found" });
       }
-      await soil.update({ soilType, effect });
+      await soil.update({ soil_type, description, effect });
       res.status(200).json(soil);
     } catch (error) {
       console.error("Error updating soil:", error);

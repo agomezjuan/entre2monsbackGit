@@ -55,6 +55,10 @@ module.exports = (sequelize) => {
     production:{
       type: DataTypes.STRING,
     },
+    otustanding: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
     cellarId: {
       type: DataTypes.INTEGER,
       allowNull: false,

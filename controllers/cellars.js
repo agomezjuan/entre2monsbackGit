@@ -16,15 +16,15 @@ module.exports = {
   // POST
   createCellar: async (req, res) => {
     try {
-      const { cellarName, description } = req.body;
+      const { cellar_name, description } = req.body; // Actualizado para usar snake_case
       console.log(req.body);
 
-      if (!cellarName) {
+      if (!cellar_name) { // Verificación también actualizada para snake_case
         return res.status(400).json({ error: "Cellar name is required" });
       }
 
       const createdCellar = await Cellar.create({
-        cellarName,
+        cellar_name, // Usando snake_case para coincidir con la definición del modelo
         description,
       });
       console.log('created cellar', createdCellar);
@@ -60,7 +60,7 @@ module.exports = {
   updateCellar: async (req, res) => {
     try {
       const { id } = req.params;
-      const { cellarName, description } = req.body;
+      const { cellar_name, description } = req.body; // Actualizado para usar snake_case
 
       const cellar = await Cellar.findByPk(id);
       if (!cellar) {
@@ -68,7 +68,7 @@ module.exports = {
       }
 
       await cellar.update({
-        cellarName,
+        cellar_name, // Usando snake_case para coincidir con la definición del modelo
         description,
       });
 

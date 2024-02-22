@@ -14,13 +14,13 @@ module.exports = {
 
   // POST
   createGrape: async (req, res) => {
-    const { grapeType, description } = req.body; // Usa camelCase como en el modelo
-    if (!grapeType) {
+    const { grape_type, description } = req.body; // Actualizado para usar snake_case
+    if (!grape_type) { // Verificación también actualizada para snake_case
       return res.status(400).json({ error: "Grape type is required" });
     }
     try {
       const createdGrape = await Grape.create({
-        grapeType,
+        grape_type, // Usando snake_case para coincidir con la definición del modelo
         description
       });
       res.status(201).json({message: 'Grape created successfully', grape: createdGrape});
@@ -49,14 +49,14 @@ module.exports = {
   // PUT
   updateGrape: async (req, res) => {
     const { id } = req.params;
-    const { grapeType, description } = req.body; // Usa camelCase como en el modelo
+    const { grape_type, description } = req.body; // Actualizado para usar snake_case
     try {
       const grapeToUpdate = await Grape.findByPk(id);
       if (!grapeToUpdate) {
         return res.status(404).json({ error: "Grape not found" });
       }
       await grapeToUpdate.update({
-        grapeType,
+        grape_type, // Usando snake_case para coincidir con la definición del modelo
         description
       });
       res.json({ message: `Grape with ID: ${id} updated successfully`, grape: grapeToUpdate });

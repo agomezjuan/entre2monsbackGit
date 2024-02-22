@@ -1,78 +1,108 @@
-const { Wines } = require('../database/models');
+const { Wine } = require('../database/models');
 
-module.exports = {
-  // GET
-  getAllWines: async (req, res, next) => {
+const wineController = {
+  // Crear un nuevo vino
+  createWine: async (req, res) => {
     try {
-      const wines = await Wines.findAll();
-      console.log("All wines:", JSON.stringify(wines, null, 2));
-      res.json(wines);
+      const {
+        wineName,
+        description,
+        img,
+        vintage,
+        vineyard_alttitude,
+        production,
+        otustanding,
+        cellarId,
+        grapeId,
+        iconId,
+        soilId,
+        regionId,
+        wineTypeId,
+        sulphiteId
+      } = req.body;
+
+      const newWine = await Wine.create({
+        wineName,
+        description,
+        img,
+        vintage,
+        vineyard_alttitude,
+        production,
+        otustanding,
+        cellarId,
+        grapeId,
+        iconId,
+        soilId,
+        regionId,
+        wineTypeId,
+        sulphiteId
+      });
+
+      res.status(201).json(newWine);
+    } catch (error) {
+      console.error("Error creating new wine:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  // Obtener todos los vinos
+  getAllWines: async (req, res) => {
+    try {
+      const wines = await Wine.findAll();
+      res.status(200).json(wines);
     } catch (error) {
       console.error("Error retrieving wines:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
-  // POST
-  postWine: async (req, res, next) => {
-    const { 
-      wine_name, 
-      description, 
-      price, 
-      img, 
-      vintage, 
-      cellar_id,
-      soil_id,
-      country_id,
-      region_id,
-      wineType_id, 
-    } = req.body;
-    console.log(req.body);
-
-    if (!wine_name) {
-      return res.status(400).json({ error: "Wine name is required" });
-    }
-
+  // Obtener un vino por ID
+  getWineById: async (req, res) => {
     try {
-      const createdWine = await Wines.create({ 
-        wine_name, 
-        description,
-        price, 
-        img, 
-        vintage, 
-        cellar_id,
-        soil_id,
-        country_id,
-        region_id,
-        wineType_id, 
-      });
-      console.log('created wine', createdWine);
-      res.status(201).json({ message: 'Wine created successfully', wine: createdWine });
-    } catch (error) {
-      console.error("Error creating wine:", error);
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(400).json({ error: "Wine must be unique" }); 
+      const { id } = req.params;
+      const wine = await Wine.findByPk(id);
+      if (wine) {
+        res.status(200).json(wine);
+      } else {
+        res.status(404).json({ error: "Wine not found" });
       }
+    } catch (error) {
+      console.error("Error finding wine:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
-  // DELETE
-  deleteWine: async (req, res) => {
-    const { id } = req.params; 
-
+  // Actualizar un vino por ID
+  updateWine: async (req, res) => {
     try {
-      const wine = await Wines.findByPk(id); 
-      if (!wine) {
-        return res.status(404).json({ error: "Wine not found" }); 
+      const { id } = req.params;
+      const updated = await Wine.update(req.body, { where: { id } });
+      if (updated[0] > 0) {
+        res.status(200).json({ message: "Wine updated successfully" });
+      } else {
+        res.status(404).json({ error: "Wine not found" });
       }
+    } catch (error) {
+      console.error("Error updating wine:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 
-      await wine.destroy(); 
-      console.log(`Deleted wine with ID: ${id}`);
-      res.json({ message: `Wine with ID: ${id} deleted successfully` }); 
+  // Eliminar un vino por ID
+  deleteWine: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deleted = await Wine.destroy({ where: { id } });
+      if (deleted) {
+        res.status(204).send();
+      } else {
+        res.status(404).json({ error: "Wine not found" });
+      }
     } catch (error) {
       console.error("Error deleting wine:", error);
-      res.status(500).json({ error: "Internal Server Error" }); 
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 };
+
+module.exports = wineController;
