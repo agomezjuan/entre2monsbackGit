@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    wineType: {
+    type: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'WineType',
-    underscored: true
+    tableName: 'wine_types',
   });
   return WineType;
 };

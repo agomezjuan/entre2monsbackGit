@@ -45,7 +45,7 @@ module.exports = (sequelize, Sequelize) => {
   }, {
     sequelize,
     modelName: 'User',
-    underscored: true,
+    tableName: 'users',
     hooks: {
       beforeSave: async (user) => {
         if (user.password) {

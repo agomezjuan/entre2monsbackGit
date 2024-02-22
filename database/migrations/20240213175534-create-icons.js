@@ -19,12 +19,12 @@ module.exports = {
         type: Sequelize.STRING, 
         allowNull: false
       },
-      created_at: {
+      createdAt: {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         defaultValue: Sequelize.literal( 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP' ),
         allowNull: false,
         type: Sequelize.DATE

@@ -46,7 +46,6 @@ module.exports = (sequelize) => {
     sequelize,
     modelName: 'Stock',
     tableName: 'stocks',
-    underscored: true
   });
 
   return Stock;

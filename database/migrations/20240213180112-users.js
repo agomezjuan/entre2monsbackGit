@@ -26,12 +26,12 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      created_at: { // snake_case para el nombre de la columna
+      createdAt: { // snake_case para el nombre de la columna
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: { // snake_case para el nombre de la columna
+      updatedAt: { // snake_case para el nombre de la columna
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
         allowNull: false,
         type: Sequelize.DATE

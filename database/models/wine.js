@@ -59,7 +59,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'cellars',
+        model: 'Cellar',
         key: 'id'
       }
     },
@@ -67,7 +67,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'grapes',
+        model: 'Grape',
         key: 'id'
       }
     },
@@ -75,7 +75,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'icons',
+        model: 'Icon',
         key: 'id'
       }
     },
@@ -83,7 +83,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'soils',
+        model: 'Soil',
         key: 'id'
       }
     },  
@@ -91,7 +91,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'regions',
+        model: 'Region',
         key: 'id'
       }
     },
@@ -99,7 +99,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'wineTypes',
+        model: 'WineType',
         key: 'id'
       }
     },
@@ -107,7 +107,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'sulphites',
+        model: 'Sulphite',
         key: 'id'
       }
     },
@@ -115,7 +115,6 @@ module.exports = (sequelize) => {
     sequelize,
     modelName: 'Wine',
     tableName: 'wines',
-    underscored: true,
   });
 
   return Wine;
