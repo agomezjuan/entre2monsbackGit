@@ -1,5 +1,6 @@
 const {Users} = require('../database/models')
 
+// TODO CRUD 
 module.exports = {
   /* GET users listing. */
   getAllUsers: function (req, res, next) {
