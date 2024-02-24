@@ -1,39 +1,43 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+'use strict'
+
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Sulphite extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-  
+
+      // Sulphite have many wines
+      Sulphite.belongsToMany(models.Wine, {
+        through: 'wine_sulphites',
+        foreignKey: 'sulphiteId',
+        otherKey: 'wineId',
+        as: 'wines',
+      })
     }
-  };
-  Sulphite.init({
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+  }
+  Sulphite.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      sulphite: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      image: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
-    img: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+    {
+      sequelize,
+      modelName: 'Sulphite',
+      tableName: 'sulphites',
     }
-  }, {
-    sequelize,
-    modelName: 'Sulphite',
-    tableName: 'sulphites',
-  });
-  return Sulphite;
-};
+  )
+  return Sulphite
+}

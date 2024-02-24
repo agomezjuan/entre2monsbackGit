@@ -1,38 +1,41 @@
-'use strict';
-const { Model } = require('sequelize');
+'use strict'
+
+const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   class Grape extends Model {
     static associate(models) {
-      Grape.belongsToMany(models.Wine, {
-        through: 'WineGrape',
-        as: 'wines',
+      
+      // A grape has many wines
+      Grape.hasMany(models.Wine, {
         foreignKey: 'grapeId',
-        otherKey: 'wineId'
-      });
+        as: 'wines',
+      })
     }
   }
-
-  Grape.init({
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+  Grape.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      grape: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
-    grape_type: { 
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    description: {
-      type: DataTypes.STRING
+    {
+      sequelize,
+      modelName: 'Grape',
+      tableName: 'grapes',
     }
-  }, {
-    sequelize,
-    modelName: 'Grape',
-    tableName: 'grapes',
-  });
-
-  return Grape;
-};
+  )
+  return Grape
+}

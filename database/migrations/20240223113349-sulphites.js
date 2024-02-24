@@ -5,33 +5,31 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('sulphites', {
       id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+        primaryKey: true
       },
-      img: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true        
-      },
-      description: {
+      sulphite: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
+      image: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
       createdAt: {
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
-        defaultValue: Sequelize.literal( 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP' ),
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
       }
     });
-    
   },
 
   async down (queryInterface, Sequelize) {

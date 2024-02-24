@@ -2,44 +2,45 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('regions', {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('regions', { 
       id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER, 
       },
       region: {
-        type: Sequelize.STRING, 
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
       description: {
-        type: Sequelize.STRING, 
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
       countryId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'countries',
-          key: 'id'
-      }
-    },
+          key: 'id',
+        }
+      },
       createdAt: {
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
-        defaultValue: Sequelize.literal( 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP' ),
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
       }
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
     await queryInterface.dropTable('regions');
   }
 };

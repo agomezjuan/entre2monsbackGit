@@ -1,52 +1,43 @@
 'use strict';
-const {
-  Model,
-  DataTypes
-} = require('sequelize');
 
-module.exports = (sequelize) => {
+const { Model } = require('sequelize');
+
+module.exports = (sequelize, DataTypes) => {
   class Stock extends Model {
     static associate(models) {
-      Stock.belongsTo(models.Wine, {
-        foreignKey: 'wineId',
-        as: 'wine'
+      Stock.hasOne(models.Price, {
+        foreignKey: 'stockId',
+        as: 'price',
       });
     }
   }
-
-  Stock.init({
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+  Stock.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      sku: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      amountIn: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      amountOut: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
-    sku: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    price_restaurant: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false
-    },
-    price_ecommerce: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false
-    },
-    price_cost: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      unique: true
-    },
-    amount: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+    {
+      sequelize,
+      modelName: 'Stock',
+      tableName: 'stocks',
     }
-  }, {
-    sequelize,
-    modelName: 'Stock',
-    tableName: 'stocks',
-  });
-
+  );
   return Stock;
 };

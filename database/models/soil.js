@@ -1,39 +1,48 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+'use strict'
+
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Soil extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
     static associate(models) {
-      // define association here
+      // Cellar have many soils
+      Soil.belongsToMany(models.Cellar, {
+        through: 'cellar_soils',
+        foreignKey: 'soilId',
+        otherKey: 'cellarId',
+        as: 'cellars',
+      })
     }
-  };
-  Soil.init({
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+  }
+
+  Soil.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      soil: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      effect: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
-    soil_type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    effect: DataTypes.STRING, 
-  }, {
-    sequelize,
-    modelName: 'Soil',
-    tableName: 'soils',
-  });
-  return Soil;
-};
+    {
+      sequelize,
+      modelName: 'Soil',
+      tableName: 'soils',
+    }
+  )
+  return Soil
+}

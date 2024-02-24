@@ -1,37 +1,42 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+'use strict'
+
+const { Model, DataTypes } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class WineType extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-        WineType.hasMany(models.Wine, {
+      
+      // A wine type has many wines
+      WineType.hasMany(models.Wine, {
         foreignKey: 'wineTypeId',
-        as: 'wine'
-      });
+        as: 'wines',
+      })
     }
-  };
-  WineType.init({
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+  }
+  WineType.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      wineType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-  }, {
-    sequelize,
-    modelName: 'WineType',
-    tableName: 'wine_types',
-  });
-  return WineType;
-};
+    {
+      sequelize,
+      modelName: 'WineType',
+      tableName: 'wineTypes',
+    }
+  )
+  return WineType
+}
+  

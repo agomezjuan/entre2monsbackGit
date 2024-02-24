@@ -1,52 +1,40 @@
 'use strict';
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-
-    await queryInterface.createTable('wines', {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('wines', { 
       id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true
       },
-      wineName: {
+      wine: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
       description: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      year: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      procuction: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
+      },
+      vineyardAltitude: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       img: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      vintage: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      vineyardAlttitude: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      production: {
-        type: Sequelize.INTEGER,
-      },
-      outstanding: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
-      sulphiteId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'sulphites',
-          key: 'id'
-        }
-
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       cellarId: {
         type: Sequelize.INTEGER,
@@ -56,19 +44,11 @@ module.exports = {
           key: 'id'
         }
       },
-      soilId: {
+      stockId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'soils',
-          key: 'id'
-        }
-      },
-      regionId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'regions',
+          model: 'stocks',
           key: 'id'
         }
       },
@@ -76,81 +56,80 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'wine_types',
+          model: 'wineTypes',
           key: 'id'
         }
       },
-      iconId: {
+      sulphiteId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'icons',
-          key: 'id'
-        }  
-      },
-      grapeId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'grapes',
+          model: 'sulphites',
           key: 'id'
         }
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      updatedAt: {
-        allowNull: false,
+      updatedAt: {  
         type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
       }
     });
+
+    /*
+      * Create table wines_grapes
+    */
+
     await queryInterface.createTable('wines_grapes', {
       wineId: {
-        allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'wines',
           key: 'id'
         }
       },
       grapeId: {
-        allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'grapes',
           key: 'id'
-        }
+        } 
       },
     })
+
+    /*
+      * Create table wines_icons
+    */  
+
     await queryInterface.createTable('wines_icons', {
       wineId: {
-        allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'wines',
           key: 'id'
         }
       },
       iconId: {
-        allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'icons',
           key: 'id'
-        }
+        } 
       },
     })
   },
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('wines_grapes')
-    await queryInterface.dropTable('wines_icons')
+
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTable('wines_grapes');
+    await queryInterface.dropTable('wines_icons');
     await queryInterface.dropTable('wines');
   }
 };

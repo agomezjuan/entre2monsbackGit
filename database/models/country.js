@@ -1,33 +1,39 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+'use strict'
+
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Country extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
+      Country.hasMany(models.Region, {
+        foreignKey: 'countryId',
+        as: 'regions',
+      })
     }
-  };
-  Country.init({
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+  }
+  Country.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
-    country: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-  }, {
-    sequelize,
-    modelName: 'Country',
-    tableName: 'countries',
-  });
-  return Country;
-};
+    {
+      sequelize,
+      modelName: 'Country',
+      tableName: 'countries',
+    }
+  )
+  return Country
+}
