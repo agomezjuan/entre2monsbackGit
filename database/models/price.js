@@ -5,10 +5,11 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Price extends Model {
     static associate(models) {
-      Price.belongsTo(models.Stock, {
-        foreignKey: 'stockId',
-        as: 'stock',
-      });
+      // one price has one stocks
+      Price.hasOne(models.Stock, {
+        foreignKey: 'priceId',
+        as: 'stocks',
+      });      
     }
   }
   Price.init(
@@ -35,19 +36,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      stockId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'stocks', 
-          key: 'id',
-        },
-      },
     },
     {
       sequelize,
       modelName: 'Price',
       tableName: 'prices',
+      timestamps: false,
     }
   );
   return Price;

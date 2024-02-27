@@ -25,15 +25,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      stockId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true, // Asegura la relación uno a uno
-        references: {
-          model: 'stocks',
-          key: 'id',
-        },
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

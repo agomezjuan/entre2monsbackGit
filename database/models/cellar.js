@@ -52,14 +52,6 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         }
       },
-      soilId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'soils',
-          key: 'id',
-        }
-      },
     },
     {
       sequelize,

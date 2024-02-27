@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
+
+  /* 
+    ! sulphite: DATA TYPE STRING
+  */
+
   Sulphite.init(
     {
       id: {
@@ -37,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'Sulphite',
       tableName: 'sulphites',
+      timestamps: false,
     }
   )
   return Sulphite

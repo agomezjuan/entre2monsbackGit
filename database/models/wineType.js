@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'WineType',
       tableName: 'wineTypes',
+      timestamps: false,
     }
   )
   return WineType

@@ -24,8 +24,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      procuction: {
-        type: Sequelize.STRING,
+      production: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       vineyardAltitude: {

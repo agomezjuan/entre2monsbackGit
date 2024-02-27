@@ -15,6 +15,11 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+
+    
+    
+      // ! sulphite: DATA TYPE STRING
+    
       image: {
         type: Sequelize.TEXT,
         allowNull: true

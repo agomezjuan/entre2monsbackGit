@@ -10,7 +10,7 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true
       },
-      icon: {
+      url: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true

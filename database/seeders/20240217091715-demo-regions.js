@@ -3,14 +3,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Regions', [{
+    await queryInterface.bulkInsert('regions', [{
       region: 'Boredeux',
-      description: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+      description: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      countryId: 1
     }], {});    
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Regions', null, {});
+    await queryInterface.bulkDelete('regions', null, {});
     
   }
 };

@@ -16,16 +16,18 @@ module.exports = {
   // POST
   createCellar: async (req, res) => {
     try {
-      const { cellar_name, description } = req.body; // Actualizado para usar snake_case
+      const { cellar, description, distance, regionId } = req.body; 
       console.log(req.body);
 
-      if (!cellar_name) { // Verificación también actualizada para snake_case
+      if (!cellar) { // Verificación también actualizada para snake_case
         return res.status(400).json({ error: "Cellar name is required" });
       }
 
       const createdCellar = await Cellar.create({
-        cellar_name, // Usando snake_case para coincidir con la definición del modelo
+        cellar, // Usando snake_case para coincidir con la definición del modelo
         description,
+        distance,
+        regionId,
       });
       console.log('created cellar', createdCellar);
       res.status(201).json({ message: 'Cellar created successfully', cellar: createdCellar });

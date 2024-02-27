@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      icon: {
+      url: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'Icon',
       tableName: 'icons',
+      timestamps: false,
     }
   )
   return Icon

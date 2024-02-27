@@ -31,14 +31,6 @@ module.exports = {
           key: 'id'
         }
       },
-      soilId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'soils',
-          key: 'id'
-        }
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -56,12 +48,6 @@ module.exports = {
     */
 
     await queryInterface.createTable('cellar_soils', {
-      id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true
-      },
       cellarId: {
         type: Sequelize.INTEGER,
         allowNull: false,

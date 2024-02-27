@@ -14,13 +14,13 @@ module.exports = {
 
   // POST
   createGrape: async (req, res) => {
-    const { grape_type, description } = req.body; // Actualizado para usar snake_case
-    if (!grape_type) { // Verificación también actualizada para snake_case
+    const { grape, description } = req.body; // Actualizado para usar snake_case
+    if (!grape) { // Verificación también actualizada para snake_case
       return res.status(400).json({ error: "Grape type is required" });
     }
     try {
       const createdGrape = await Grape.create({
-        grape_type, // Usando snake_case para coincidir con la definición del modelo
+        grape, // Usando snake_case para coincidir con la definición del modelo
         description
       });
       res.status(201).json({message: 'Grape created successfully', grape: createdGrape});

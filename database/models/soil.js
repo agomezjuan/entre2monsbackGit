@@ -36,12 +36,13 @@ module.exports = (sequelize, DataTypes) => {
       effect: {
         type: DataTypes.TEXT,
         allowNull: true,
-      },
+      },      
     },
     {
       sequelize,
       modelName: 'Soil',
       tableName: 'soils',
+      timestamps: false,
     }
   )
   return Soil

@@ -1,12 +1,17 @@
 'use strict';
 
 const { Model } = require('sequelize');
+/*
+  !Outstandig is required 
+*/
 
 module.exports = (sequelize, DataTypes) => {
   class Stock extends Model {
     static associate(models) {
-      Stock.hasOne(models.Price, {
-        foreignKey: 'stockId',
+      
+      // one stock has one price
+      Stock.belongsTo(models.Price, {
+        foreignKey: 'priceId',
         as: 'price',
       });
     }
@@ -32,11 +37,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      priceId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'prices',
+          key: 'id',
+        },
+      },
     },
     {
       sequelize,
       modelName: 'Stock',
       tableName: 'stocks',
+      timestamps: false,  
     }
   );
   return Stock;

@@ -16,16 +16,16 @@ module.exports = {
 
   // POST
   postIcon: async (req, res) => {
-    const { icon, description } = req.body; 
+    const { url, description } = req.body; 
     console.log(req.body);
 
-    if (!icon) { 
+    if (!url) { 
       return res.status(400).json({ error: "Icon is required" });
     }
 
     try {
       const createdIcon = await Icon.create({ 
-        icon,
+        url,
         description
       });
       console.log('created icon', createdIcon);

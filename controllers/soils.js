@@ -14,9 +14,9 @@ const soilController = {
   
   // Crear un suelo
   createSoil: async (req, res) => {
-    const { soil_type, description, effect } = req.body; 
+    const { soil, description, effect } = req.body; 
     try {
-      const newSoil = await Soil.create({ soil_type, description, effect });
+      const newSoil = await Soil.create({ soil, description, effect });
       res.status(201).json(newSoil);
     } catch (error) {
       console.error("Error creating soil:", error);

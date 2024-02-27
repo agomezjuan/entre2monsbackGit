@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const {Grapes} = require('../database/models');
-const { getAllGrapes, deleteGrapes, updateGrape, createGrape } = require('../controllers/grapes');
+const grapeController = require('../controllers/grapes');
+
+const { 
+  getAllGrapes, 
+  deleteGrapes, 
+  updateGrape, 
+  createGrape 
+} = require('../controllers/grapes');
 
 router.get('/', getAllGrapes)
 router.post('/', createGrape)
