@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,  
       },
-      username: {
+      surnames: {
         type: Sequelize.STRING,
         allowNull: false,
       },

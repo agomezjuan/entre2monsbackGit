@@ -15,27 +15,30 @@ module.exports = {
 
   // POST
   createWineType: async (req, res) => {
-    try {
-      const { wineType } = req.body; 
-      console.log(req.body);
+  try {
+    const { wineType, description } = req.body; 
+    console.log(req.body);
 
-      if (!wineType) { 
-        return res.status(400).json({ error: "Wine type is required" });
-      }
-
-      const createdWineType = await WineType.create({
-        wineType, 
-      });
-      console.log('created wineType', createdWineType);
-      res.status(201).json({ message: "Wine type created successfully", wineType: createdWineType });
-    } catch (error) {
-      console.error("Error creating wine type:", error);
-      if (error.name === "SequelizeUniqueConstraintError") {
-        return res.status(400).json({ error: "Wine type must be unique" });
-      }
-      res.status(500).json({ error: "Internal Server Error" });
+    // Validación básica para asegurar que el campo wineType está presente
+    if (!wineType) { 
+      return res.status(400).json({ error: "Wine type is required" });
     }
-  },
+
+    // Crear un nuevo tipo de vino
+    const createdWineType = await WineType.create({
+      wineType, 
+      description
+    });
+    console.log('Created wineType:', createdWineType);
+    res.status(201).json({ message: "Wine type created successfully", wineType: createdWineType });
+  } catch (error) {
+    console.error("Error creating wine type:", error);
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({ error: "Wine type must be unique" });
+    }
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+},
 
   // DELETE
   deleteWineType: async (req, res) => {
