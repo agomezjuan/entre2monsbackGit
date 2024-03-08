@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,  
       },
-      surnames: {
+      userSurname: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -29,7 +29,8 @@ module.exports = {
       },
       role: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'user'
       },      
     });
     

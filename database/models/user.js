@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      surnames: {
+      userSurname: {
         type: DataTypes.STRING,
         allowNull: false
       },
@@ -35,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       role: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'user'
       }
     },
     {

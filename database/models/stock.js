@@ -1,9 +1,6 @@
 'use strict';
 
 const { Model } = require('sequelize');
-/*
-  !Outstandig is required 
-*/
 
 module.exports = (sequelize, DataTypes) => {
   class Stock extends Model {
@@ -13,6 +10,14 @@ module.exports = (sequelize, DataTypes) => {
       Stock.belongsTo(models.Price, {
         foreignKey: 'priceId',
         as: 'price',
+      });
+    }
+
+    // one stock has one wine
+    static associate(models) {
+      Stock.belongsTo(models.Wine, {
+        foreignKey: 'wineId',
+        as: 'wine',
       });
     }
   }
@@ -50,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'Stock',
       tableName: 'stocks',
-      timestamps: false,  
+      timestamps: true,  
     }
   );
   return Stock;

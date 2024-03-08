@@ -5,12 +5,13 @@ const bcrypt = require('bcrypt');
 const authController = {
   register: async (req, res) => {
     try {
-      const { username, userSurnames, email, password } = req.body;
+      const { username, userSurname, email, password, role } = req.body;
+      const hash = await bcrypt.hash(password, 10)
       const newUser = await User.create({
         username,
-        userSurnames,
+        userSurname,
         email,
-        password,
+        password: hash,
       });
       return res.status(201).json({ message: "User registered successfully", user: { id: newUser.id, email: newUser.email }});
     } catch (error) {
@@ -22,6 +23,13 @@ const authController = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
+      bcrypt.compare(password, hash, function(err, result) {
+        if (result) {
+          console.log('Logged in');
+        } else {
+          console.log('Incorrect password');
+        }
+      });
       const user = await User.findOne({ where: { email } });
       if (!user || !user.verifyPassword(password)) {
         return res.status(401).json({ message: "Invalid credentials" });

@@ -15,4 +15,5 @@ router.put('/:id', updateStock);
 router.get('/:id', getStockById);
 
 
+
 module.exports = router;
