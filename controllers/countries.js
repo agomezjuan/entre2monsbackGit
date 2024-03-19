@@ -15,27 +15,27 @@ module.exports ={
   },
 
   // POST
-  createCountrie: async (req, res, next) => {
-    const { country, description } = req.body;
-    console.log(req.body);
-    console.log(JSON.stringify(Country))
-    if (!country) {
-      return res.status(400).json({ error: "Countrie is required" });
+  createCountry: async (req, res, next) => {
+  const { country, description } = req.body;
+  console.log(req.body);
+  if (!country) {
+    return res.status(400).json({ error: "Countrie is required" });
+  }
+  try {
+    const createdCountrie = await Country.create({
+      country,
+      description // Add description property
+    });
+    console.log('created country', createdCountrie)
+    res.status(201).json({message: 'Country created succesfully', countie: createdCountrie});
+  } catch (error) {
+    console.error("Error creating country:", error);
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ error: "Country type must be unique" });
     }
-    try {
-      const createdCountrie = await Country.create({
-        country,
-      });
-      console.log('created country', createdCountrie)
-      res.status(201).json({message: 'Country created succesfully', countie: createdCountrie});
-    } catch (error) {
-      console.error("Error creating country:", error);
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(400).json({ error: "Country type must be unique" });
-      }
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  },
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+},
 
   // DELETE
     deleteCountry: async (req, res) => {
@@ -57,7 +57,7 @@ module.exports ={
   },
 
   // PUT
-  updateCountrie: async (req, res) => {
+  updateCountry: async (req, res) => {
     const { id } = req.params;
     const { country: newCountrieName } = req.body; 
     try {
@@ -74,6 +74,36 @@ module.exports ={
       res.json({ message: `Country with ID: ${id} updated successfully`, country: countrieToUpdate }); 
     } catch (error) {
       console.error("Error updating country:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  // Get by Id
+  getCountryById: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const country = await Country.findByPk(id);
+      if (!country) {
+        return res.status(404).json({ error: "Country not found" });
+      }
+      res.json(country);
+    } catch (error) {
+      console.error("Error retrieving country by ID:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  // Get by name
+  getCountryByName: async (req, res) => {
+    const { name } = req.params;
+    try {
+      const country = await Country.findOne({ where: { country: name} });
+      if (!country) {
+        return res.status(404).json({ error: "Country not found" });
+      }
+      res.json(country);
+    } catch (error) {
+      console.error("Error retrieving country by name:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
