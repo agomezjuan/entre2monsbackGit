@@ -12,10 +12,12 @@ module.exports = {
     }
   },
 
+  // POST
   createInfoCreateWine: async (req, res, next) => {
+    const { title, helpText } = req.body;
     try {
-      const newInfoCreateWine = await InfoCreateWine.create(req.body);
-      res.json(newInfoCreateWine);
+      const infoCreateWine = await InfoCreateWine.create({ title, helpText });
+      res.status(201).json(infoCreateWine);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'There was a problem trying to create the infoCreateWine' });
