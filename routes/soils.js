@@ -4,7 +4,8 @@ const {
   createSoil, 
   getSoilById, 
   updateSoil, 
-  deleteSoil 
+  deleteSoil, 
+  deleteSoilByName
 } = require('../controllers/soils');
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.post('/', createSoil);
 router.get('/:id', getSoilById);
 router.put('/:id', updateSoil);
 router.delete('/:id', deleteSoil);
+router.delete('/:name', deleteSoilByName);
 
 module.exports = router;

@@ -106,5 +106,28 @@ module.exports ={
       console.error("Error retrieving country by name:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
+  },
+
+  //put by name
+  updateCountryByName: async (req, res) => {
+    const { name} = req.params;
+    const { country: newCountrieName, description } = req.body; 
+    try {
+      const countrieToUpdate = await Country.findOne({ where: { country: name} }); // 
+      if (!countrieToUpdate) {
+        return res.status(404).json({ error: "Country not found" });
+      }
+
+      await countrieToUpdate.update({
+        country: newCountrieName, 
+        description
+      });
+
+      console.log(`Updated country with name: ${name}`);
+      res.json({ message: `Country with name: ${name} updated successfully`, country: countrieToUpdate }); 
+    } catch (error) {
+      console.error("Error updating country:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 }
