@@ -10,7 +10,12 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      sulphite: {
+      sulphiteMin: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      sulphiteMax: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,

@@ -19,15 +19,16 @@ module.exports = {
    * POST - create a new sulphite
    */
   createSulphite: async (req, res, next) => {
-    const { sulphite, description } = req.body;
+    const { sulphiteMin, sulphiteMax } = req.body;
     console.log(req.body);
     console.log(JSON.stringify(Sulphite));
-    if (!sulphite) {
+    if (!sulphiteMin && !sulphiteMax) {
       return res.status(400).json({ error: "Sulphite is required" });
     }
     try {
       const createdSulphite = await Sulphite.create({
-        sulphite,
+        sulphiteMin,
+        sulphiteMax,
       });
       console.log("created sulphite", createdSulphite);
       res.status(200).json({

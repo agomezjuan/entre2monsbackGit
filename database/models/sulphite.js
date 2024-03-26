@@ -23,10 +23,13 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      sulphite: {
-        type: DataTypes.STRING,
+      sulphiteMin: {
+        type: DataTypes.NUMBER,
         allowNull: false,
-        unique: true,
+      },
+      sulphiteMax: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
       },
     },
     {
