@@ -1,24 +1,19 @@
-'use strict'
+"use strict";
 
-const { Model } = require('sequelize')
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Sulphite extends Model {
     static associate(models) {
-
       // Sulphite have many wines
       Sulphite.belongsToMany(models.Wine, {
-        through: 'wine_sulphites',
-        foreignKey: 'sulphiteId',
-        otherKey: 'wineId',
-        as: 'wines',
-      })
+        through: "wine_sulphites",
+        foreignKey: "sulphiteId",
+        otherKey: "wineId",
+        as: "wines",
+      });
     }
   }
-
-  /* 
-    ! sulphite: DATA TYPE STRING
-  */
 
   Sulphite.init(
     {
@@ -33,17 +28,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-      image: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
     },
     {
       sequelize,
-      modelName: 'Sulphite',
-      tableName: 'sulphites',
+      modelName: "Sulphite",
+      tableName: "sulphites",
       timestamps: false,
     }
-  )
-  return Sulphite
-}
+  );
+  return Sulphite;
+};

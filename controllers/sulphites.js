@@ -1,11 +1,10 @@
-const {Sulphite} = require('../database/models')
+const { Sulphite } = require("../database/models");
 
 module.exports = {
-
   /*
-   * GET  - get all sulphites 
-  */
-  getAllSulphites: async (req, res, next) => {  
+   * GET  - get all sulphites
+   */
+  getAllSulphites: async (req, res, next) => {
     try {
       const sulphites = await Sulphite.findAll();
       console.log("All sulphites:", JSON.stringify(sulphites, null, 2));
@@ -18,11 +17,11 @@ module.exports = {
 
   /*
    * POST - create a new sulphite
-  */  
+   */
   createSulphite: async (req, res, next) => {
     const { sulphite, description } = req.body;
     console.log(req.body);
-    console.log(JSON.stringify(Sulphite))
+    console.log(JSON.stringify(Sulphite));
     if (!sulphite) {
       return res.status(400).json({ error: "Sulphite is required" });
     }
@@ -30,11 +29,14 @@ module.exports = {
       const createdSulphite = await Sulphite.create({
         sulphite,
       });
-      console.log('created sulphite', createdSulphite)
-      res.status(201).json({message: 'Sulphite created succesfully', countie: createdSulphite});
+      console.log("created sulphite", createdSulphite);
+      res.status(200).json({
+        message: "Sulphite created succesfully",
+        sulphite: createdSulphite,
+      });
     } catch (error) {
       console.error("Error creating sulphite:", error);
-      if (error.name === 'SequelizeUniqueConstraintError') {
+      if (error.name === "SequelizeUniqueConstraintError") {
         return res.status(400).json({ error: "Sulphite type must be unique" });
       }
       res.status(500).json({ error: "Internal Server Error" });
@@ -43,48 +45,48 @@ module.exports = {
 
   /*
    * DELETE - delete a sulphite
-  */
+   */
   deleteSulphite: async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params;
 
     try {
-      const sulphite = await Sulphite.findByPk(id); 
+      const sulphite = await Sulphite.findByPk(id);
       if (!sulphite) {
-        return res.status(404).json({ error: "Sulphite is not found" }); 
+        return res.status(404).json({ error: "Sulphite is not found" });
       }
 
-      await sulphite.destroy(); 
+      await sulphite.destroy();
       console.log(`Deleted sulphite with ID: ${id}`);
-      res.json({ message: `Sulphite with ID: ${id} deleted successfully` }); 
+      res.json({ message: `Sulphite with ID: ${id} deleted successfully` });
     } catch (error) {
       console.error("Error deleting sulphite:", error);
-      res.status(500).json({ error: "Internal Server Error" }); 
+      res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
   /*
    * PUT - update a sulphite
-  */
+   */
   updateSulphite: async (req, res) => {
     const { id } = req.params;
-    const { sulphite: newSulphiteName } = req.body; 
+    const { sulphite: newSulphiteName } = req.body;
     try {
-      const sulphiteToUpdate = await Sulphite.findByPk(id); // 
+      const sulphiteToUpdate = await Sulphite.findByPk(id); //
       if (!sulphiteToUpdate) {
         return res.status(404).json({ error: "Sulphite not found" });
       }
-      await sulphiteToUpdate.update({ sulphite: newSulphiteName }); 
+      await sulphiteToUpdate.update({ sulphite: newSulphiteName });
       console.log(`Sulphite with ID: ${id} has been updated`);
-      res.json({ message: `Sulphite with ID: ${id} has been updated` }); 
+      res.json({ message: `Sulphite with ID: ${id} has been updated` });
     } catch (error) {
       console.error("Error updating sulphite:", error);
-      res.status(500).json({ error: "Internal Server Error" }); 
+      res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
   /*
    * GET - get a sulphite by id
-  */
+   */
   getSulphiteById: async (req, res) => {
     const { id } = req.params;
     try {
@@ -98,5 +100,5 @@ module.exports = {
       console.error("Error retrieving sulphite:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
-  }
-}
+  },
+};
