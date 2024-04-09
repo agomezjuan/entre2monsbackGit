@@ -21,7 +21,7 @@ const soilController = {
     try {
       const newSoil = await Soil.create({ soil, description, effect });
       res
-        .status(200)
+        .status(201)
         .json({ message: "Soil created successfully", soil: newSoil });
     } catch (error) {
       console.error("Error creating soil:", error);

@@ -1,11 +1,11 @@
-const { Region, Country } = require('../database/models');
+const { Region, Country } = require("../database/models");
 
 module.exports = {
   // Obtener todas las regiones con el país asociado
   getAllRegions: async (req, res) => {
     try {
       const regions = await Region.findAll({
-        include: [{ model: Country, as: 'country' }]
+        include: [{ model: Country, as: "country" }],
       });
       res.json(regions);
     } catch (error) {
@@ -17,9 +17,12 @@ module.exports = {
   // Crear una nueva región
   createRegion: async (req, res) => {
     const { region, countryId, description } = req.body;
+    console.log("Creating region:", region, countryId, description);
     try {
       const newRegion = await Region.create({ region, countryId, description });
-      res.status(201).json({ message: 'Region created successfully', data: newRegion });
+      res
+        .status(201)
+        .json({ message: "Region created successfully", data: newRegion });
     } catch (error) {
       console.error("Error creating region:", error);
       res.status(500).json({ error: "Internal Server Error" });
@@ -36,7 +39,10 @@ module.exports = {
         return res.status(404).json({ error: "Region not found" });
       }
       await regionToUpdate.update({ region, countryId, description });
-      res.json({ message: `Region with ID: ${id} updated successfully`, data: regionToUpdate });
+      res.json({
+        message: `Region with ID: ${id} updated successfully`,
+        data: regionToUpdate,
+      });
     } catch (error) {
       console.error("Error updating region:", error);
       res.status(500).json({ error: "Internal Server Error" });
@@ -57,5 +63,5 @@ module.exports = {
       console.error("Error deleting region:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
-  }
+  },
 };
