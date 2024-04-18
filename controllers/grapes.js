@@ -15,9 +15,16 @@ module.exports = {
   // POST
   createGrape: async (req, res) => {
     const { grape, description } = req.body; // Actualizado para usar snake_case
-    if (!grape) {
+    const existingGrape = await Grape.findOne({
+      where: {
+        grape,
+      },
+    });
+    if (existingGrape) {
       // Verificación también actualizada para snake_case
-      return res.status(400).json({ error: "Grape type is required" });
+      return res
+        .status(400)
+        .json({ error: "Already exist a grape with this name" });
     }
     try {
       const createdGrape = await Grape.create({
@@ -52,14 +59,14 @@ module.exports = {
   // PUT
   updateGrape: async (req, res) => {
     const { id } = req.params;
-    const { grape_type, description } = req.body; // Actualizado para usar snake_case
+    const { grape, description } = req.body;
     try {
       const grapeToUpdate = await Grape.findByPk(id);
       if (!grapeToUpdate) {
         return res.status(404).json({ error: "Grape not found" });
       }
       await grapeToUpdate.update({
-        grape_type, // Usando snake_case para coincidir con la definición del modelo
+        grape,
         description,
       });
       res.json({

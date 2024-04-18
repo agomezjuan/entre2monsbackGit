@@ -65,19 +65,22 @@ module.exports = {
   // PUT
   updateWineType: async (req, res) => {
     const { id } = req.params;
-    const { wineType } = req.body;
-    console.log(req.body);
-
+    const { wineType, description } = req.body;
     try {
       const wineTypeToUpdate = await WineType.findByPk(id);
       if (!wineTypeToUpdate) {
         return res.status(404).json({ error: "Wine type not found" });
       }
 
-      wineTypeToUpdate.wineType = wineType;
-      await wineTypeToUpdate.save();
-      console.log(`Updated wine type with ID: ${id}`);
-      res.json({ message: `Wine type with ID: ${id} updated successfully` });
+      await wineTypeToUpdate.update({
+        wineType,
+        description,
+      });
+
+      res.json({
+        message: `Wine type with ID: ${id} updated successfully`,
+        wineType: wineTypeToUpdate,
+      });
     } catch (error) {
       console.error("Error updating wine type:", error);
       res.status(500).json({ error: "Internal Server Error" });

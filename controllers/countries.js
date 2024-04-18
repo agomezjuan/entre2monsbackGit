@@ -14,29 +14,18 @@ module.exports = {
   },
 
   // POST
-  createCountry: async (req, res, next) => {
+  createCountry: async (req, res) => {
     const { country, description } = req.body;
-    console.log(req.body);
     if (!country) {
-      return res.status(400).json({ error: "Countrie is required" });
+      return res.status(400).json({ error: "Country is required" });
     }
     try {
-      const createdCountrie = await Country.create({
-        country,
-        description, // Add description property
-      });
-      console.log("created country", createdCountrie);
+      const newCountry = await Country.create({ country, description });
       res
         .status(201)
-        .json({
-          message: "Country created succesfully",
-          countie: createdCountrie,
-        });
+        .json({ message: "Country created successfully", country: newCountry });
     } catch (error) {
       console.error("Error creating country:", error);
-      if (error.name === "SequelizeUniqueConstraintError") {
-        return res.status(400).json({ error: "Country type must be unique" });
-      }
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
