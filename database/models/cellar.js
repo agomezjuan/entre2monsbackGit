@@ -1,28 +1,32 @@
-'use strict'
+"use strict";
 
-const { Model } = require('sequelize')
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Cellar extends Model {
     static associate(models) {
+      // Cellar have many suppliers
+      Cellar.belongsTo(models.Supplier, {
+        foreignKey: "supplierId",
+        as: "supplier",
+      });
 
       // Cellar have many wines
       Cellar.belongsTo(models.Region, {
-        foreignKey: 'regionId',
-        as: 'region',
-      })
-
+        foreignKey: "regionId",
+        as: "region",
+      });
 
       // Cellar have many soils
       Cellar.belongsToMany(models.Soil, {
-        through: 'cellar_soils',
-        foreignKey: 'cellarId',
-        otherKey: 'soilId',
-        as: 'soils',
-      })
+        through: "cellar_soils",
+        foreignKey: "cellarId",
+        otherKey: "soilId",
+        as: "soils",
+      });
     }
   }
-  
+
   Cellar.init(
     {
       id: {
@@ -48,16 +52,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'regions',
-          key: 'id',
-        }
+          model: "regions",
+          key: "id",
+        },
       },
     },
     {
       sequelize,
-      modelName: 'Cellar',
-      tableName: 'cellars',
+      modelName: "Cellar",
+      tableName: "cellars",
     }
-  )
-  return Cellar
-}
+  );
+  return Cellar;
+};

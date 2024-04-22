@@ -47,17 +47,18 @@ const soilController = {
   // Actualizar un suelo por ID
   updateSoil: async (req, res) => {
     const { id } = req.params;
-    const { soil_type, description, effect } = req.body; // Cambiado a soil_type para alinearse con el modelo
+    const { soil, description, effect } = req.body;
     try {
-      const soil = await Soil.findByPk(id);
-      if (!soil) {
+      const soilToUpdate = await Soil.findByPk(id);
+      if (!soilToUpdate) {
         return res.status(404).json({ error: "Soil not found" });
       }
-      soil.soil_type = soil_type;
-      soil.description = description;
-      soil.effect = effect;
-      await soil.save();
-      res.status(200).json(soil);
+      await soilToUpdate.update({ soil, description, effect });
+
+      res.json({
+        message: `Soil with ID: ${id} updated successfully`,
+        soil: soilToUpdate,
+      });
     } catch (error) {
       console.error("Error updating soil:", error);
       res.status(500).json({ error: "Internal Server Error" });
