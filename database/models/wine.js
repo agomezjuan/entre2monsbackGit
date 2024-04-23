@@ -1,54 +1,60 @@
-'use strict'
+"use strict";
 
-const { Model } = require('sequelize')
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Wine extends Model {
     static associate(models) {
-
       // relacion de muchos a uno con cellar donde un cellar tine muchos vinos
       Wine.belongsTo(models.Cellar, {
-        foreignKey: 'cellarId',
-        as: 'cellar',
-      })
-      
+        foreignKey: "cellarId",
+        as: "cellar",
+      });
+
       // relacion de uno a uno con stock donde un vino tiene un stock
       Wine.hasOne(models.Stock, {
-        foreignKey: 'wineId',
-        as: 'stock',
-      })
+        foreignKey: "wineId",
+        as: "stock",
+      });
 
       // wine has many grapes
       Wine.belongsToMany(models.Grape, {
-        through: 'wine_grapes',
-        foreignKey: 'wineId',
-        otherKey: 'grapeId',
-        as: 'grapes',
-      })
+        through: "wine_grapes",
+        foreignKey: "wineId",
+        otherKey: "grapeId",
+        as: "grapes",
+      });
 
       // wine has many icons
       Wine.belongsToMany(models.Icon, {
-        through: 'wine_icons',
-        foreignKey: 'wineId',
-        otherKey: 'iconId',
-        as: 'icons',
-      })
+        through: "wine_icons",
+        foreignKey: "wineId",
+        otherKey: "iconId",
+        as: "icons",
+      });
 
       // wine has many wineTypes
       Wine.belongsToMany(models.WineType, {
-        through: 'wine_wineTypes',
-        foreignKey: 'wineId',
-        otherKey: 'wineTypeId',
-        as: 'wineTypes',
-      })
+        through: "wine_wineTypes",
+        foreignKey: "wineId",
+        otherKey: "wineTypeId",
+        as: "wineTypes",
+      });
 
       //wine has one sulphite
       Wine.belongsToMany(models.Sulphite, {
-        through: 'wine_sulphites',
-        foreignKey: 'wineId',
-        otherKey: 'sulphiteId',
-        as: 'sulphites',
-      })
+        through: "wine_sulphites",
+        foreignKey: "wineId",
+        otherKey: "sulphiteId",
+        as: "sulphites",
+      });
+
+      Wine.belongsToMany(models.Label, {
+        through: "wine_labels",
+        foreignKey: "wineId",
+        otherKey: "labelId",
+        as: "labels",
+      });
     }
   }
   Wine.init(
@@ -88,33 +94,33 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'cellars',
-          key: 'id',
+          model: "cellars",
+          key: "id",
         },
       },
       stockId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'stocks',
-          key: 'id',
+          model: "stocks",
+          key: "id",
         },
       },
       sulphiteId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'sulphites',
-          key: 'id',
+          model: "sulphites",
+          key: "id",
         },
       },
     },
     {
       sequelize,
-      modelName: 'Wine',
-      tableName: 'wines',
+      modelName: "Wine",
+      tableName: "wines",
       timestamps: false,
     }
-  )
-  return Wine
-}
+  );
+  return Wine;
+};

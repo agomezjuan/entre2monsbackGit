@@ -143,11 +143,31 @@ module.exports = {
         },
       },
     });
+
+    await queryInterface.createTable("wines_labels", {
+      wineId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "wines",
+          key: "id",
+        },
+      },
+      iconId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "labels",
+          key: "id",
+        },
+      },
+    });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("wines_grapes");
     await queryInterface.dropTable("wines_icons");
+    await queryInterface.dropTable("wines_labels");
     await queryInterface.dropTable("wines");
   },
 };

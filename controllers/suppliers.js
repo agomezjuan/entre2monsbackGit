@@ -56,4 +56,70 @@ module.exports = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  /**
+   * * Delete a supplier
+   */
+  deleteSupplier: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const supplier = await Supplier.findByPk(id);
+      if (!supplier) {
+        return res.status(404).json({ error: "Supplier not found" });
+      }
+      await supplier.destroy();
+      res.json({ message: `Supplier with ID: ${id} deleted successfully` });
+    } catch (error) {
+      console.error("Error deleting supplier:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  /**
+   * * Update supplier
+   */
+  updateSupplier: async (req, res) => {
+    const { id } = req.params;
+    const {
+      companyName,
+      brandName,
+      country,
+      city,
+      adress,
+      CP,
+      businessPhone,
+      contactName,
+      contactPhone,
+      businessEmail,
+      contactEmail,
+      description,
+    } = req.body;
+    try {
+      const supplierToUpdate = await Supplier.findByPk(id);
+      if (!supplierToUpdate) {
+        return res.status(404).json({ error: "Supplier not found" });
+      }
+      await supplierToUpdate.update({
+        companyName,
+        brandName,
+        country,
+        city,
+        adress,
+        CP,
+        businessPhone,
+        contactName,
+        contactPhone,
+        businessEmail,
+        contactEmail,
+        description,
+      });
+      res.json({
+        message: `Supplier with ID: ${id} updated successfully`,
+        supplier: supplierToUpdate,
+      });
+    } catch (error) {
+      console.error("Error updating supplier:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 };

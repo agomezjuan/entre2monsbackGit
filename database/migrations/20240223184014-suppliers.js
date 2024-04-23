@@ -7,12 +7,14 @@ module.exports = {
       /**
        * @param id - integer - not null - autoincrement - primary key
        * @param companyName - string - not null - unique
-       * @param brandName - string - not null - unique
+       * @param fiscalName - string - not null - unique
+       * @param {string} NIF - not null - unique
+       * @param country - string - not null
        * @param country - string - not null
        * @param city - string - not null
-       * @param adress - string - not null
+       * @param address - string - not null
        * @param CP - integer - not null
-       * @param businessPhone - string - not null
+       * @param {string} businessPhone - not null
        * @param contactName - string - not null
        * @param contactPhone - string - not null
        * @param businessEmail - string - not null
@@ -33,7 +35,12 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      brandName: {
+      fiscalName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      NIF: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,

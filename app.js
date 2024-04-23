@@ -21,6 +21,7 @@ const sulphitesRouter = require("./routes/sulphites");
 const authRouter = require("./routes/auth");
 const infoCreate = require("./routes/infoCreateWine");
 const suppliersRouter = require("./routes/suppliers");
+const labelsRouter = require("./routes/label");
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use("/auth", authRouter);
 app.use("/sulphites", sulphitesRouter);
 app.use("/infoCreateWine", infoCreate);
 app.use("/suppliers", suppliersRouter);
+app.use("/labels", labelsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
