@@ -30,10 +30,9 @@ module.exports = {
     }
   },
 
-  // DELETE
+  //DELETE
   deleteCountry: async (req, res) => {
     const { id } = req.params;
-
     try {
       const country = await Country.findByPk(id);
       if (!country) {
@@ -41,7 +40,7 @@ module.exports = {
       }
 
       await country.destroy();
-      console.log(`Deleted country with ID: ${id}`);
+      // console.log(`Deleted country with ID: ${id}`);
       res.json({ message: `Country with ID: ${id} deleted successfully` });
     } catch (error) {
       console.error("Error deleting country:", error);

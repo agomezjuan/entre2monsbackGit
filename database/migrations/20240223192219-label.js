@@ -15,7 +15,7 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      desription: {
+      description: {
         type: Sequelize.TEXT,
         allowNull: true,
       },

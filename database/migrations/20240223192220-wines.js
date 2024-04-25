@@ -153,7 +153,7 @@ module.exports = {
           key: "id",
         },
       },
-      iconId: {
+      labelId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

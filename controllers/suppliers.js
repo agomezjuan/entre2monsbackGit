@@ -17,7 +17,8 @@ module.exports = {
   createSupplier: async (req, res) => {
     const {
       companyName,
-      brandName,
+      fiscalName,
+      NIF,
       country,
       city,
       adress,
@@ -35,7 +36,8 @@ module.exports = {
     try {
       const newSupplier = await Supplier.create({
         companyName,
-        brandName,
+        fiscalName,
+        NIF,
         country,
         city,
         adress,
@@ -82,7 +84,8 @@ module.exports = {
     const { id } = req.params;
     const {
       companyName,
-      brandName,
+      fiscalName,
+      NIF,
       country,
       city,
       adress,
@@ -101,7 +104,8 @@ module.exports = {
       }
       await supplierToUpdate.update({
         companyName,
-        brandName,
+        fiscalName,
+        NIF,
         country,
         city,
         adress,
