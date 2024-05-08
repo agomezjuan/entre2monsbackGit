@@ -6,8 +6,10 @@ module.exports = (sequelize, DataTypes) => {
   class Cellar extends Model {
     static associate(models) {
       // Cellar have many suppliers
-      Cellar.belongsTo(models.Supplier, {
-        foreignKey: "supplierId",
+      Cellar.belongsToMany(models.Supplier, {
+        foreignKey: "cellarId",
+        through: "cellar_suppliers",
+        otherKey: "supplierId",
         as: "supplier",
       });
 
@@ -53,6 +55,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         references: {
           model: "regions",
+          key: "id",
+        },
+      },
+      supplierId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "suppliers",
           key: "id",
         },
       },

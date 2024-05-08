@@ -1,4 +1,4 @@
-const { Cellar } = require('../database/models');
+const { Cellar } = require("../database/models");
 
 module.exports = {
   // GET
@@ -16,10 +16,12 @@ module.exports = {
   // POST
   createCellar: async (req, res) => {
     try {
-      const { cellar, description, distance, regionId } = req.body; 
+      const { cellar, description, distance, regionId, supplierId, soilId } =
+        req.body;
       console.log(req.body);
 
-      if (!cellar) { // Verificación también actualizada para snake_case
+      if (!cellar) {
+        // Verificación también actualizada para snake_case
         return res.status(400).json({ error: "Cellar name is required" });
       }
 
@@ -28,12 +30,19 @@ module.exports = {
         description,
         distance,
         regionId,
+        supplierId,
+        soilId,
       });
-      console.log('created cellar', createdCellar);
-      res.status(201).json({ message: 'Cellar created successfully', cellar: createdCellar });
+      console.log("created cellar", createdCellar);
+      res
+        .status(201)
+        .json({
+          message: "Cellar created successfully",
+          cellar: createdCellar,
+        });
     } catch (error) {
       console.error("Error creating cellar:", error);
-      if (error.name === 'SequelizeUniqueConstraintError') {
+      if (error.name === "SequelizeUniqueConstraintError") {
         return res.status(400).json({ error: "Cellar name must be unique" });
       }
       res.status(500).json({ error: "Internal Server Error" });
@@ -75,7 +84,10 @@ module.exports = {
       });
 
       console.log(`Updated cellar with ID: ${id}`);
-      res.json({ message: `Cellar with ID: ${id} updated successfully`, cellar });
+      res.json({
+        message: `Cellar with ID: ${id} updated successfully`,
+        cellar,
+      });
     } catch (error) {
       console.error("Error updating cellar:", error);
       res.status(500).json({ error: "Internal Server Error" });
