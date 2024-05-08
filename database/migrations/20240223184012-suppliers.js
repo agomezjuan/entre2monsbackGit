@@ -98,26 +98,6 @@ module.exports = {
         ),
       },
     });
-
-    // Suppliers_Cellars table
-    await queryInterface.createTable("suppliers_cellars", {
-      supplierId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "suppliers",
-          key: "id",
-        },
-      },
-      cellarId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "cellars",
-          key: "id",
-        },
-      },
-    });
   },
 
   async down(queryInterface, Sequelize) {

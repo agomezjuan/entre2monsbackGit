@@ -31,14 +31,6 @@ module.exports = {
           key: "id",
         },
       },
-      supplierId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "suppliers",
-          key: "id",
-        },
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

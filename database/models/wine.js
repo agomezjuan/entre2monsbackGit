@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "stock",
       });
 
+      Wine.hasOne(models.Price, {
+        foreignKey: "wineId",
+        as: "price",
+      });
+
       // wine has many grapes
       Wine.belongsToMany(models.Grape, {
         through: "wine_grapes",
@@ -106,6 +111,16 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
+
+      priceId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "prices",
+          key: "id",
+        },
+      },
+
       sulphiteId: {
         type: DataTypes.INTEGER,
         allowNull: false,

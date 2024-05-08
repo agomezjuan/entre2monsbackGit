@@ -66,6 +66,16 @@ module.exports = {
           key: "id",
         },
       },
+
+      priceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "prices",
+          key: "id",
+        },
+      },
+
       wineTypeId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -82,6 +92,7 @@ module.exports = {
           key: "id",
         },
       },
+
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

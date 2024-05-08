@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Price extends Model {
     static associate(models) {
       // one price has one stocks
-      Price.hasOne(models.Stock, {
-        foreignKey: 'priceId',
-        as: 'stocks',
-      });      
+      Price.hasOne(models.Wine, {
+        foreignKey: "priceId",
+        as: "wines",
+      });
     }
   }
   Price.init(
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       priceStore: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
-      },  
+      },
       priceCost: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
@@ -39,8 +39,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Price',
-      tableName: 'prices',
+      modelName: "Price",
+      tableName: "prices",
       timestamps: false,
     }
   );
