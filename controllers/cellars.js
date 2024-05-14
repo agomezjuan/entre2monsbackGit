@@ -1,10 +1,12 @@
-const { Cellar } = require("../database/models");
+const { Cellar, Supplier, Soil, Region } = require("../database/models");
 
 module.exports = {
   // GET
   getAllCellars: async (req, res) => {
     try {
-      const cellars = await Cellar.findAll();
+      const cellars = await Cellar.findAll({
+        include: ["supplier", "soils", "region"],
+      });
       console.log("All cellars:", JSON.stringify(cellars, null, 2));
       res.json(cellars);
     } catch (error) {
@@ -26,20 +28,25 @@ module.exports = {
       }
 
       const createdCellar = await Cellar.create({
-        cellar, // Usando snake_case para coincidir con la definición del modelo
+        cellar,
         description,
         distance,
         regionId,
-        supplierId,
-        soilId,
       });
+
+      const suppliers = await Supplier.findAll({
+        where: { id: supplierId },
+      });
+      const soils = await Soil.findAll({ where: { id: soilId } });
+
+      await createdCellar.addSupplier(suppliers);
+      await createdCellar.addSoil(soils);
+
       console.log("created cellar", createdCellar);
-      res
-        .status(201)
-        .json({
-          message: "Cellar created successfully",
-          cellar: createdCellar,
-        });
+      res.status(201).json({
+        message: "Cellar created successfully",
+        cellar: createdCellar,
+      });
     } catch (error) {
       console.error("Error creating cellar:", error);
       if (error.name === "SequelizeUniqueConstraintError") {

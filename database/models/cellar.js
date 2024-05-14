@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       Cellar.belongsToMany(models.Supplier, {
         foreignKey: "cellarId",
         through: "cellar_suppliers",
-        otherKey: "supplierId",
         as: "supplier",
       });
 
@@ -23,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       Cellar.belongsToMany(models.Soil, {
         through: "cellar_soils",
         foreignKey: "cellarId",
-        otherKey: "soilId",
         as: "soils",
       });
     }
