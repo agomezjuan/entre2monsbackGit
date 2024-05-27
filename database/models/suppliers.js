@@ -6,9 +6,10 @@ module.exports = (sequelize, DataTypes) => {
   class Supplier extends Model {
     //supplier has many cellars
     static associate(models) {
-      Supplier.hasMany(models.Cellar, {
+      Supplier.belongsToMany(models.Cellar, {
         foreignKey: "supplierId",
         as: "cellars",
+        through: "cellar_supplier",
       });
     }
   }

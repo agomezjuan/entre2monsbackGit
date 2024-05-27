@@ -5,12 +5,40 @@ module.exports = {
   getAllCellars: async (req, res) => {
     try {
       const cellars = await Cellar.findAll({
-        include: ["supplier", "soils", "region"],
+        include: [
+          {
+            model: Supplier,
+            as: "suppliers",
+          },
+          {
+            model: Soil,
+            as: "soils",
+          },
+          {
+            model: Region,
+            as: "region",
+          },
+        ],
       });
+
       console.log("All cellars:", JSON.stringify(cellars, null, 2));
       res.json(cellars);
     } catch (error) {
       console.error("Error retrieving cellars:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  getCellarById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const cellar = await Cellar.findByPk(id);
+      if (!cellar) {
+        return res.status(404).json({ error: "Cellar not found" });
+      }
+      res.json(cellar);
+    } catch (error) {
+      console.error("Error retrieving cellar:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
@@ -32,15 +60,24 @@ module.exports = {
         description,
         distance,
         regionId,
+        supplierId,
       });
 
+      /**
+       * * Para agregar relaciones muchos a muchos en una tabla intermedia, se debe hacer de la siguiente manera:
+       */
       const suppliers = await Supplier.findAll({
         where: { id: supplierId },
       });
-      const soils = await Soil.findAll({ where: { id: soilId } });
+      supplierId.forEach(async (supplierId) => {
+        const supplier = await Supplier.findByPk(supplierId);
+        await createdCellar.addSupplier(supplier);
+      });
 
-      await createdCellar.addSupplier(suppliers);
-      await createdCellar.addSoil(soils);
+      soilId.forEach(async (soilId) => {
+        const soils = await Soil.findByPk(soilId);
+        await createdCellar.addSoil(soils);
+      });
 
       console.log("created cellar", createdCellar);
       res.status(201).json({

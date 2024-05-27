@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       Cellar.belongsToMany(models.Supplier, {
         foreignKey: "cellarId",
         through: "cellar_suppliers",
-        as: "supplier",
+        as: "suppliers",
       });
 
       // Cellar have many wines
