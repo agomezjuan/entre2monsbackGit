@@ -6,10 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   class Sulphite extends Model {
     static associate(models) {
       // Sulphite have many wines
-      Sulphite.belongsToMany(models.Wine, {
-        through: "wine_sulphites",
+      Sulphite.hasMany(models.Wine, {
         foreignKey: "sulphiteId",
-        otherKey: "wineId",
         as: "wines",
       });
     }

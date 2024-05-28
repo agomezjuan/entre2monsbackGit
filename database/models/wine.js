@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       // relacion de muchos a uno con cellar donde un cellar tine muchos vinos
       Wine.belongsTo(models.Cellar, {
         foreignKey: "cellarId",
-        as: "cellar",
+        as: "cellars",
       });
 
       // relacion de uno a uno con stock donde un vino tiene un stock
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
 
       // wine has many grapes
       Wine.belongsToMany(models.Grape, {
-        through: "wine_grapes",
+        through: "wines_grapes",
         foreignKey: "wineId",
         otherKey: "grapeId",
         as: "grapes",
@@ -32,30 +32,26 @@ module.exports = (sequelize, DataTypes) => {
 
       // wine has many icons
       Wine.belongsToMany(models.Icon, {
-        through: "wine_icons",
+        through: "wines_icons",
         foreignKey: "wineId",
         otherKey: "iconId",
         as: "icons",
       });
 
       // wine has many wineTypes
-      Wine.belongsToMany(models.WineType, {
-        through: "wine_wineTypes",
-        foreignKey: "wineId",
+      Wine.belongsTo(models.WineType, {
         otherKey: "wineTypeId",
-        as: "wineTypes",
+        as: "wineType",
       });
 
       //wine has one sulphite
-      Wine.belongsToMany(models.Sulphite, {
-        through: "wine_sulphites",
-        foreignKey: "wineId",
+      Wine.belongsTo(models.Sulphite, {
         otherKey: "sulphiteId",
         as: "sulphites",
       });
 
       Wine.belongsToMany(models.Label, {
-        through: "wine_labels",
+        through: "wines_labels",
         foreignKey: "wineId",
         otherKey: "labelId",
         as: "labels",
@@ -126,6 +122,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         references: {
           model: "sulphites",
+          key: "id",
+        },
+      },
+
+      wineTypeId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "wineTypes",
           key: "id",
         },
       },

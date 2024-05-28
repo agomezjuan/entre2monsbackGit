@@ -6,8 +6,10 @@ module.exports = (sequelize, DataTypes) => {
   class Label extends Model {
     static associate(models) {
       // A label has many wines
-      Label.hasMany(models.Wine, {
+      Label.belongsToMany(models.Wine, {
+        through: "wines_labels",
         foreignKey: "labelId",
+        otherKey: "wineId",
         as: "wines",
       });
     }

@@ -1,22 +1,21 @@
-'use strict'
+"use strict";
 
-const { Model } = require('sequelize')
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Region extends Model {
     static associate(models) {
-
       // A region belongs to a country
       Region.belongsTo(models.Country, {
-        foreignKey: 'countryId',
-        as: 'country',
-      })
+        foreignKey: "countryId",
+        as: "countries",
+      });
 
       // A region has many cellars
       Region.hasMany(models.Cellar, {
-        foreignKey: 'regionId',
-        as: 'cellars',
-      })
+        foreignKey: "regionId",
+        as: "cellars",
+      });
     }
   }
   Region.init(
@@ -40,17 +39,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'countries',
-          key: 'id',
-        }
+          model: "countries",
+          key: "id",
+        },
       },
     },
     {
       sequelize,
-      modelName: 'Region',
-      tableName: 'regions',
+      modelName: "Region",
+      tableName: "regions",
       timestamps: false,
     }
-  )
-  return Region
-}
+  );
+  return Region;
+};

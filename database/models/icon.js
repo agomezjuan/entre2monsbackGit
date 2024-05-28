@@ -1,15 +1,17 @@
-'use strict'
+"use strict";
 
-const { Model } = require('sequelize')
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Icon extends Model {
     static associate(models) {
       // An icon has many wines
-      Icon.hasMany(models.Wine, {
-        foreignKey: 'iconId',
-        as: 'wines',
-      })
+      Icon.belongsToMany(models.Wine, {
+        through: "wines_icons",
+        foreignKey: "iconId",
+        otherKey: "wineId",
+        as: "wines",
+      });
     }
   }
   Icon.init(
@@ -32,10 +34,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Icon',
-      tableName: 'icons',
+      modelName: "Icon",
+      tableName: "icons",
       timestamps: false,
     }
-  )
-  return Icon
-}
+  );
+  return Icon;
+};

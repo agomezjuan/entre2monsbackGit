@@ -1,4 +1,17 @@
-const { Wine } = require("../database/models");
+const {
+  Wine,
+  Cellar,
+  Region,
+  Country,
+  Supplier,
+  Stock,
+  Price,
+  Sulphite,
+  WineType,
+  Icon,
+  Grape,
+  Label,
+} = require("../database/models");
 
 const wineController = {
   /*
@@ -6,7 +19,84 @@ const wineController = {
    */
   async getAllWines(req, res) {
     try {
-      const wines = await Wine.findAll();
+      const wines = await Wine.findAll({
+        include: [
+          {
+            model: Cellar,
+            attributes: ["cellar", "description", "distance"],
+            as: "cellars",
+            include: [
+              {
+                model: Region,
+                attributes: ["region", "description"],
+                as: "regions",
+                include: [
+                  {
+                    model: Country,
+                    attributes: ["country", "description"],
+                    as: "countries",
+                  },
+                ],
+              },
+              {
+                model: Supplier,
+                as: "suppliers",
+                attributes: [
+                  "companyName",
+                  "fiscalName",
+                  "NIF",
+                  "country",
+                  "city",
+                  "address",
+                  "CP",
+                  "businessPhone",
+                  "contactName",
+                  "contactPhone",
+                  "businessEmail",
+                  "contactEmail",
+                  "description",
+                ],
+              },
+            ],
+          },
+          {
+            model: Stock,
+            attributes: ["sku", "amountIn", "amountOut"],
+            as: "stock",
+          },
+          {
+            model: Price,
+            attributes: ["priceRestaurant", "priceCost", "date"],
+            as: "price",
+          },
+          {
+            model: Sulphite,
+            attributes: ["sulphiteMin", "sulphiteMax"],
+            as: "sulphites",
+          },
+          {
+            model: WineType,
+            attributes: ["wineType", "description"],
+            as: "wineType",
+          },
+          {
+            model: Icon,
+            attributes: ["icon", "description"],
+            as: "icons",
+          },
+          {
+            model: Grape,
+            attributes: ["grape", "description"],
+            as: "grapes",
+          },
+          {
+            model: Label,
+            attributes: ["label", "description"],
+            as: "labels",
+          },
+        ],
+      });
+
       res.json(wines);
     } catch (error) {
       console.error(error);
@@ -33,6 +123,9 @@ const wineController = {
         priceId,
         sulphiteId,
         wineTypeId,
+        icons,
+        grapes,
+        labels,
       } = req.body;
 
       if (
@@ -44,7 +137,10 @@ const wineController = {
         !stockId ||
         !priceId ||
         !sulphiteId ||
-        !wineTypeId
+        !wineTypeId ||
+        !icons ||
+        !grapes ||
+        !labels
       ) {
         return res.status(400).json({
           message:
@@ -65,6 +161,21 @@ const wineController = {
         priceId,
         sulphiteId,
         wineTypeId,
+        labels,
+        grapes,
+        icons,
+      });
+
+      icons.forEach(async (icon) => {
+        await createdWine.addIcon(icon);
+      });
+
+      grapes.forEach(async (grape) => {
+        await createdWine.addGrape(grape);
+      });
+
+      labels.forEach(async (label) => {
+        await createdWine.addLabel(label);
       });
 
       res.status(201).json(createdWine);

@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       // Cellar have many wines
       Cellar.belongsTo(models.Region, {
         foreignKey: "regionId",
-        as: "region",
+        as: "regions",
       });
 
       // Cellar have many soils

@@ -1,16 +1,17 @@
-'use strict'
+"use strict";
 
-const { Model } = require('sequelize')
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Grape extends Model {
     static associate(models) {
-      
       // A grape has many wines
-      Grape.hasMany(models.Wine, {
-        foreignKey: 'grapeId',
-        as: 'wines',
-      })
+      Grape.belongsToMany(models.Wine, {
+        through: "wines_grapes",
+        foreignKey: "grapeId",
+        otherKey: "wineId",
+        as: "wines",
+      });
     }
   }
   Grape.init(
@@ -33,10 +34,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Grape',
-      tableName: 'grapes',
+      modelName: "Grape",
+      tableName: "grapes",
       timestamps: false,
     }
-  )
-  return Grape
-}
+  );
+  return Grape;
+};
