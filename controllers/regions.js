@@ -5,7 +5,7 @@ module.exports = {
   getAllRegions: async (req, res) => {
     try {
       const regions = await Region.findAll({
-        include: [{ model: Country, as: "country" }],
+        include: [{ model: Country, as: "countries" }],
       });
       res.json(regions);
     } catch (error) {

@@ -16,7 +16,7 @@ module.exports = {
           },
           {
             model: Region,
-            as: "region",
+            as: "regions",
           },
         ],
       });

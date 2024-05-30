@@ -13,12 +13,12 @@ module.exports = (sequelize, DataTypes) => {
 
       // relacion de uno a uno con stock donde un vino tiene un stock
       Wine.hasOne(models.Stock, {
-        foreignKey: "wineId",
+        foreignKey: "stockId",
         as: "stock",
       });
 
       Wine.hasOne(models.Price, {
-        foreignKey: "wineId",
+        foreignKey: "priceId",
         as: "price",
       });
 
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       //wine has one sulphite
       Wine.belongsTo(models.Sulphite, {
         otherKey: "sulphiteId",
-        as: "sulphites",
+        as: "sulphite",
       });
 
       Wine.belongsToMany(models.Label, {

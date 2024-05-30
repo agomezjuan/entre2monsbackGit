@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class Price extends Model {
     static associate(models) {
       // one price has one stocks
-      Price.hasOne(models.Wine, {
+      Price.belongsTo(models.Wine, {
         foreignKey: "priceId",
         as: "wines",
       });

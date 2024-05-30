@@ -47,7 +47,7 @@ const wineController = {
                   "NIF",
                   "country",
                   "city",
-                  "address",
+                  "adress",
                   "CP",
                   "businessPhone",
                   "contactName",
@@ -72,7 +72,7 @@ const wineController = {
           {
             model: Sulphite,
             attributes: ["sulphiteMin", "sulphiteMax"],
-            as: "sulphites",
+            as: "sulphite",
           },
           {
             model: WineType,
@@ -81,7 +81,7 @@ const wineController = {
           },
           {
             model: Icon,
-            attributes: ["icon", "description"],
+            attributes: ["url", "description"],
             as: "icons",
           },
           {
