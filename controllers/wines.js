@@ -91,7 +91,7 @@ const wineController = {
           },
           {
             model: Label,
-            attributes: ["label", "description"],
+            attributes: ["name", "description"],
             as: "labels",
           },
         ],
