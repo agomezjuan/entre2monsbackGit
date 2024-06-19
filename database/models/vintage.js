@@ -3,16 +3,16 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Price extends Model {
+  class Vintage extends Model {
     static associate(models) {
-      // one price has one stocks
-      Price.hasOne(models.Wine, {
-        foreignKey: "priceId",
-        as: "wines",
+      Vintage.belongsTo(models.Wine, {
+        foreignKey: "wineId",
+        as: "wine",
       });
     }
   }
-  Price.init(
+
+  Vintage.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -20,25 +20,25 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      costPrice: {
-        type: DataTypes.DECIMAL(10, 2),
+      vintage: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
-      sellPrice: {
-        type: DataTypes.DECIMAL(10, 2),
+      wineId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false,
+        references: {
+          model: "wines",
+          key: "id",
+        },
       },
     },
     {
       sequelize,
-      modelName: "Price",
-      tableName: "prices",
+      modelName: "Vintage",
+      tableName: "vintages",
       timestamps: false,
     }
   );
-  return Price;
+  return Vintage;
 };

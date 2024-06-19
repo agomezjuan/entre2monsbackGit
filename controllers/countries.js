@@ -1,10 +1,18 @@
-const { Country } = require("../database/models");
+const { Country, Region } = require("../database/models");
 
 module.exports = {
   // GET
   getAllCountries: async (req, res, next) => {
     try {
-      const countries = await Country.findAll();
+      const countries = await Country.findAll({
+        include: [
+          {
+            model: Region,
+            as: "regions",
+            attributes: ["id", "region", "description"],
+          },
+        ],
+      });
       console.log("All countries:", JSON.stringify(countries, null, 2));
       res.json(countries);
     } catch (error) {

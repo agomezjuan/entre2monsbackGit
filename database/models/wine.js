@@ -5,32 +5,16 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Wine extends Model {
     static associate(models) {
-      // relacion de muchos a uno con cellar donde un cellar tine muchos vinos
       Wine.belongsTo(models.Cellar, {
         foreignKey: "cellarId",
         as: "cellars",
       });
 
-      // relacion de uno a uno con stock donde un vino tiene un stock
-      Wine.belongsTo(models.Stock, {
-        foreignKey: "stockId",
-        as: "stock",
-      });
-
-      Wine.belongsTo(models.Price, {
-        foreignKey: "priceId",
-        as: "price",
-      });
-
-      // wine has many grapes
-      Wine.belongsToMany(models.Grape, {
-        through: "wines_grapes",
+      Wine.hasMany(models.Vintage, {
         foreignKey: "wineId",
-        otherKey: "grapeId",
-        as: "grapes",
+        as: "vintages",
       });
 
-      // wine has many icons
       Wine.belongsToMany(models.Icon, {
         through: "wines_icons",
         foreignKey: "wineId",
@@ -38,16 +22,14 @@ module.exports = (sequelize, DataTypes) => {
         as: "icons",
       });
 
-      // wine has many wineTypes
       Wine.belongsTo(models.WineType, {
-        otherKey: "wineTypeId",
-        as: "wineType",
+        foreignKey: "wineTypeId",
+        as: "wineTypes",
       });
 
-      //wine has one sulphite
       Wine.belongsTo(models.Sulphite, {
-        otherKey: "sulphiteId",
-        as: "sulphite",
+        foreignKey: "sulphiteId",
+        as: "sulphites",
       });
 
       Wine.belongsToMany(models.Label, {
@@ -75,10 +57,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      year: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
       production: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -99,38 +77,19 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      stockId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "stocks",
-          key: "id",
-        },
-      },
-
-      priceId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "prices",
-          key: "id",
-        },
-      },
-
-      sulphiteId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "sulphites",
-          key: "id",
-        },
-      },
-
       wineTypeId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: "wineTypes",
+          key: "id",
+        },
+      },
+      sulphiteId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "sulphites",
           key: "id",
         },
       },

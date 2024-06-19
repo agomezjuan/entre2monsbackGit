@@ -34,10 +34,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      year: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       production: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -55,23 +51,6 @@ module.exports = {
         allowNull: false,
         references: {
           model: "cellars",
-          key: "id",
-        },
-      },
-      stockId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "stocks",
-          key: "id",
-        },
-      },
-
-      priceId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "prices",
           key: "id",
         },
       },
