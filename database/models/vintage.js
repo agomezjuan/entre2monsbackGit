@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "wineId",
         as: "wine",
       });
+
+      Vintage.belongsToMany(models.Grape, {
+        through: "vintages_grapes",
+        foreignKey: "vintageId",
+        otherKey: "grapeId",
+        as: "grapes",
+      });
     }
   }
 

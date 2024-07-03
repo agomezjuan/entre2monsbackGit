@@ -1,0 +1,85 @@
+"use strict";
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("vintages", {
+      id: {
+        type: Sequelize.INTEGER,
+      },
+      vintage: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      wineId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "wines",
+          key: "id",
+        },
+      },
+      grapeId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "grapes",
+          key: "id",
+        },
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal(
+          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        ),
+      },
+    });
+
+    /**
+     * Table vintage_grapes
+     * @param vintageId - integer - not null - references vintages.id
+     * @param grapeId - integer - not null - references grapes.id
+     */
+    await queryInterface.createTable("vintages_grapes", {
+      vintageId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "vintages",
+          key: "id",
+        },
+      },
+      grapeId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "grapes",
+          key: "id",
+        },
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal(
+          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        ),
+      },
+    });
+  },
+
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("vintages_grapes");
+    await queryInterface.dropTable("vintages");
+  },
+};

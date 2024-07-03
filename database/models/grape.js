@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
   class Grape extends Model {
     static associate(models) {
       // A grape has many wines
-      Grape.belongsToMany(models.Wine, {
-        through: "wines_grapes",
+      Grape.belongsToMany(models.Vintage, {
+        through: "vintages_grapes",
         foreignKey: "grapeId",
-        otherKey: "wineId",
-        as: "wines",
+        otherKey: "vintageId",
+        as: "vintages",
       });
     }
   }

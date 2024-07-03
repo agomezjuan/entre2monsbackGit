@@ -86,43 +86,6 @@ module.exports = {
       },
     });
 
-    /**
-     * Table wines_grapes
-     * @param wineId - integer - not null - references wines.id
-     * @param grapeId - integer - not null - references grapes.id
-     */
-
-    await queryInterface.createTable("wines_grapes", {
-      wineId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wines",
-          key: "id",
-        },
-      },
-      grapeId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "grapes",
-          key: "id",
-        },
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal(
-          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-        ),
-      },
-    });
-
     /*
      * Create table wines_icons
      */
@@ -191,7 +154,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("wines_grapes");
     await queryInterface.dropTable("wines_icons");
     await queryInterface.dropTable("wines_labels");
     await queryInterface.dropTable("wines");
