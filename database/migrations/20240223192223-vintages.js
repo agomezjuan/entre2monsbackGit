@@ -22,14 +22,6 @@ module.exports = {
           key: "id",
         },
       },
-      grapeId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "grapes",
-          key: "id",
-        },
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
