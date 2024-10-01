@@ -6,6 +6,9 @@ module.exports = {
     await queryInterface.createTable("vintages", {
       id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
       },
       vintage: {
         type: Sequelize.INTEGER,
