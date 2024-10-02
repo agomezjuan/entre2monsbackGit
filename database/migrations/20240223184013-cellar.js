@@ -31,14 +31,6 @@ module.exports = {
           key: "id",
         },
       },
-      soilId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "soils",
-          key: "id",
-        },
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
