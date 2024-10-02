@@ -74,6 +74,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      tastingNotes: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
       cellarId: {
         type: DataTypes.INTEGER,
         allowNull: false,

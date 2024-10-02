@@ -46,6 +46,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      tastingNotes: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       cellarId: {
         type: Sequelize.INTEGER,
         allowNull: false,
