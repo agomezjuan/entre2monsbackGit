@@ -51,4 +51,24 @@ module.exports = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  updateLabel: async (req, res) => {
+    const { id } = req.params;
+    const { name, description } = req.body;
+
+    const label = await Label.findByPk(id);
+    if (!label) {
+      return res.status(404).json({ error: "Label not found" });
+    }
+
+    await label.update({
+      name,
+      description,
+    });
+
+    res.json({
+      message: `Label with ID: ${id} updated successfully`,
+      label,
+    });
+  },
 };

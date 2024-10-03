@@ -115,7 +115,7 @@ module.exports = {
   updateCellar: async (req, res) => {
     try {
       const { id } = req.params;
-      const { cellar_name, description } = req.body; // Actualizado para usar snake_case
+      const { cellar_name, description } = req.body;
 
       const cellar = await Cellar.findByPk(id);
       if (!cellar) {
@@ -123,7 +123,7 @@ module.exports = {
       }
 
       await cellar.update({
-        cellar_name, // Usando snake_case para coincidir con la definición del modelo
+        cellar_name,
         description,
       });
 
