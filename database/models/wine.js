@@ -10,8 +10,10 @@ module.exports = (sequelize, DataTypes) => {
         as: "cellars",
       });
 
-      Wine.hasMany(models.Vintage, {
+      Wine.belongsToMany(models.Vintage, {
+        through: "vintages_wines",
         foreignKey: "wineId",
+        otherKey: "vintageId",
         as: "vintages",
       });
 

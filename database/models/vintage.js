@@ -5,9 +5,11 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Vintage extends Model {
     static associate(models) {
-      Vintage.belongsTo(models.Wine, {
-        foreignKey: "wineId",
-        as: "wine",
+      Vintage.belongsToMany(models.Wine, {
+        through: "vintages_wines",
+        foreignKey: "vintageId",
+        otherKey: "wineId",
+        as: "wines",
       });
 
       Vintage.belongsToMany(models.Grape, {
@@ -30,14 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       vintage: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      wineId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wines",
-          key: "id",
-        },
       },
     },
     {

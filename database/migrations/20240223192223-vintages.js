@@ -14,6 +14,35 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal(
+          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        ),
+      },
+    });
+
+    /**
+     ** Table vintages_wines
+     * @param vintageId - integer - not null - references vintages.id
+     * @param wineId - integer - not null - references wines.id
+     */
+
+    await queryInterface.createTable("vintages_wines", {
+      vintageId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "vintages",
+          key: "id",
+        },
+      },
       wineId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -37,7 +66,7 @@ module.exports = {
     });
 
     /**
-     * Table vintage_grapes
+     **Table vintage_grapes
      * @param vintageId - integer - not null - references vintages.id
      * @param grapeId - integer - not null - references grapes.id
      */

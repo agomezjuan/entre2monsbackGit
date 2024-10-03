@@ -8,8 +8,8 @@ module.exports = {
       const labels = await Label.findAll({
         include: [
           {
-            model: Grape,
-            as: "grapes",
+            vintage: 1900,
+            wineId: 1,
           },
         ],
       });
