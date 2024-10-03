@@ -56,19 +56,30 @@ module.exports = {
     const { id } = req.params;
     const { name, description } = req.body;
 
-    const label = await Label.findByPk(id);
-    if (!label) {
-      return res.status(404).json({ error: "Label not found" });
+    // Validar que se reciban los datos requeridos
+    if (!name || !description) {
+      return res
+        .status(400)
+        .json({ error: "Name and description are required." });
     }
 
-    await label.update({
-      name,
-      description,
-    });
+    try {
+      const label = await Label.findByPk(id);
+      if (!label) {
+        return res.status(404).json({ error: "Label not found" });
+      }
 
-    res.json({
-      message: `Label with ID: ${id} updated successfully`,
-      label,
-    });
+      // Intentar actualizar la etiqueta
+      await label.update({ name, description });
+
+      // Devolver una respuesta exitosa
+      res.json({
+        message: `Label with ID: ${id} updated successfully`,
+        label,
+      });
+    } catch (error) {
+      console.error("Error updating label:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   },
 };
