@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "stockId",
         as: "wine",
       });
+
+      Stock.belongsTo(models.Price, {
+        foreignKey: "priceId",
+        as: "prices",
+      });
     }
   }
   Stock.init(
@@ -32,6 +37,14 @@ module.exports = (sequelize, DataTypes) => {
       amountOut: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      priceId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "prices",
+          key: "id",
+        },
       },
     },
     {

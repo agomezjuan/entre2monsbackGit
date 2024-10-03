@@ -23,7 +23,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-
+      priceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "prices",
+          key: "id",
+        },
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

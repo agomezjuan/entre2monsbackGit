@@ -38,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: "labelId",
         as: "labels",
       });
+
+      Wine.belongsTo(models.Stock, {
+        foreignKey: "stockId",
+        as: "stocks",
+      });
     }
   }
   Wine.init(
@@ -94,6 +99,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         references: {
           model: "sulphites",
+          key: "id",
+        },
+      },
+      stockId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "stocks",
           key: "id",
         },
       },

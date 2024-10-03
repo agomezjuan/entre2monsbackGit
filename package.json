@@ -11,7 +11,9 @@
     "db:reset": "docker-compose down && docker-compose up -d",
     "db:migrate": "npx sequelize db:migrate",
     "db:rollback": "npx sequelize db:migrate:undo:all",
-    "db:seed": "npx sequelize db:seed:all"
+    "db:seed": "npx sequelize db:seed:all",
+    "db:seed:specific": "npx sequelize db:seed --seed",
+    "db:generate:seed": "npx sequelize-cli seed:generate --name"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
