@@ -3,14 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("labels", {
+    await queryInterface.createTable("labelCat", {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
+      labelCat: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
@@ -19,11 +19,41 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      labelCat: {
+      color: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal(
+          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        ),
+      },
+    });
+
+    /*
+     * Midle table categotries_labels
+     */
+    await queryInterface.createTable("categories_labels", {
+      labelCatId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "labelCats",
+          model: "labelCat",
+          key: "id",
+        },
+      },
+      labelId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "labels",
           key: "id",
         },
       },
@@ -43,6 +73,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("labels");
+    await queryInterface.dropTable("categories_labels");
+    await queryInterface.dropTable("labelCat");
   },
 };

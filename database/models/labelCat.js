@@ -3,18 +3,15 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Label extends Model {
+  class LabelCat extends Model {
     static associate(models) {
-      // A label has many wines
-      Label.belongsToMany(models.Wine, {
-        through: "wines_labels",
-        foreignKey: "labelId",
-        otherKey: "wineId",
-        as: "wines",
+      LabelCat.hasMany(models.Label, {
+        foreignKey: "labelCatId",
+        as: "labels",
       });
     }
   }
-  Label.init(
+  LabelCat.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -31,21 +28,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      labelCat: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "labelCats",
-          key: "id",
-        },
-      },
     },
     {
       sequelize,
-      modelName: "Label",
-      tableName: "labels",
+      modelName: "LabelCat",
+      tableName: "labelCats",
       timestamps: false,
     }
   );
-  return Label;
+  return LabelCat;
 };
