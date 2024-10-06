@@ -6,11 +6,12 @@ module.exports = (sequelize, DataTypes) => {
   class LabelCat extends Model {
     static associate(models) {
       LabelCat.hasMany(models.Label, {
-        foreignKey: "labelCatId",
+        foreignKey: "labelsCategoriesId",
         as: "labels",
       });
     }
   }
+
   LabelCat.init(
     {
       id: {
@@ -27,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
+      },
+      color: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
       },
     },
     {

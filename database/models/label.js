@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: "wineId",
         as: "wines",
       });
+      Label.belongsTo(models.LabelCategories, {
+        foreignKey: "labelCatId",
+        as: "labelCat",
+      });
     }
   }
   Label.init(
@@ -31,11 +35,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      labelCat: {
+      labelCategoriesId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "labelCats",
+          model: "labelsCategories",
           key: "id",
         },
       },
