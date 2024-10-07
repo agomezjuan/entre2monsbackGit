@@ -61,14 +61,15 @@ module.exports = {
         distance,
         regionId,
         supplierId,
+        soilId,
       });
 
       /**
        * * Para agregar relaciones muchos a muchos en una tabla intermedia, se debe hacer de la siguiente manera:
        */
-      const suppliers = await Supplier.findAll({
-        where: { id: supplierId },
-      });
+      // const suppliers = await Supplier.findAll({
+      //   where: { id: supplierId },
+      // });
       supplierId.forEach(async (supplierId) => {
         const supplier = await Supplier.findByPk(supplierId);
         await createdCellar.addSupplier(supplier);
