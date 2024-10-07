@@ -34,4 +34,20 @@ module.exports = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  //* DELETE */
+  deleteCustomer: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const customer = await Customer.findByPk(id);
+      if (!customer) {
+        return res.status(404).json({ error: "Customer not found" });
+      }
+      await customer.destroy();
+      res.json({ message: `Customer with ID: ${id} deleted successfully` });
+    } catch (error) {
+      console.error("Error deleting customer:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 };
