@@ -50,4 +50,32 @@ module.exports = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  //* PUT */
+  updateCustomer: async (req, res) => {
+    const { id } = req.params;
+    const { firstName, surnames, email, telf } = req.body;
+    try {
+      const customerToUpdate = await Customer.findByPk(id);
+      if (!customerToUpdate) {
+        return res.status(404).json({ error: "Customer not found" });
+      }
+
+      await customerToUpdate.update({
+        firstName,
+        surnames,
+        email,
+        telf,
+      });
+
+      console.log(`Updated customer with ID: ${id}`);
+      res.json({
+        message: `Customer with ID: ${id} updated successfully`,
+        customer: customerToUpdate,
+      });
+    } catch (error) {
+      console.error("Error updating customer:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 };
