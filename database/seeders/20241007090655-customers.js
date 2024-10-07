@@ -6,7 +6,7 @@ module.exports = {
     await queryInterface.bulkInsert("customers", [
       {
         firstName: "Juan",
-        lastName: "Pérez",
+        surnames: "Pérez",
         email: "juan.perez@example.com",
         telf: "123456789",
         createdAt: new Date(),
@@ -14,7 +14,7 @@ module.exports = {
       },
       {
         firstName: "María",
-        lastName: "García",
+        surnames: "García",
         email: "maria.garcia@example.com",
         telf: "987654321",
         createdAt: new Date(),
@@ -22,7 +22,7 @@ module.exports = {
       },
       {
         firstName: "Pedro",
-        lastName: "López",
+        surnames: "López",
         email: "pedro.lopez@example.com",
         telf: "456789123",
         createdAt: new Date(),
@@ -30,7 +30,7 @@ module.exports = {
       },
       {
         firstName: "Ana",
-        lastName: "Martínez",
+        surnames: "Martínez",
         email: "ana.martinez@example.com",
         telf: "321654987",
         createdAt: new Date(),
@@ -38,7 +38,7 @@ module.exports = {
       },
       {
         firstName: "Luis",
-        lastName: "Rodríguez",
+        surnames: "Rodríguez",
         email: "luis.rodriguez@example.com",
         telf: "654789321",
         createdAt: new Date(),
@@ -46,7 +46,7 @@ module.exports = {
       },
       {
         firstName: "Laura",
-        lastName: "Hernández",
+        surnames: "Hernández",
         email: "laura.hernandez@example.com",
         telf: "147258369",
         createdAt: new Date(),
@@ -54,7 +54,7 @@ module.exports = {
       },
       {
         firstName: "José",
-        lastName: "Gómez",
+        surnames: "Gómez",
         email: "jose.gomez@example.com",
         telf: "258369147",
         createdAt: new Date(),
@@ -62,7 +62,7 @@ module.exports = {
       },
       {
         firstName: "Sofía",
-        lastName: "Ramírez",
+        surnames: "Ramírez",
         email: "sofia.ramirez@example.com",
         telf: "369147258",
         createdAt: new Date(),
@@ -70,7 +70,7 @@ module.exports = {
       },
       {
         firstName: "Diego",
-        lastName: "Torres",
+        surnames: "Torres",
         email: "diego.torres@example.com",
         telf: "741852963",
         createdAt: new Date(),
@@ -78,7 +78,7 @@ module.exports = {
       },
       {
         firstName: "Carmen",
-        lastName: "Vázquez",
+        surnames: "Vázquez",
         email: "carmen.vazquez@example.com",
         telf: "852963741",
         createdAt: new Date(),
