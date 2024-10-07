@@ -3,22 +3,16 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Label extends Model {
+  class LabelCategory extends Model {
     static associate(models) {
-      Label.belongsTo(models.LabelCategory, {
+      LabelCategory.hasMany(models.Label, {
         foreignKey: "labelCategoryId",
-        as: "category",
-      });
-      // A label has many wines
-      Label.belongsToMany(models.Wine, {
-        through: "wines_labels",
-        foreignKey: "labelId",
-        otherKey: "wineId",
-        as: "wines",
+        as: "labels",
       });
     }
   }
-  Label.init(
+
+  LabelCategory.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -35,21 +29,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      labelCategoryId: {
-        type: DataTypes.INTEGER,
+      color: {
+        type: DataTypes.STRING,
         allowNull: false,
-        references: {
-          model: "labelsCategories",
-          key: "id",
-        },
+        unique: true,
       },
     },
     {
       sequelize,
-      modelName: "Label",
-      tableName: "labels",
+      modelName: "LabelCategory",
+      tableName: "labelCategories",
       timestamps: false,
     }
   );
-  return Label;
+  return LabelCategory;
 };

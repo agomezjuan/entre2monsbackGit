@@ -13,7 +13,8 @@
     "db:rollback": "npx sequelize db:migrate:undo:all",
     "db:seed": "npx sequelize db:seed:all",
     "db:seed:specific": "npx sequelize db:seed --seed",
-    "db:generate:seed": "npx sequelize-cli seed:generate --name"
+    "db:generate:seed": "npx sequelize-cli seed:generate --name",
+    "db:model": "npx sequelize-cli migration:generate --name"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
