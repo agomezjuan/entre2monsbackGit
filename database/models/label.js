@@ -5,16 +5,16 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Label extends Model {
     static associate(models) {
+      Label.belongsTo(models.LabelCategory, {
+        foreignKey: "labelCategoryId",
+        as: "category",
+      });
       // A label has many wines
       Label.belongsToMany(models.Wine, {
         through: "wines_labels",
         foreignKey: "labelId",
         otherKey: "wineId",
         as: "wines",
-      });
-      Label.belongsTo(models.LabelCategories, {
-        foreignKey: "labelCatId",
-        as: "labelCat",
       });
     }
   }
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      labelCategoriesId: {
+      labelCategoryId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

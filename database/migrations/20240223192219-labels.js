@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      labelCategoriesId: {
+      labelCategoryId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

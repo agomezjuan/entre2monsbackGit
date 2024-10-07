@@ -3,16 +3,16 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class LabelCat extends Model {
+  class LabelCategory extends Model {
     static associate(models) {
-      LabelCat.hasMany(models.Label, {
-        foreignKey: "labelsCategoriesId",
+      LabelCategory.hasMany(models.Label, {
+        foreignKey: "labelCategoryId",
         as: "labels",
       });
     }
   }
 
-  LabelCat.init(
+  LabelCategory.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -37,10 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "LabelCat",
-      tableName: "labelCats",
+      modelName: "LabelCategory",
+      tableName: "labelCategories",
       timestamps: false,
     }
   );
-  return LabelCat;
+  return LabelCategory;
 };
