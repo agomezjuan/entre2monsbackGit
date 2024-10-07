@@ -94,7 +94,7 @@ module.exports = {
     }
   },
 
-  // DELETE
+  //** DELETE */
   deleteCellar: async (req, res) => {
     try {
       const { id } = req.params;
