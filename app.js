@@ -22,6 +22,7 @@ const authRouter = require("./routes/auth");
 const suppliersRouter = require("./routes/suppliers");
 const labelRouter = require("./routes/labels");
 const customersRouter = require("./routes/customers");
+const vintageRouter = require("./routes/vintages");
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use("/sulphites", sulphitesRouter);
 app.use("/suppliers", suppliersRouter);
 app.use("/labels", labelRouter);
 app.use("/customers", customersRouter);
+app.use("/vintages", vintageRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
