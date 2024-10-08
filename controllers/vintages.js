@@ -113,26 +113,30 @@ module.exports = {
       const { id } = req.params;
       const { vintage, wineId, grapeId } = req.body;
 
+      // Buscar el vintage por su ID
       const updatedVintage = await Vintage.findByPk(id);
       if (!updatedVintage) {
         return res.status(404).json({ error: "Vintage not found" });
       }
 
+      // Actualizar los campos del vintage
       await updatedVintage.update({
         vintage,
         wineId,
         grapeId,
       });
 
-      wineId.forEach(async (wineId) => {
-        const wine = await Wine.findByPk(wineId);
-        await updatedVintage.addWine(wine);
-      });
+      // Actualizar la relación con Wine (remover y agregar de nuevo)
+      if (wineId) {
+        const wines = await Wine.findAll({ where: { id: wineId } });
+        await updatedVintage.setWines(wines);
+      }
 
-      grapeId.forEach(async (grapeId) => {
-        const grape = await Grape.findByPk(grapeId);
-        await updatedVintage.addGrape(grape);
-      });
+      // Actualizar la relación con Grape (remover y agregar de nuevo)
+      if (grapeId) {
+        const grapes = await Grape.findAll({ where: { id: grapeId } });
+        await updatedVintage.setGrapes(grapes);
+      }
 
       console.log(`Updated vintage with ID: ${id}`);
       res.json({
