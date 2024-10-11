@@ -1,7 +1,7 @@
 const { Cellar, Supplier, Soil, Region } = require("../database/models");
 
 module.exports = {
-  // GET
+  // GET all Cellars
   getAllCellars: async (req, res) => {
     try {
       const cellars = await Cellar.findAll({
@@ -20,8 +20,6 @@ module.exports = {
           },
         ],
       });
-
-      console.log("All cellars:", JSON.stringify(cellars, null, 2));
       res.json(cellars);
     } catch (error) {
       console.error("Error retrieving cellars:", error);
@@ -29,10 +27,26 @@ module.exports = {
     }
   },
 
+  // GET a single Cellar by ID
   getCellarById: async (req, res) => {
     try {
       const { id } = req.params;
-      const cellar = await Cellar.findByPk(id);
+      const cellar = await Cellar.findByPk(id, {
+        include: [
+          {
+            model: Supplier,
+            as: "suppliers",
+          },
+          {
+            model: Soil,
+            as: "soils",
+          },
+          {
+            model: Region,
+            as: "regions",
+          },
+        ],
+      });
       if (!cellar) {
         return res.status(404).json({ error: "Cellar not found" });
       }
@@ -43,68 +57,95 @@ module.exports = {
     }
   },
 
-  // POST
+  // POST a new Cellar
   createCellar: async (req, res) => {
     try {
-      const { cellar, description, distance, regionId, supplierId, soilId } =
+      const { cellar, description, distance, regionId, supplierIds, soilIds } =
         req.body;
-      console.log(req.body);
 
-      if (!cellar) {
-        // Verificación también actualizada para snake_case
-        return res.status(400).json({ error: "Cellar name is required" });
+      if (!cellar || !distance || !regionId) {
+        return res
+          .status(400)
+          .json({ error: "Cellar name, distance, and regionId are required" });
       }
 
+      // Create the new cellar
       const createdCellar = await Cellar.create({
         cellar,
         description,
         distance,
         regionId,
-        supplierId,
-        soilId,
       });
 
-      /**
-       * * Para agregar relaciones muchos a muchos en una tabla intermedia, se debe hacer de la siguiente manera:
-       */
-      // const suppliers = await Supplier.findAll({
-      //   where: { id: supplierId },
-      // });
-      supplierId.forEach(async (supplierId) => {
-        const supplier = await Supplier.findByPk(supplierId);
-        await createdCellar.addSupplier(supplier);
+      // Add Suppliers if provided
+      if (supplierIds && Array.isArray(supplierIds)) {
+        const suppliers = await Supplier.findAll({
+          where: { id: supplierIds },
+        });
+        await createdCellar.addSuppliers(suppliers);
+      }
+
+      // Add Soils if provided
+      if (soilIds && Array.isArray(soilIds)) {
+        const soils = await Soil.findAll({
+          where: { id: soilIds },
+        });
+        await createdCellar.addSoils(soils);
+      }
+
+      // Retrieve the created cellar with associations
+      const cellarWithAssociations = await Cellar.findByPk(createdCellar.id, {
+        include: [
+          {
+            model: Supplier,
+            as: "suppliers",
+          },
+          {
+            model: Soil,
+            as: "soils",
+          },
+          {
+            model: Region,
+            as: "regions",
+          },
+        ],
       });
 
-      soilId.forEach(async (soilId) => {
-        const soils = await Soil.findByPk(soilId);
-        await createdCellar.addSoil(soils);
-      });
-
-      console.log("created cellar", createdCellar);
       res.status(201).json({
         message: "Cellar created successfully",
-        cellar: createdCellar,
+        cellar: cellarWithAssociations,
       });
     } catch (error) {
       console.error("Error creating cellar:", error);
-      if (error.name === "SequelizeUniqueConstraintError") {
-        return res.status(400).json({ error: "Cellar name must be unique" });
-      }
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
-  //** DELETE */
+  // DELETE a Cellar by ID
   deleteCellar: async (req, res) => {
     try {
       const { id } = req.params;
-      const cellar = await Cellar.findByPk(id);
+      const cellar = await Cellar.findByPk(id, {
+        include: [
+          {
+            model: Supplier,
+            as: "suppliers",
+          },
+          {
+            model: Soil,
+            as: "soils",
+          },
+        ],
+      });
       if (!cellar) {
         return res.status(404).json({ error: "Cellar not found" });
       }
 
+      // Remove associations with Suppliers and Soils before deleting
+      await cellar.setSuppliers([]);
+      await cellar.setSoils([]);
+
       await cellar.destroy();
-      console.log(`Deleted cellar with ID: ${id}`);
       res.json({ message: `Cellar with ID: ${id} deleted successfully` });
     } catch (error) {
       console.error("Error deleting cellar:", error);
@@ -112,26 +153,66 @@ module.exports = {
     }
   },
 
-  // PUT
+  // PUT update a Cellar by ID
   updateCellar: async (req, res) => {
     try {
       const { id } = req.params;
-      const { cellar_name, description } = req.body;
+      const { cellar, description, distance, regionId, supplierIds, soilIds } =
+        req.body;
 
-      const cellar = await Cellar.findByPk(id);
-      if (!cellar) {
+      const existingCellar = await Cellar.findByPk(id);
+      if (!existingCellar) {
         return res.status(404).json({ error: "Cellar not found" });
       }
 
-      await cellar.update({
-        cellar_name,
+      // Update the cellar details
+      await existingCellar.update({
+        cellar,
         description,
+        distance,
+        regionId,
       });
 
-      console.log(`Updated cellar with ID: ${id}`);
+      // Update Suppliers if provided
+      if (supplierIds && Array.isArray(supplierIds)) {
+        const suppliers = await Supplier.findAll({
+          where: { id: supplierIds },
+        });
+        await existingCellar.setSuppliers(suppliers);
+      }
+
+      // Update Soils if provided
+      if (soilIds && Array.isArray(soilIds)) {
+        const soils = await Soil.findAll({
+          where: { id: soilIds },
+        });
+        await existingCellar.setSoils(soils);
+      } else if (!soilIds || soilIds.length === 0) {
+        // If soilIds is not provided or empty, clear the existing associations
+        await existingCellar.setSoils([]);
+      }
+
+      // Retrieve the updated cellar with associations
+      const updatedCellar = await Cellar.findByPk(id, {
+        include: [
+          {
+            model: Supplier,
+            as: "suppliers",
+          },
+          {
+            model: Soil,
+            as: "soils",
+          },
+          {
+            model: Region,
+            as: "regions",
+          },
+        ],
+      });
+
       res.json({
         message: `Cellar with ID: ${id} updated successfully`,
-        cellar,
+        cellar: updatedCellar,
       });
     } catch (error) {
       console.error("Error updating cellar:", error);

@@ -1,0 +1,23 @@
+meta {
+  name: update cellar
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:3000/cellars/16
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "cellar": "Grand Vintage Cellar",
+    "description": "A spacious cellar ideal for storing vintage wines.",
+    "distance": "15 km from the city center",
+    "regionId": 1,
+    "supplierIds": [1, 3, 5],
+    "soilIds": [2, 4]
+  }
+  
+}

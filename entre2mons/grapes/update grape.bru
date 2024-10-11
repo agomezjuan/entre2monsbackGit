@@ -1,0 +1,18 @@
+meta {
+  name: update grape
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:3000/grapes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "grape": "Malvasia",
+    "description": "text prueva 1"
+  }
+}

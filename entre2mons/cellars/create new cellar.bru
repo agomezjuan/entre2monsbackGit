@@ -6,6 +6,17 @@ meta {
 
 post {
   url: http://localhost:3000/cellars
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "cellar": "Prueva 1",
+    "description": "Description text nº1",
+    "distance": "150 km",
+    "regionId": 1,
+    "soilId": [1,2,3],
+    "supplierId": [1,2]  
+  }
 }
