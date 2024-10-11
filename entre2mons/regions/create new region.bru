@@ -1,0 +1,19 @@
+meta {
+  name: create new region
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/regions
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "region": "Sicilia",
+    "description": "Text description 1",
+    "countryId": 1
+  }
+}

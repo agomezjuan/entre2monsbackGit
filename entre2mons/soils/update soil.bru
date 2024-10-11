@@ -1,0 +1,19 @@
+meta {
+  name: update soil
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:3000/soils/11
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "soil": "Gravilla",
+    "description": "text description nº2",
+    "effect": "text effect nº2"
+  }
+}

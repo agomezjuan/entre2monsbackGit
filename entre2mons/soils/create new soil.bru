@@ -1,0 +1,19 @@
+meta {
+  name: create new soil
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/soils
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "soil": "Formigó",
+    "description": "text description nº1",
+    "effect": "text effect nº1"
+  }
+}
