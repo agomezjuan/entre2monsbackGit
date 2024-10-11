@@ -1,10 +1,8 @@
-"use strict";
-
 const { Vintage, Wine, Grape } = require("../database/models");
 
 module.exports = {
-  // GET: Get all vintages with related wines and grapes
-  getVintages: async (req, res) => {
+  // GET all Vintages
+  getAllVintages: async (req, res) => {
     try {
       const vintages = await Vintage.findAll({
         include: [
@@ -25,7 +23,7 @@ module.exports = {
     }
   },
 
-  // GET: Get a single vintage by ID with related wines and grapes
+  // GET a single Vintage by ID
   getVintageById: async (req, res) => {
     try {
       const { id } = req.params;
@@ -51,54 +49,86 @@ module.exports = {
     }
   },
 
-  // POST: Create a new vintage
+  // POST a new Vintage
   createVintage: async (req, res) => {
     try {
-      const { vintage, wineId, grapeId } = req.body;
-      console.log(req.body);
+      const { vintage, wineIds, grapeIds } = req.body;
 
       if (!vintage) {
         return res.status(400).json({ error: "Vintage year is required" });
       }
 
+      // Create the new vintage
       const createdVintage = await Vintage.create({
         vintage,
-        wineId,
-        grapeId,
       });
 
-      wineId.forEach(async (wineId) => {
-        const wine = await Wine.findByPk(wineId);
-        await createdVintage.addWine(wine);
-      });
+      // Add Wines if provided
+      if (wineIds && Array.isArray(wineIds)) {
+        const wines = await Wine.findAll({
+          where: { id: wineIds },
+        });
+        await createdVintage.addWines(wines);
+      }
 
-      grapeId.forEach(async (grapeId) => {
-        const grape = await Grape.findByPk(grapeId);
-        await createdVintage.addGrape(grape);
-      });
+      // Add Grapes if provided
+      if (grapeIds && Array.isArray(grapeIds)) {
+        const grapes = await Grape.findAll({
+          where: { id: grapeIds },
+        });
+        await createdVintage.addGrapes(grapes);
+      }
 
-      console.log("Created vintage:", createdVintage);
+      // Retrieve the created vintage with associations
+      const vintageWithAssociations = await Vintage.findByPk(
+        createdVintage.id,
+        {
+          include: [
+            {
+              model: Wine,
+              as: "wines",
+            },
+            {
+              model: Grape,
+              as: "grapes",
+            },
+          ],
+        }
+      );
+
       res.status(201).json({
         message: "Vintage created successfully",
-        vintage: createdVintage,
+        vintage: vintageWithAssociations,
       });
     } catch (error) {
       console.error("Error creating vintage:", error);
-      if (error.name === "SequelizeUniqueConstraintError") {
-        return res.status(400).json({ error: "Vintage year must be unique" });
-      }
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
-  // DELETE: Delete a vintage by ID
+  // DELETE a Vintage by ID
   deleteVintage: async (req, res) => {
     try {
       const { id } = req.params;
-      const vintage = await Vintage.findByPk(id);
+      const vintage = await Vintage.findByPk(id, {
+        include: [
+          {
+            model: Wine,
+            as: "wines",
+          },
+          {
+            model: Grape,
+            as: "grapes",
+          },
+        ],
+      });
       if (!vintage) {
         return res.status(404).json({ error: "Vintage not found" });
       }
+
+      // Remove associations with Wines and Grapes before deleting
+      await vintage.setWines([]);
+      await vintage.setGrapes([]);
 
       await vintage.destroy();
       res.json({ message: `Vintage with ID: ${id} deleted successfully` });
@@ -107,38 +137,56 @@ module.exports = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
-  //* PUT */
+
+  // PUT update a Vintage by ID
   updateVintage: async (req, res) => {
     try {
       const { id } = req.params;
-      const { vintage, wineId, grapeId } = req.body;
+      const { vintage, wineIds, grapeIds } = req.body;
 
-      // Buscar el vintage por su ID
-      const updatedVintage = await Vintage.findByPk(id);
-      if (!updatedVintage) {
+      const existingVintage = await Vintage.findByPk(id);
+      if (!existingVintage) {
         return res.status(404).json({ error: "Vintage not found" });
       }
 
-      // Actualizar los campos del vintage
-      await updatedVintage.update({
+      // Update the vintage details
+      await existingVintage.update({
         vintage,
-        wineId,
-        grapeId,
       });
 
-      // Actualizar la relación con Wine (remover y agregar de nuevo)
-      if (wineId) {
-        const wines = await Wine.findAll({ where: { id: wineId } });
-        await updatedVintage.setWines(wines);
+      // Update Wines if provided
+      if (wineIds && Array.isArray(wineIds)) {
+        const wines = await Wine.findAll({
+          where: { id: wineIds },
+        });
+        await existingVintage.setWines(wines);
       }
 
-      // Actualizar la relación con Grape (remover y agregar de nuevo)
-      if (grapeId) {
-        const grapes = await Grape.findAll({ where: { id: grapeId } });
-        await updatedVintage.setGrapes(grapes);
+      // Update Grapes if provided
+      if (grapeIds && Array.isArray(grapeIds)) {
+        const grapes = await Grape.findAll({
+          where: { id: grapeIds },
+        });
+        await existingVintage.setGrapes(grapes);
+      } else if (!grapeIds || grapeIds.length === 0) {
+        // If grapeIds is not provided or empty, clear the existing associations
+        await existingVintage.setGrapes([]);
       }
 
-      console.log(`Updated vintage with ID: ${id}`);
+      // Retrieve the updated vintage with associations
+      const updatedVintage = await Vintage.findByPk(id, {
+        include: [
+          {
+            model: Wine,
+            as: "wines",
+          },
+          {
+            model: Grape,
+            as: "grapes",
+          },
+        ],
+      });
+
       res.json({
         message: `Vintage with ID: ${id} updated successfully`,
         vintage: updatedVintage,

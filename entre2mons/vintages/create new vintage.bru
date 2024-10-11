@@ -1,0 +1,23 @@
+meta {
+  name: create new vintage
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/vintages
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "vinatge": 1983,
+    "grapeIds": [
+      1,
+      2,
+      3
+    ],
+    "wineIds": []
+  }
+}

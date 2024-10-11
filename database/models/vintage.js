@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       vintage: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        unique: true,
       },
     },
     {
