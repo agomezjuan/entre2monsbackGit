@@ -1,0 +1,20 @@
+meta {
+  name: create new costumer
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/customers
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "Benito",
+    "surnames": " de los Palotes",
+    "email": "beni@prueva.com",
+    "telf": "555 555 555"
+  }
+}

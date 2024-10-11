@@ -1,0 +1,20 @@
+meta {
+  name: update costumer
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:3000/customers/11
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "Perico",
+    "surnames": " De Los Palotes",
+    "email": "peri@palo.com",
+    "telf": "555 555 444"
+  }
+}
