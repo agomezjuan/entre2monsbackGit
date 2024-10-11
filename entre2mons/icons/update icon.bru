@@ -1,0 +1,18 @@
+meta {
+  name: update icon
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:3000/icons/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "url": "h/icons",
+    "description": "vinyes prefiloxerica"
+  }
+}
