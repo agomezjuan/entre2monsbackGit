@@ -1,9 +1,17 @@
-const { Label } = require("../database/models");
+const { Label, LabelCategory } = require("../database/models");
 
 module.exports = {
+  // GET all Labels
   getLabels: async (req, res) => {
     try {
-      const labels = await Label.findAll();
+      const labels = await Label.findAll({
+        include: [
+          {
+            model: LabelCategory,
+            as: "category",
+          },
+        ],
+      });
       res.json(labels);
     } catch (error) {
       console.error("Error retrieving labels:", error);
@@ -11,32 +19,63 @@ module.exports = {
     }
   },
 
+  // GET a single Label by ID
+  getLabelById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const label = await Label.findByPk(id, {
+        include: [
+          {
+            model: LabelCategory,
+            as: "category",
+          },
+        ],
+      });
+      if (!label) {
+        return res.status(404).json({ error: "Label not found" });
+      }
+      res.json(label);
+    } catch (error) {
+      console.error("Error retrieving label:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  // POST a new Label
   createLabel: async (req, res) => {
-    const { name, description } = req.body;
-    const existingLabel = await Label.findOne({
-      where: {
-        name,
-      },
-    });
-    if (existingLabel) {
+    const { name, description, labelCategoryId } = req.body;
+
+    if (!name || !labelCategoryId) {
       return res
         .status(400)
-        .json({ error: "Already exist a label with this name" });
+        .json({ error: "Name and labelCategoryId are required" });
     }
+
     try {
+      // Verificar si ya existe un label con el mismo nombre
+      const existingLabel = await Label.findOne({ where: { name } });
+      if (existingLabel) {
+        return res
+          .status(400)
+          .json({ error: "A label with this name already exists." });
+      }
+
       const createdLabel = await Label.create({
         name,
         description,
+        labelCategoryId,
       });
-      res
-        .status(201)
-        .json({ message: "Label created successfully", label: createdLabel });
+      res.status(201).json({
+        message: "Label created successfully",
+        label: createdLabel,
+      });
     } catch (error) {
       console.error("Error creating label:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
+  // DELETE a Label by ID
   deleteLabel: async (req, res) => {
     const { id } = req.params;
     try {
@@ -44,6 +83,7 @@ module.exports = {
       if (!label) {
         return res.status(404).json({ error: "Label not found" });
       }
+
       await label.destroy();
       res.json({ message: `Label with ID: ${id} deleted successfully` });
     } catch (error) {
@@ -52,15 +92,15 @@ module.exports = {
     }
   },
 
+  // PUT update a Label by ID
   updateLabel: async (req, res) => {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { name, description, labelCategoryId } = req.body;
 
-    // Validar que se reciban los datos requeridos
-    if (!name || !description) {
+    if (!name || !labelCategoryId) {
       return res
         .status(400)
-        .json({ error: "Name and description are required." });
+        .json({ error: "Name and labelCategoryId are required." });
     }
 
     try {
@@ -69,10 +109,12 @@ module.exports = {
         return res.status(404).json({ error: "Label not found" });
       }
 
-      // Intentar actualizar la etiqueta
-      await label.update({ name, description });
+      await label.update({
+        name,
+        description,
+        labelCategoryId,
+      });
 
-      // Devolver una respuesta exitosa
       res.json({
         message: `Label with ID: ${id} updated successfully`,
         label,

@@ -1,0 +1,19 @@
+meta {
+  name: create new label
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/labels
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "fsdsdsdfdsfdfs",
+    "description": "32343424243424243",
+    "labelCategoryId": 1
+  }
+}
