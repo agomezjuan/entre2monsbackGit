@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "entre2mons",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
