@@ -5,7 +5,6 @@ module.exports = {
   getAllPrices: async (req, res) => {
     try {
       const prices = await Price.findAll();
-      console.log("All prices:", JSON.stringify(prices, null, 2));
       res.json(prices);
     } catch (error) {
       console.error("Error retrieving prices:", error);
@@ -16,33 +15,28 @@ module.exports = {
   // POST
   createPrice: async (req, res) => {
     try {
-      const { priceRestaurant, priceStore, priceCost, date, stockId } =
-        req.body;
-      console.log(req.body);
+      const { costPrice, sellPrice } = req.body;
 
-      if (!priceRestaurant || !priceStore || !priceCost || !date) {
-        // Verificación también actualizada para snake_case
+      // Validación de los campos (sin necesidad de `date`)
+      if (!costPrice || !sellPrice) {
         return res
           .status(400)
-          .json({ error: "All (prices and date) data is required" });
+          .json({
+            error: "Los campos costPrice y sellPrice son obligatorios.",
+          });
       }
 
-      const createdPrice = await Price.create({
-        priceRestaurant,
-        priceStore,
-        priceCost,
-        date,
+      // Crear un nuevo registro en la tabla de precios
+      const newPrice = await Price.create({
+        costPrice,
+        sellPrice,
+        // No necesitas pasar 'date', Sequelize lo asigna automáticamente
       });
-      console.log("created prices", createdPrice);
-      res
-        .status(201)
-        .json({ message: "Prices created successfully", price: createdPrice });
+
+      return res.status(201).json(newPrice);
     } catch (error) {
-      console.error("Error creating price:", error);
-      if (error.name === "SequelizeUniqueConstraintError") {
-        return res.status(400).json({ error: "Prices must be unique" });
-      }
-      res.status(500).json({ error: error });
+      console.error(error);
+      return res.status(500).json({ error: "Error al crear el precio." });
     }
   },
 
@@ -56,7 +50,6 @@ module.exports = {
       }
 
       await price.destroy();
-      console.log(`Deleted price with ID: ${id}`);
       res.json({ message: `Price with ID: ${id} deleted successfully` });
     } catch (error) {
       console.error("Error deleting price:", error);
@@ -68,15 +61,20 @@ module.exports = {
   updatePrice: async (req, res) => {
     try {
       const { id } = req.params;
-      const { priceRestaurant, priceStore, priceCost, date } = req.body; // Cambiado a price para alinearse con el modelo
+      const { costPrice, sellPrice, date } = req.body;
+
       const price = await Price.findByPk(id);
       if (!price) {
         return res.status(404).json({ error: "Price not found" });
       }
-      price.price = price;
-      price.description = description;
+
+      // Actualizamos los campos
+      price.costPrice = costPrice || price.costPrice;
+      price.sellPrice = sellPrice || price.sellPrice;
+      price.date = date || price.date;
+
       await price.save();
-      res.status(200).json(price);
+      res.status(200).json({ message: "Price updated successfully", price });
     } catch (error) {
       console.error("Error updating price:", error);
       res.status(500).json({ error: "Internal Server Error" });

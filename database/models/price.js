@@ -5,13 +5,14 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Price extends Model {
     static associate(models) {
-      // one price has one stocks
+      // one price has one stock
       Price.hasOne(models.Stock, {
         foreignKey: "priceId",
         as: "prices",
       });
     }
   }
+
   Price.init(
     {
       id: {
@@ -31,14 +32,24 @@ module.exports = (sequelize, DataTypes) => {
       date: {
         type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: DataTypes.NOW, // Se rellena automáticamente con la fecha actual
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {
       sequelize,
       modelName: "Price",
       tableName: "prices",
-      timestamps: false,
+      timestamps: true, // Activa timestamps automáticos
     }
   );
+
   return Price;
 };
