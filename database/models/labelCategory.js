@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "LabelCategory",
-      tableName: "labelsCategories", // Asegúrate de que coincide con la migración
+      tableName: "labelsCategories",
       timestamps: false,
     }
   );
