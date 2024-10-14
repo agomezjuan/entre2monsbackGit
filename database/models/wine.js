@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Wine.belongsToMany(models.Vintage, {
-        through: "vintages_wines",
+        through: "VintagesWinesStocks",
         foreignKey: "wineId",
         otherKey: "vintageId",
         as: "vintages",
@@ -41,9 +41,18 @@ module.exports = (sequelize, DataTypes) => {
         as: "labels",
       });
 
-      Wine.belongsTo(models.Stock, {
-        foreignKey: "stockId",
+      Wine.belongsToMany(models.Stock, {
+        through: "VintagesWinesStocks",
+        foreignKey: "wineId",
+        otherKey: "stockId",
         as: "stocks",
+      });
+
+      Wine.belongsToMany(models.Price, {
+        through: "VintagesWinesStocks",
+        foreignKey: "wineId",
+        otherKey: "priceId",
+        as: "prices",
       });
     }
   }
