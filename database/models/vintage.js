@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Vintage.belongsToMany(models.Wine, {
-        through: "VintagesWinesStocks",
+        through: "vintages_wines",
         foreignKey: "vintageId",
         otherKey: "wineId",
         as: "wines",

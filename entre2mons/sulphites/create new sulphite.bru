@@ -1,0 +1,18 @@
+meta {
+  name: create new sulphite
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/sulphites
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "sulphiteMin": 51,
+    "sulphiteMax": 100
+  }
+}

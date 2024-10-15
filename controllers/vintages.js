@@ -1,4 +1,11 @@
-const { Vintage, Wine, Grape } = require("../database/models");
+const {
+  Vintage,
+  Wine,
+  Grape,
+  Stock,
+  Price,
+  sequelize,
+} = require("../database/models");
 
 module.exports = {
   // GET all Vintages
@@ -7,11 +14,8 @@ module.exports = {
       const vintages = await Vintage.findAll({
         include: [
           {
-            model: Wine,
-            as: "wines",
-          },
-          {
             model: Grape,
+            attributes: ["grape", "description"],
             as: "grapes",
           },
         ],
@@ -52,57 +56,57 @@ module.exports = {
   // POST a new Vintage
   createVintage: async (req, res) => {
     try {
-      const { vintage, wineIds, grapeIds } = req.body;
+      const { vintage, wineIds, stockIds, priceIds } = req.body;
 
-      if (!vintage) {
-        return res.status(400).json({ error: "Vintage year is required" });
-      }
+      // Crear el registro de Vintage primero
+      const createdVintage = await Vintage.create({ vintage });
 
-      // Create the new vintage
-      const createdVintage = await Vintage.create({
-        vintage,
-      });
-
-      // Add Wines if provided
+      // Asegurarse de que los vinos se crean antes de hacer las asociaciones
       if (wineIds && Array.isArray(wineIds)) {
-        const wines = await Wine.findAll({
-          where: { id: wineIds },
-        });
-        await createdVintage.addWines(wines);
+        const wines = await Wine.findAll({ where: { id: wineIds } });
+
+        // Si hay stocks y precios, asociarlos a través de la tabla VintageWineStocks
+        if (
+          wines.length &&
+          stockIds &&
+          Array.isArray(stockIds) &&
+          priceIds &&
+          Array.isArray(priceIds)
+        ) {
+          for (let i = 0; i < wines.length; i++) {
+            // Asociar cada vino con el vintage, stock y price correspondiente
+            await VintagesWinesStocks.create({
+              vintageId: createdVintage.id,
+              wineId: wines[i].id,
+              stockId: stockIds[i], // Suponiendo que los IDs de stock se pasan en el mismo orden
+              priceId: priceIds[i], // Suponiendo que los IDs de price se pasan en el mismo orden
+            });
+          }
+        } else {
+          // En caso de que no se tengan stocks o precios, sólo se relaciona el vino
+          await createdVintage.addWines(wines);
+        }
       }
 
-      // Add Grapes if provided
-      if (grapeIds && Array.isArray(grapeIds)) {
-        const grapes = await Grape.findAll({
-          where: { id: grapeIds },
-        });
-        await createdVintage.addGrapes(grapes);
-      }
-
-      // Retrieve the created vintage with associations
+      // Recuperar el vintage con las asociaciones
       const vintageWithAssociations = await Vintage.findByPk(
         createdVintage.id,
         {
           include: [
-            {
-              model: Wine,
-              as: "wines",
-            },
-            {
-              model: Grape,
-              as: "grapes",
-            },
+            { model: Wine, as: "wines" },
+            { model: Stock, as: "stocks" },
+            { model: Price, as: "prices" },
           ],
         }
       );
 
       res.status(201).json({
-        message: "Vintage created successfully",
+        message: "Vintage creado y asociado correctamente",
         vintage: vintageWithAssociations,
       });
     } catch (error) {
-      console.error("Error creating vintage:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error("Error al crear el vintage:", error);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
   },
 
@@ -110,26 +114,24 @@ module.exports = {
   deleteVintage: async (req, res) => {
     try {
       const { id } = req.params;
+
+      // Buscar el vintage por ID, incluyendo asociaciones con wines y grapes
       const vintage = await Vintage.findByPk(id, {
         include: [
-          {
-            model: Wine,
-            as: "wines",
-          },
-          {
-            model: Grape,
-            as: "grapes",
-          },
+          { model: Wine, as: "wines" },
+          { model: Grape, as: "grapes" },
         ],
       });
+
       if (!vintage) {
         return res.status(404).json({ error: "Vintage not found" });
       }
 
-      // Remove associations with Wines and Grapes before deleting
+      // Eliminar asociaciones con Wines y Grapes
       await vintage.setWines([]);
       await vintage.setGrapes([]);
 
+      // Eliminar el vintage
       await vintage.destroy();
       res.json({ message: `Vintage with ID: ${id} deleted successfully` });
     } catch (error) {

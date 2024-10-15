@@ -1,6 +1,5 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("orders", {
@@ -13,6 +12,7 @@ module.exports = {
       orderDate: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       customerId: {
         type: Sequelize.INTEGER,
@@ -21,31 +21,36 @@ module.exports = {
           model: "customers",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+    });
+
+    // Tabla intermedia para la relación many-to-many
+    await queryInterface.createTable("order_wines", {
+      orderId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "orders",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       wineId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: "wines",
           key: "id",
         },
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal(
-          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-        ),
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
     });
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("order_wines");
     await queryInterface.dropTable("orders");
   },
 };

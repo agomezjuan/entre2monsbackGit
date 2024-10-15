@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Wine.belongsToMany(models.Vintage, {
-        through: "VintagesWinesStocks",
+        through: models.VintagesWinesStocks,
         foreignKey: "wineId",
         otherKey: "vintageId",
         as: "vintages",
@@ -24,14 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "icons",
       });
 
-      Wine.belongsTo(models.WineType, {
-        foreignKey: "wineTypeId",
-        as: "wineTypes",
-      });
-
-      Wine.belongsTo(models.Sulphite, {
-        foreignKey: "sulphiteId",
-        as: "sulphites",
+      Wine.belongsToMany(models.Grape, {
+        through: "wines_grapes",
+        foreignKey: "wineId",
+        otherKey: "grapeId",
+        as: "grapes",
       });
 
       Wine.belongsToMany(models.Label, {
@@ -41,29 +38,20 @@ module.exports = (sequelize, DataTypes) => {
         as: "labels",
       });
 
-      Wine.belongsToMany(models.Stock, {
-        through: "VintagesWinesStocks",
-        foreignKey: "wineId",
-        otherKey: "stockId",
-        as: "stocks",
+      Wine.belongsTo(models.Sulphite, {
+        foreignKey: "sulphiteId",
+        as: "sulphites",
       });
 
-      Wine.belongsToMany(models.Price, {
-        through: "VintagesWinesStocks",
-        foreignKey: "wineId",
-        otherKey: "priceId",
-        as: "prices",
+      Wine.belongsTo(models.WineType, {
+        foreignKey: "wineTypeId",
+        as: "wineTypes",
       });
     }
   }
+
   Wine.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
       wine: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -113,14 +101,6 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      stockId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "stocks",
-          key: "id",
-        },
-      },
     },
     {
       sequelize,
@@ -129,5 +109,6 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
+
   return Wine;
 };

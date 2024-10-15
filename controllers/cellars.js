@@ -20,6 +20,10 @@ module.exports = {
           },
         ],
       });
+
+      if (cellars.length === 0) {
+        return res.status(404).json({ error: "No cellars found" });
+      }
       res.json(cellars);
     } catch (error) {
       console.error("Error retrieving cellars:", error);

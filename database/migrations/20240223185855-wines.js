@@ -161,11 +161,35 @@ module.exports = {
         ),
       },
     });
+
+    await queryInterface.createTable("wines_grapes", {
+      wineId: {
+        type: Sequelize.INTEGER,
+        references: { model: "wines", key: "id" },
+        onDelete: "CASCADE",
+      },
+      grapeId: {
+        type: Sequelize.INTEGER,
+        references: { model: "grapes", key: "id" },
+        onDelete: "CASCADE",
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal(
+          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        ),
+      },
+    });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("wines_icons");
     await queryInterface.dropTable("wines_labels");
+    await queryInterface.dropTable("wines_grapes");
     await queryInterface.dropTable("wines");
   },
 };

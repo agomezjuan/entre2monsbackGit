@@ -70,13 +70,26 @@ module.exports = {
    */
   updateSulphite: async (req, res) => {
     const { id } = req.params;
-    const { sulphite: newSulphiteName } = req.body;
+    const { sulphiteMin, sulphiteMax } = req.body; // Esperamos ambos campos en el body
     try {
-      const sulphiteToUpdate = await Sulphite.findByPk(id); //
+      // Encontrar el registro de sulphite por ID
+      const sulphiteToUpdate = await Sulphite.findByPk(id);
       if (!sulphiteToUpdate) {
         return res.status(404).json({ error: "Sulphite not found" });
       }
-      await sulphiteToUpdate.update({ sulphite: newSulphiteName });
+
+      // Actualizamos los campos sulphiteMin y sulphiteMax si se proporcionan
+      await sulphiteToUpdate.update({
+        sulphiteMin:
+          sulphiteMin !== undefined
+            ? sulphiteMin
+            : sulphiteToUpdate.sulphiteMin,
+        sulphiteMax:
+          sulphiteMax !== undefined
+            ? sulphiteMax
+            : sulphiteToUpdate.sulphiteMax,
+      });
+
       console.log(`Sulphite with ID: ${id} has been updated`);
       res.json({ message: `Sulphite with ID: ${id} has been updated` });
     } catch (error) {
@@ -84,7 +97,6 @@ module.exports = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
-
   /*
    * GET - get a sulphite by id
    */

@@ -5,16 +5,16 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Orders extends Model {
     static associate(models) {
-      // Orders have many customers
+      // Orders belong to a Customer (uno a muchos)
       Orders.belongsTo(models.Customer, {
         foreignKey: "customerId",
         as: "customers",
       });
 
-      // Orders have many wines
+      // Orders have many Wines (many-to-many)
       Orders.belongsToMany(models.Wine, {
         foreignKey: "orderId",
-        through: "order_wines",
+        through: "order_wines", // Tabla intermedia para many-to-many
         as: "wines",
       });
     }
@@ -31,20 +31,13 @@ module.exports = (sequelize, DataTypes) => {
       orderDate: {
         type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
       customerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "customers",
-          key: "id",
-        },
-      },
-      wineId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wines",
+          model: "customers", // Tabla 'customers'
           key: "id",
         },
       },
@@ -52,6 +45,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Orders",
+      tableName: "orders", // Asegúrate de que el nombre de la tabla esté definido
+      timestamps: false,
     }
   );
 
