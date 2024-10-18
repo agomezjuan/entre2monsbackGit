@@ -5,15 +5,15 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Grape extends Model {
     static associate(models) {
-      // A grape has many wines
-      Grape.belongsToMany(models.Vintage, {
-        through: "vintages_grapes",
+      Grape.belongsToMany(models.WineVintage, {
+        through: "wine_vintage_grape",
         foreignKey: "grapeId",
-        otherKey: "vintageId",
-        as: "vintages",
+        otherKey: "wineVintageId",
+        as: "wineVintages",
       });
     }
   }
+
   Grape.init(
     {
       id: {
@@ -36,8 +36,9 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Grape",
       tableName: "grapes",
-      timestamps: false,
+      timestamps: true,
     }
   );
+
   return Grape;
 };

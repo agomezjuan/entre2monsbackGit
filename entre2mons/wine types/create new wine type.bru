@@ -1,0 +1,18 @@
+meta {
+  name: create new wine type
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/wineTypes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "wineType": "Prova1",
+    "description": "Prova1"
+  }
+}

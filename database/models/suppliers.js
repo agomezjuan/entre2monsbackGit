@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Supplier.belongsToMany(models.Cellar, {
         foreignKey: "supplierId",
+        otherKey: "cellarId",
         as: "cellars",
         through: "cellar_supplier",
       });

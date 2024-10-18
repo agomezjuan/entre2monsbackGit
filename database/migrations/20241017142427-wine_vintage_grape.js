@@ -1,35 +1,31 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("stocks", {
+    await queryInterface.createTable("wine_vintage_grape", {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      sku: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      amountIn: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      amountOut: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      priceId: {
+      wineVintageId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "prices",
+          model: "wine_vintage",
           key: "id",
         },
+        onDelete: "CASCADE",
+      },
+      grapeId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "grapes",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -47,6 +43,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("stocks");
+    await queryInterface.dropTable("wine_vintage_grape");
   },
 };

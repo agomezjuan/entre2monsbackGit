@@ -6,24 +6,9 @@ module.exports = {
     await queryInterface.bulkInsert(
       "vintages",
       [
-        {
-          vintage: 2015, // Añada del vino
-        },
-        {
-          vintage: 2016,
-        },
-        {
-          vintage: 2017,
-        },
-        {
-          vintage: 2018,
-        },
-        {
-          vintage: 2019,
-        },
-        {
-          vintage: 2020,
-        },
+        { vintage: 2018, createdAt: new Date(), updatedAt: new Date() },
+        { vintage: 2019, createdAt: new Date(), updatedAt: new Date() },
+        { vintage: 2020, createdAt: new Date(), updatedAt: new Date() },
       ],
       {}
     );

@@ -5,10 +5,9 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Price extends Model {
     static associate(models) {
-      // one price has one stock
-      Price.hasOne(models.Stock, {
-        foreignKey: "priceId",
-        as: "prices",
+      Price.belongsTo(models.WineVintage, {
+        foreignKey: "wineVintageId",
+        as: "wineVintage",
       });
     }
   }
@@ -21,33 +20,29 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      costPrice: {
+      purchasePrice: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
-      sellPrice: {
+      salePrice: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
-      date: {
-        type: DataTypes.DATE,
+      wineVintageId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: DataTypes.NOW, // Se rellena automáticamente con la fecha actual
-      },
-      createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+        references: {
+          model: "wine_vintage",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
     },
     {
       sequelize,
       modelName: "Price",
       tableName: "prices",
-      timestamps: true, // Activa timestamps automáticos
+      timestamps: true,
     }
   );
 

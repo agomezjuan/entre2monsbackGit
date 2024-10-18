@@ -67,13 +67,14 @@ module.exports = {
       const { cellar, description, distance, regionId, supplierIds, soilIds } =
         req.body;
 
+      // Validar campos requeridos
       if (!cellar || !distance || !regionId) {
         return res
           .status(400)
           .json({ error: "Cellar name, distance, and regionId are required" });
       }
 
-      // Create the new cellar
+      // Crear el nuevo Cellar
       const createdCellar = await Cellar.create({
         cellar,
         description,
@@ -81,37 +82,26 @@ module.exports = {
         regionId,
       });
 
-      // Add Suppliers if provided
+      // Asociar Suppliers si se proporcionan
       if (supplierIds && Array.isArray(supplierIds)) {
         const suppliers = await Supplier.findAll({
           where: { id: supplierIds },
         });
-        await createdCellar.addSuppliers(suppliers);
+        await createdCellar.addSuppliers(suppliers); // Asociar suppliers
       }
 
-      // Add Soils if provided
+      // Asociar Soils si se proporcionan
       if (soilIds && Array.isArray(soilIds)) {
-        const soils = await Soil.findAll({
-          where: { id: soilIds },
-        });
-        await createdCellar.addSoils(soils);
+        const soils = await Soil.findAll({ where: { id: soilIds } });
+        await createdCellar.addSoils(soils); // Asociar soils
       }
 
-      // Retrieve the created cellar with associations
+      // Retornar el Cellar creado con asociaciones
       const cellarWithAssociations = await Cellar.findByPk(createdCellar.id, {
         include: [
-          {
-            model: Supplier,
-            as: "suppliers",
-          },
-          {
-            model: Soil,
-            as: "soils",
-          },
-          {
-            model: Region,
-            as: "regions",
-          },
+          { model: Supplier, as: "suppliers" },
+          { model: Soil, as: "soils" },
+          { model: Region, as: "regions" },
         ],
       });
 

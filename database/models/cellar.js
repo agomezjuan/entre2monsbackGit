@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       // Cellar have many suppliers
       Cellar.belongsToMany(models.Supplier, {
         foreignKey: "cellarId",
+        otherKey: "supplierId",
         through: "cellar_suppliers",
         as: "suppliers",
       });
@@ -20,8 +21,9 @@ module.exports = (sequelize, DataTypes) => {
 
       // Cellar have many soils
       Cellar.belongsToMany(models.Soil, {
-        through: "cellar_soils",
         foreignKey: "cellarId",
+        otherKey: "soilId",
+        through: "cellar_soils",
         as: "soils",
       });
     }

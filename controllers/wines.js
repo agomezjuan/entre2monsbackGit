@@ -171,81 +171,50 @@ module.exports = {
         cellarId,
         sulphiteId,
         wineTypeId,
-        vintages,
-        icons,
-        grapes,
-        labels,
+        vintages, // Array de vintages con su stock y price data
       } = req.body;
 
-      if (
-        !wine ||
-        !production ||
-        !vineyardAltitude ||
-        !cellarId ||
-        !vintages ||
-        vintages.length === 0
-      ) {
-        return res.status(400).json({
-          message:
-            "Faltan campos obligatorios: wine, production, vineyardAltitude, cellarId, vintages.",
-        });
-      }
+      // Crear el vino
+      const createdWine = await Wine.create({
+        wine,
+        description,
+        production,
+        vineyardAltitude,
+        img,
+        tastingNotes,
+        cellarId,
+        sulphiteId,
+        wineTypeId,
+      });
 
-      // Recorrer las añadas para crear los registros asociados
+      // Asociar el vino con los vintages
       for (const vintageData of vintages) {
         const { vintageId, stockData, priceData } = vintageData;
 
-        if (!vintageId || !stockData || !priceData) {
+        // Verificar que el vintage exista
+        const vintage = await Vintage.findByPk(vintageId);
+        if (!vintage) {
           return res.status(400).json({
-            message:
-              "Faltan campos obligatorios en la añada: vintageId, stockData, priceData.",
+            message: `El vintage con id ${vintageId} no existe.`,
           });
         }
 
-        // Crear el registro de Price antes que el Stock, para poder usar su priceId
-        const newPrice = await Price.create(priceData);
-
-        // Añadir priceId al stockData antes de crear Stock
-        stockData.priceId = newPrice.id;
-
-        // Crear el registro de Stock con el priceId
-        const newStock = await Stock.create(stockData);
-
-        // Finalmente, crear el vino utilizando el stockId asociado
-        const createdWine = await Wine.create({
-          wine,
-          description,
-          production,
-          vineyardAltitude,
-          img,
-          tastingNotes,
-          cellarId,
-          sulphiteId,
-          wineTypeId,
-          stockId: newStock.id, // Asociar el stockId al vino
-        });
-
-        // Crear la relación en la tabla intermedia VintagesWinesStocks
+        // Crear la asociación en la tabla intermedia
         await VintagesWinesStocks.create({
           wineId: createdWine.id,
-          vintageId,
-          stockId: newStock.id,
-          priceId: newPrice.id,
-        });
-
-        // Asignar iconos, uvas y etiquetas si existen
-        if (icons && icons.length > 0) await createdWine.addIcons(icons);
-        if (grapes && grapes.length > 0) await createdWine.addGrapes(grapes);
-        if (labels && labels.length > 0) await createdWine.addLabels(labels);
-
-        res.status(201).json({
-          message: "Vino creado exitosamente",
-          wine: createdWine,
+          vintageId: vintage.id,
+          stockId: stockData.stockId, // Asumimos que stockData tiene un stockId
+          priceId: priceData.priceId, // Asumimos que priceData tiene un priceId
         });
       }
+
+      res.status(201).json({
+        message: "Vino creado exitosamente y asociado a los vintages.",
+        wine: createdWine,
+      });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error al crear el vino." });
+      console.error("Error al crear el vino:", error);
+      res.status(500).json({ error: "Error interno del servidor." });
     }
   },
 

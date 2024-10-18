@@ -7,32 +7,25 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Wine.belongsTo(models.Cellar, {
         foreignKey: "cellarId",
-        as: "cellars",
+        as: "cellar",
       });
 
       Wine.belongsToMany(models.Vintage, {
-        through: models.VintagesWinesStocks,
+        through: models.WineVintage, // Requiere el modelo `WineVintage`
         foreignKey: "wineId",
         otherKey: "vintageId",
         as: "vintages",
       });
 
       Wine.belongsToMany(models.Icon, {
-        through: "wines_icons",
+        through: "wine_icons", // Cambiado para seguir convención de plural
         foreignKey: "wineId",
         otherKey: "iconId",
         as: "icons",
       });
 
-      Wine.belongsToMany(models.Grape, {
-        through: "wines_grapes",
-        foreignKey: "wineId",
-        otherKey: "grapeId",
-        as: "grapes",
-      });
-
       Wine.belongsToMany(models.Label, {
-        through: "wines_labels",
+        through: "wine_labels", // Cambiado para seguir convención de plural
         foreignKey: "wineId",
         otherKey: "labelId",
         as: "labels",
@@ -40,19 +33,19 @@ module.exports = (sequelize, DataTypes) => {
 
       Wine.belongsTo(models.Sulphite, {
         foreignKey: "sulphiteId",
-        as: "sulphites",
+        as: "sulphite",
       });
 
       Wine.belongsTo(models.WineType, {
         foreignKey: "wineTypeId",
-        as: "wineTypes",
+        as: "wineType",
       });
     }
   }
 
   Wine.init(
     {
-      wine: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
@@ -106,7 +99,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Wine",
       tableName: "wines",
-      timestamps: false,
+      timestamps: true,
     }
   );
 

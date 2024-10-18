@@ -1,4 +1,4 @@
-const { Stock } = require('../database/models'); 
+const { Stock } = require("../database/models");
 
 module.exports = {
   // GET /stocks
@@ -12,11 +12,16 @@ module.exports = {
     }
   },
 
-  // POST /stocks 
+  // POST /stocks
   createStock: async (req, res) => {
-    const { sku, amountIn, amountOut, priceId } = req.body;
+    const { sku, quantityIn, quantityOut, wineVintageId } = req.body;
     try {
-      const newStock = await Stock.create({ sku, amountIn, amountOut, priceId });
+      const newStock = await Stock.create({
+        sku,
+        quantityIn,
+        quantityOut,
+        wineVintageId,
+      });
       res.status(201).json(newStock);
     } catch (error) {
       console.error("Error creating stock:", error);
@@ -43,16 +48,17 @@ module.exports = {
   // PUT /stocks/:id
   updateStock: async (req, res) => {
     const { id } = req.params;
-    const { sku, amountIn, amountOut, priceId } = req.body;
+    const { sku, quantityIn, quantityOut, wineVintageId } = req.body;
     try {
       const stock = await Stock.findByPk(id);
       if (!stock) {
         return res.status(404).json({ error: "Stock not found" });
       }
+      // Actualizamos los campos del registro
       stock.sku = sku;
-      stock.amountIn = amountIn;
-      stock.amountOut = amountOut;
-      stock.priceId = priceId;
+      stock.quantityIn = quantityIn;
+      stock.quantityOut = quantityOut;
+      stock.wineVintageId = wineVintageId;
       await stock.save();
       res.status(200).json(stock);
     } catch (error) {
@@ -75,6 +81,4 @@ module.exports = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
-
-
-}
+};

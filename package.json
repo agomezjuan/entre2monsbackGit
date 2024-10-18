@@ -10,6 +10,7 @@
     "db:stop": "docker-compose down",
     "db:reset": "docker-compose down && docker-compose up -d",
     "db:migrate": "npx sequelize db:migrate",
+    "db:generate:migration": "npx sequelize-cli migration:generate --name",
     "db:rollback": "npx sequelize db:migrate:undo:all",
     "db:seed": "npx sequelize db:seed:all",
     "db:seed:specific": "npx sequelize db:seed --seed",

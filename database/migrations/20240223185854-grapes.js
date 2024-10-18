@@ -1,15 +1,14 @@
-'use strict';
+"use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('grapes', { 
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("grapes", {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-      }, 
+      },
       grape: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -17,24 +16,24 @@ module.exports = {
       },
       description: {
         type: Sequelize.TEXT,
-        allowNull: true,
+        allowNull: true, // Asegúrate de que sea nullable si es opcional
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
-      }
+        defaultValue: Sequelize.literal(
+          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        ),
+      },
     });
-
-    
   },
 
-  async down (queryInterface, Sequelize,) {
-    await queryInterface.dropTable('grapes');
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("grapes");
+  },
 };

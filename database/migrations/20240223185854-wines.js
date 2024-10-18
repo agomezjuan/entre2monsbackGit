@@ -1,31 +1,16 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    // Crear tabla wines
     await queryInterface.createTable("wines", {
-      /**
-       * @param id - integer - not null - autoincrement - primary key
-       * @param wine - string - not null - unique
-       * @param description - text - nullable
-       * @param year - integer - not null
-       * @param production - integer - not null
-       * @param vineyardAltitude - integer - not null
-       * @param img - text - nullable
-       * @param cellarId - integer - not null - references cellars.id
-       * @param stockId - integer - not null - references stocks.id
-       * @param wineTypeId - integer - not null - references wineTypes.id
-       * @param sulphiteId - integer - not null - references sulphites.id
-       */
-
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        autoIncrement: true,
       },
-      wine: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
@@ -50,6 +35,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+
       cellarId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -74,14 +60,6 @@ module.exports = {
           key: "id",
         },
       },
-      stockId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "stocks",
-          key: "id",
-        },
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -96,11 +74,14 @@ module.exports = {
       },
     });
 
-    /*
-     * Create table wines_icons
-     */
-
-    await queryInterface.createTable("wines_icons", {
+    // ** Middle table wine_vintage
+    await queryInterface.createTable("wine_vintage", {
+      id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       wineId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -108,30 +89,26 @@ module.exports = {
           model: "wines",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
-      iconId: {
+      vintageId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "icons",
+          model: "vintages",
           key: "id",
         },
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal(
-          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-        ),
+        onDelete: "CASCADE",
       },
     });
 
-    await queryInterface.createTable("wines_labels", {
+    await queryInterface.createTable("wine_labels", {
+      id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       wineId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -139,6 +116,7 @@ module.exports = {
           model: "wines",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       labelId: {
         type: Sequelize.INTEGER,
@@ -147,49 +125,42 @@ module.exports = {
           model: "labels",
           key: "id",
         },
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal(
-          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-        ),
+        onDelete: "CASCADE",
       },
     });
 
-    await queryInterface.createTable("wines_grapes", {
+    await queryInterface.createTable("wine_icons", {
+      id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       wineId: {
         type: Sequelize.INTEGER,
-        references: { model: "wines", key: "id" },
+        allowNull: false,
+        references: {
+          model: "wines",
+          key: "id",
+        },
         onDelete: "CASCADE",
       },
-      grapeId: {
+      iconId: {
         type: Sequelize.INTEGER,
-        references: { model: "grapes", key: "id" },
+        allowNull: false,
+        references: {
+          model: "icons",
+          key: "id",
+        },
         onDelete: "CASCADE",
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal(
-          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-        ),
       },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("wines_icons");
-    await queryInterface.dropTable("wines_labels");
-    await queryInterface.dropTable("wines_grapes");
+    await queryInterface.dropTable("wine_vintage");
+    await queryInterface.dropTable("wine_labels");
+    await queryInterface.dropTable("wine_icons");
     await queryInterface.dropTable("wines");
   },
 };

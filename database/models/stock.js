@@ -4,19 +4,14 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Stock extends Model {
-    // one stock has one wine
     static associate(models) {
-      Stock.hasOne(models.Wine, {
-        foreignKey: "stockId",
-        as: "wine",
-      });
-
-      Stock.belongsTo(models.Price, {
-        foreignKey: "priceId",
-        as: "prices",
+      Stock.belongsTo(models.WineVintage, {
+        foreignKey: "wineVintageId",
+        as: "wineVintage",
       });
     }
   }
+
   Stock.init(
     {
       id: {
@@ -30,21 +25,22 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-      amountIn: {
+      quantityIn: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      amountOut: {
+      quantityOut: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      priceId: {
+      wineVintageId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "prices",
+          model: "wine_vintage",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
     },
     {
@@ -54,5 +50,6 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
     }
   );
+
   return Stock;
 };
