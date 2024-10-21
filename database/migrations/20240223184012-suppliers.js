@@ -5,9 +5,9 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("suppliers", {
       /**
-       * @param id - integer - not null - autoincrement - primary key
-       * @param companyName - string - not null - unique
-       * @param fiscalName - string - not null - unique
+       * @param {integer} id - integer - not null - autoincrement - primary key
+       * @param {string} companyName - string - not null - unique
+       * @param {string} fiscalName - string - not null - unique
        * @param {string} NIF - not null - unique
        * @param country - string - not null
        * @param country - string - not null
@@ -44,6 +44,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          is: /^[XYZ]?\d{5,8}[A-Z]$/i,
+        },
       },
       country: {
         type: Sequelize.STRING,
@@ -53,7 +56,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      adress: {
+      address: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -64,6 +67,9 @@ module.exports = {
       businessPhone: {
         type: Sequelize.STRING,
         allowNull: false,
+        validate: {
+          isNumeric: true,
+        },
       },
       contactName: {
         type: Sequelize.STRING,
@@ -72,14 +78,24 @@ module.exports = {
       contactPhone: {
         type: Sequelize.STRING,
         allowNull: false,
+        validate: {
+          isNumeric: true,
+          isMobilePhone: true,
+        },
       },
       businessEmail: {
         type: Sequelize.STRING,
         allowNull: false,
+        validate: {
+          isEmail: true,
+        },
       },
       contactEmail: {
         type: Sequelize.STRING,
         allowNull: false,
+        validate: {
+          isEmail: true,
+        },
       },
       description: {
         type: Sequelize.TEXT,

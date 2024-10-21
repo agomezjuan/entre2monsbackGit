@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       Stock.belongsTo(models.WineVintage, {
         foreignKey: "wineVintageId",
         as: "wineVintage",
+        onDelete: "CASCADE",
       });
     }
   }
@@ -28,16 +29,31 @@ module.exports = (sequelize, DataTypes) => {
       quantityIn: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+          isInt: true,
+          min: 0,
+        },
       },
       quantityOut: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+          isInt: true,
+          min: 0,
+          max(value) {
+            if (value > this.quantityIn) {
+              throw new Error(
+                "La cantidad saliente no puede exceder la cantidad entrante."
+              );
+            }
+          },
+        },
       },
       wineVintageId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "wine_vintage",
+          model: "wines_vintages",
           key: "id",
         },
         onDelete: "CASCADE",

@@ -2,30 +2,58 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert("wines", [
+    return queryInterface.bulkInsert("wines", [
       {
-        name: "Cabernet Sauvignon",
-        description: "Vino tinto con sabor robusto y aroma intenso.",
-        production: 2020,
-        vineyardAltitude: 800,
-        img: "img1.jpg",
-        tastingNotes: "Frutos rojos, madera, taninos suaves.",
-        cellarId: 1, // Asegúrate de tener estos IDs en las tablas relacionadas
-        wineTypeId: 1,
-        sulphiteId: 1,
+        name: "Chardonnay Reserva",
+        description: "Un vino blanco seco con notas de manzana y vainilla.",
+        production: 5000,
+        vineyardAltitude: 400,
+        img: "https://example.com/images/chardonnay_reserva.png",
+        tastingNotes: "Manzana verde, vainilla, y un toque de miel.",
+        cellarId: 1, // Debes asegurarte de que esta bodega exista en tu tabla cellars
+        sulphiteId: 3, // Debes asegurarte de que este sulphite exista en tu tabla sulphites
+        wineTypeId: 2, // Debes asegurarte de que este tipo de vino exista en tu tabla wineTypes
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "Chardonnay",
-        description: "Vino blanco con notas de frutas tropicales.",
-        production: 2021,
+        name: "Cabernet Sauvignon",
+        description:
+          "Un vino tinto robusto con notas de cereza negra y tabaco.",
+        production: 3000,
+        vineyardAltitude: 500,
+        img: "https://example.com/images/cabernet_sauvignon.png",
+        tastingNotes: "Cereza negra, tabaco, y un toque de roble.",
+        cellarId: 2, // Referencia a otra bodega existente
+        sulphiteId: 2, // Referencia a sulphites existente
+        wineTypeId: 1, // Referencia a un tipo de vino existente
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Merlot",
+        description:
+          "Un vino tinto suave y afrutado con notas de ciruela y cacao.",
+        production: 4500,
+        vineyardAltitude: 350,
+        img: "https://example.com/images/merlot.png",
+        tastingNotes: "Ciruela, cacao y un toque de vainilla.",
+        cellarId: 3, // Referencia a otra bodega existente
+        sulphiteId: 1, // Referencia a sulphites existente
+        wineTypeId: 1, // Referencia a un tipo de vino existente
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Malbec",
+        description: "Un vino tinto intenso con notas de mora y regaliz.",
+        production: 4000,
         vineyardAltitude: 600,
-        img: "img2.jpg",
-        tastingNotes: "Piña, manzana verde, toque de roble.",
-        cellarId: 1,
-        wineTypeId: 2,
-        sulphiteId: 2,
+        img: "https://example.com/images/malbec.png",
+        tastingNotes: "Mora, regaliz y un toque de pimienta.",
+        cellarId: 4, // Referencia a otra bodega existente
+        sulphiteId: 2, // Referencia a sulphites existente
+        wineTypeId: 1, // Referencia a un tipo de vino existente
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -33,6 +61,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("wines", null, {});
+    return queryInterface.bulkDelete("wines", null, {});
   },
 };

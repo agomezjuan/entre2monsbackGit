@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       Price.belongsTo(models.WineVintage, {
         foreignKey: "wineVintageId",
         as: "wineVintage",
+        onDelete: "CASCADE",
       });
     }
   }
@@ -32,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "wine_vintage",
+          model: "wines_vintages",
           key: "id",
         },
         onDelete: "CASCADE",

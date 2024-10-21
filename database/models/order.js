@@ -3,16 +3,18 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Orders extends Model {
+  class Order extends Model {
     static associate(models) {
       // Orders belong to a Customer (uno a muchos)
-      Orders.belongsTo(models.Customer, {
+      Order.belongsTo(models.Customer, {
         foreignKey: "customerId",
-        as: "customers",
+        as: "customer",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
 
       // Orders have many Wines (many-to-many)
-      Orders.belongsToMany(models.Wine, {
+      Order.belongsToMany(models.Wine, {
         foreignKey: "orderId",
         through: "order_wines", // Tabla intermedia para many-to-many
         as: "wines",
@@ -20,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  Orders.init(
+  Order.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -50,5 +52,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return Orders;
+  return Order;
 };

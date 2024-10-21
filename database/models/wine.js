@@ -11,21 +11,26 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Wine.belongsToMany(models.Vintage, {
-        through: models.WineVintage, // Requiere el modelo `WineVintage`
+        through: models.WineVintage,
         foreignKey: "wineId",
         otherKey: "vintageId",
         as: "vintages",
       });
 
+      Wine.hasMany(models.WineVintage, {
+        foreignKey: "wineId",
+        as: "wineVintageStocks",
+      });
+
       Wine.belongsToMany(models.Icon, {
-        through: "wine_icons", // Cambiado para seguir convención de plural
+        through: "wine_icons",
         foreignKey: "wineId",
         otherKey: "iconId",
         as: "icons",
       });
 
       Wine.belongsToMany(models.Label, {
-        through: "wine_labels", // Cambiado para seguir convención de plural
+        through: "wine_labels",
         foreignKey: "wineId",
         otherKey: "labelId",
         as: "labels",
@@ -57,10 +62,18 @@ module.exports = (sequelize, DataTypes) => {
       production: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+          isInt: true,
+          min: 0,
+        },
       },
       vineyardAltitude: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+          isInt: true,
+          min: 0,
+        },
       },
       img: {
         type: DataTypes.TEXT,

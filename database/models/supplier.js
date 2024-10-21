@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       Supplier.belongsToMany(models.Cellar, {
         foreignKey: "supplierId",
         otherKey: "cellarId",
-        as: "cellars",
-        through: "cellar_supplier",
+        as: "suppliers",
+        through: "cellars_suppliers",
       });
     }
   }
@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      adress: {
+      address: {
         type: DataTypes.STRING,
         allowNull: false,
       },

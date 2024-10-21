@@ -9,7 +9,12 @@ const {
   Icon,
   Grape,
   Label,
-  VintagesWinesStocks,
+  WineVintage,
+  Supplier,
+  Region,
+  Country,
+  Soil,
+  sequelize,
 } = require("../database/models");
 
 module.exports = {
@@ -22,68 +27,58 @@ module.exports = {
         include: [
           {
             model: Cellar,
-            attributes: ["cellar", "description", "distance"],
-            as: "cellars",
+            as: "cellar", // Asociación con Cellar
+            include: [
+              {
+                model: Region,
+                as: "regions", // Usar el alias correcto 'regions'
+                include: [
+                  {
+                    model: Country,
+                    as: "countries", // Asociación directa con un país
+                  },
+                ],
+              },
+              {
+                model: Soil,
+                as: "soils", // Asociación directa con varios suelos
+              },
+              {
+                model: Supplier,
+                as: "suppliers", // Asociación directa con varios proveedores
+              },
+            ],
           },
           {
             model: Vintage,
             as: "vintages",
+            through: { attributes: [] }, // Omitimos la tabla intermedia
             include: [
               {
-                model: Stock,
-                attributes: ["sku", "amountIn", "amountOut"],
-                as: "stocks",
-              },
-              {
-                model: Price,
-                attributes: ["sellPrice", "costPrice", "date"],
-                as: "prices",
-              },
-              {
-                model: Grape,
-                attributes: ["grape", "description"],
-                as: "grapes",
+                model: WineVintage,
+                as: "wineVintageStocks", // Alias correcto en el modelo Vintage
+                include: [
+                  {
+                    model: Stock,
+                    as: "stock",
+                    attributes: ["sku", "quantityIn", "quantityOut"],
+                  },
+                  {
+                    model: Price,
+                    as: "price",
+                    attributes: ["salePrice", "purchasePrice"],
+                  },
+                ],
               },
             ],
-            through: { attributes: [] }, // Omitimos las columnas de la tabla intermedia
-          },
-          {
-            model: Sulphite,
-            attributes: ["sulphiteMin", "sulphiteMax"],
-            as: "sulphites",
-          },
-          {
-            model: WineType,
-            attributes: ["wineType", "description"],
-            as: "wineTypes",
-          },
-          {
-            model: Icon,
-            attributes: ["url", "description"],
-            as: "icons",
-          },
-          {
-            model: Grape,
-            attributes: ["grape", "description"],
-            as: "grapes",
-          },
-          {
-            model: Label,
-            attributes: ["name", "description"],
-            as: "labels",
           },
         ],
       });
 
-      // Verificar si se obtienen los resultados deseados
-      if (!wines || wines.length === 0) {
-        return res.status(404).json({ message: "No se encontraron vinos." });
-      }
-
       res.json(wines);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error al obtener los vinos." });
+      console.error("Error retrieving wines:", error);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
   },
 
@@ -98,7 +93,7 @@ module.exports = {
           {
             model: Cellar,
             attributes: ["cellar", "description", "distance"],
-            as: "cellars",
+            as: "cellar",
           },
           {
             model: Vintage,
@@ -107,12 +102,12 @@ module.exports = {
             include: [
               {
                 model: Stock,
-                attributes: ["sku", "amountIn", "amountOut"],
+                attributes: ["sku", "quantityIn", "quantityOut"],
                 as: "stocks",
               },
               {
                 model: Price,
-                attributes: ["sellPrice", "costPrice", "date"],
+                attributes: ["sellPrice", "purchasePrice", "date"], // Atributos corregidos
                 as: "prices",
               },
             ],
@@ -120,22 +115,17 @@ module.exports = {
           {
             model: Sulphite,
             attributes: ["sulphiteMin", "sulphiteMax"],
-            as: "sulphites",
+            as: "sulphite",
           },
           {
             model: WineType,
             attributes: ["wineType", "description"],
-            as: "wineTypes",
+            as: "wineType",
           },
           {
             model: Icon,
             attributes: ["url", "description"],
             as: "icons",
-          },
-          {
-            model: Grape,
-            attributes: ["grape", "description"],
-            as: "grapes",
           },
           {
             model: Label,
@@ -157,12 +147,15 @@ module.exports = {
   },
 
   /*
-   * POST - Crear un nuevo vino
+   * POST - Crear un nuevo vino y asociarlo con vintages
    */
   createWine: async (req, res) => {
+    const t = await sequelize.transaction(); // Iniciar transacción
     try {
+      console.log("Datos recibidos en req.body:", req.body);
+
       const {
-        wine,
+        name,
         description,
         production,
         vineyardAltitude,
@@ -174,83 +167,14 @@ module.exports = {
         vintages, // Array de vintages con su stock y price data
       } = req.body;
 
-      // Crear el vino
-      const createdWine = await Wine.create({
-        wine,
-        description,
-        production,
-        vineyardAltitude,
-        img,
-        tastingNotes,
-        cellarId,
-        sulphiteId,
-        wineTypeId,
-      });
-
-      // Asociar el vino con los vintages
-      for (const vintageData of vintages) {
-        const { vintageId, stockData, priceData } = vintageData;
-
-        // Verificar que el vintage exista
-        const vintage = await Vintage.findByPk(vintageId);
-        if (!vintage) {
-          return res.status(400).json({
-            message: `El vintage con id ${vintageId} no existe.`,
-          });
-        }
-
-        // Crear la asociación en la tabla intermedia
-        await VintagesWinesStocks.create({
-          wineId: createdWine.id,
-          vintageId: vintage.id,
-          stockId: stockData.stockId, // Asumimos que stockData tiene un stockId
-          priceId: priceData.priceId, // Asumimos que priceData tiene un priceId
-        });
-      }
-
-      res.status(201).json({
-        message: "Vino creado exitosamente y asociado a los vintages.",
-        wine: createdWine,
-      });
-    } catch (error) {
-      console.error("Error al crear el vino:", error);
-      res.status(500).json({ error: "Error interno del servidor." });
-    }
-  },
-
-  /*
-   * PUT - Actualizar un vino por su ID
-   */
-  updateWine: async (req, res) => {
-    const t = await sequelize.transaction(); // Iniciar transacción
-    try {
-      const { id } = req.params;
-      const {
-        wine,
-        description,
-        production,
-        vineyardAltitude,
-        img,
-        tastingNotes,
-        cellarId,
-        sulphiteId,
-        wineTypeId,
-        vintages,
-        icons,
-        grapes,
-        labels,
-      } = req.body;
-
-      const existingWine = await Wine.findByPk(id, { transaction: t });
-      if (!existingWine) {
+      if (!Array.isArray(vintages)) {
         await t.rollback();
-        return res.status(404).json({ message: "Vino no encontrado." });
+        return res.status(400).json({ message: "Vintages debe ser un array." });
       }
 
-      // Actualizar datos del vino
-      await existingWine.update(
+      const createdWine = await Wine.create(
         {
-          wine,
+          name,
           description,
           production,
           vineyardAltitude,
@@ -263,7 +187,136 @@ module.exports = {
         { transaction: t }
       );
 
-      // Actualizar las añadas, stocks y precios
+      console.log("Vino creado con éxito:", createdWine);
+
+      for (const vintageData of vintages) {
+        const { vintageId, stockData, priceData } = vintageData;
+
+        const vintage = await Vintage.findByPk(vintageId, { transaction: t });
+        if (!vintage) {
+          await t.rollback();
+          return res.status(400).json({
+            message: `El vintage con id ${vintageId} no existe.`,
+          });
+        }
+
+        const wineVintage = await WineVintage.create(
+          {
+            wineId: createdWine.id,
+            vintageId: vintage.id,
+          },
+          { transaction: t }
+        );
+
+        console.log("Asociación WineVintage creada:", wineVintage);
+
+        if (
+          stockData &&
+          stockData.sku &&
+          stockData.quantityIn != null &&
+          stockData.quantityOut != null
+        ) {
+          await Stock.create(
+            {
+              ...stockData,
+              wineVintageId: wineVintage.id,
+            },
+            { transaction: t }
+          );
+          console.log("Stock asociado con éxito:", stockData);
+        } else if (stockData) {
+          await t.rollback();
+          return res.status(400).json({
+            message:
+              "Faltan los valores de 'quantityIn' o 'quantityOut' en stockData.",
+          });
+        }
+
+        console.log("Datos de priceData recibidos:", priceData);
+
+        if (
+          priceData &&
+          priceData.purchasePrice != null &&
+          priceData.salePrice != null
+        ) {
+          try {
+            await Price.create(
+              {
+                ...priceData,
+                wineVintageId: wineVintage.id,
+              },
+              { transaction: t }
+            );
+            console.log("Precio asociado con éxito:", priceData);
+          } catch (priceError) {
+            console.error("Error al insertar precio:", priceError.message);
+            await t.rollback();
+            return res.status(500).json({ error: "Error al insertar precio." });
+          }
+        } else if (priceData) {
+          await t.rollback();
+          return res.status(400).json({
+            message:
+              "Faltan los valores de 'purchasePrice' o 'salePrice' en priceData.",
+          });
+        }
+      }
+
+      await t.commit();
+      res.status(201).json({
+        message: "Vino creado exitosamente y asociado a los vintages.",
+        wine: createdWine,
+      });
+    } catch (error) {
+      await t.rollback();
+      console.error("Error al crear el vino:", error.message, error.stack);
+      res
+        .status(500)
+        .json({ error: error.message || "Error interno del servidor." });
+    }
+  },
+
+  /*
+   * PUT - Actualizar un vino por su ID
+   */
+  updateWine: async (req, res) => {
+    const t = await sequelize.transaction();
+    try {
+      const { id } = req.params;
+      const {
+        name,
+        description,
+        production,
+        vineyardAltitude,
+        img,
+        tastingNotes,
+        cellarId,
+        sulphiteId,
+        wineTypeId,
+        vintages,
+      } = req.body;
+
+      const existingWine = await Wine.findByPk(id, { transaction: t });
+      if (!existingWine) {
+        await t.rollback();
+        return res.status(404).json({ message: "Vino no encontrado." });
+      }
+
+      await existingWine.update(
+        {
+          name,
+          description,
+          production,
+          vineyardAltitude,
+          img,
+          tastingNotes,
+          cellarId,
+          sulphiteId,
+          wineTypeId,
+        },
+        { transaction: t }
+      );
+
       for (const vintageData of vintages) {
         const { vintageId, stockData, priceData } = vintageData;
 
@@ -275,7 +328,7 @@ module.exports = {
           await existingStock.update(stockData, { transaction: t });
         } else {
           const newStock = await Stock.create(stockData, { transaction: t });
-          await VintageWinesStocks.update(
+          await WineVintage.update(
             { stockId: newStock.id },
             { where: { wineId: id, vintageId }, transaction: t }
           );
@@ -289,17 +342,12 @@ module.exports = {
           await existingPrice.update(priceData, { transaction: t });
         } else {
           const newPrice = await Price.create(priceData, { transaction: t });
-          await VintageWinesStocks.update(
+          await WineVintage.update(
             { priceId: newPrice.id },
             { where: { wineId: id, vintageId }, transaction: t }
           );
         }
       }
-
-      // Actualizar iconos, uvas y etiquetas
-      await existingWine.setIcons(icons, { transaction: t });
-      await existingWine.setGrapes(grapes, { transaction: t });
-      await existingWine.setLabels(labels, { transaction: t });
 
       await t.commit();
       res.json({
@@ -317,7 +365,7 @@ module.exports = {
    * DELETE - Eliminar un vino por su ID
    */
   deleteWine: async (req, res) => {
-    const t = await sequelize.transaction(); // Iniciar transacción
+    const t = await sequelize.transaction();
     try {
       const { id } = req.params;
 
@@ -327,7 +375,6 @@ module.exports = {
         return res.status(404).json({ message: "Vino no encontrado." });
       }
 
-      // Eliminar relaciones many-to-many
       await wine.setIcons([], { transaction: t });
       await wine.setGrapes([], { transaction: t });
       await wine.setLabels([], { transaction: t });

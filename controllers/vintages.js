@@ -1,10 +1,9 @@
 const {
   Vintage,
   Wine,
-  Grape,
   Stock,
   Price,
-  VintagesWinesStocks,
+  WineVintage,
   sequelize,
 } = require("../database/models");
 
@@ -16,35 +15,32 @@ module.exports = {
         include: [
           {
             model: Wine,
-            as: "wines", // Incluir los vinos asociados a cada vintage
+            as: "wines",
+            through: { attributes: [] }, // Omite los atributos de la tabla intermedia
+            include: [
+              {
+                model: WineVintage,
+                as: "wineVintageStocks", // Debe coincidir con el alias en el modelo Vintage
+                include: [
+                  {
+                    model: Stock,
+                    as: "stock",
+                    attributes: ["sku", "quantityIn", "quantityOut"],
+                  },
+                  {
+                    model: Price,
+                    as: "price",
+                    attributes: ["salePrice", "purchasePrice"], // Eliminamos "date"
+                  },
+                ],
+              },
+            ],
           },
         ],
       });
       res.json(vintages);
     } catch (error) {
       console.error("Error retrieving vintages:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
-    }
-  },
-
-  // GET a single Vintage by ID with associated Wines
-  getVintageById: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const vintage = await Vintage.findByPk(id, {
-        include: [
-          {
-            model: Wine,
-            as: "wines", // Incluir los vinos asociados a este vintage
-          },
-        ],
-      });
-      if (!vintage) {
-        return res.status(404).json({ error: "Vintage no encontrado" });
-      }
-      res.json(vintage);
-    } catch (error) {
-      console.error("Error retrieving vintage:", error);
       res.status(500).json({ error: "Error interno del servidor" });
     }
   },
@@ -57,18 +53,24 @@ module.exports = {
         include: [
           {
             model: Wine,
-            as: "wines", // Incluir los vinos asociados
-            through: { attributes: [] }, // Omitimos la tabla intermedia en los resultados
+            as: "wines",
+            through: { attributes: [] }, // Omite los atributos de la tabla intermedia
             include: [
               {
-                model: Stock,
-                as: "stocks", // Incluir stock asociado al vino
-                attributes: ["sku", "amountIn", "amountOut"],
-              },
-              {
-                model: Price,
-                as: "prices", // Incluir precio asociado al vino
-                attributes: ["sellPrice", "costPrice", "date"],
+                model: WineVintage,
+                as: "wineVintageStocks", // Debe coincidir con el alias en el modelo Vintage
+                include: [
+                  {
+                    model: Stock,
+                    as: "stock",
+                    attributes: ["sku", "quantityIn", "quantityOut"],
+                  },
+                  {
+                    model: Price,
+                    as: "price",
+                    attributes: ["sellPrice", "purchasePrice"], // Eliminamos "date"
+                  },
+                ],
               },
             ],
           },
@@ -79,7 +81,7 @@ module.exports = {
         return res.status(404).json({ message: "Vintage no encontrado." });
       }
 
-      res.json(vintage); // Devolver el vintage con los vinos asociados
+      res.json(vintage);
     } catch (error) {
       console.error("Error retrieving vintage:", error);
       res.status(500).json({ error: "Error interno del servidor" });
@@ -88,11 +90,15 @@ module.exports = {
 
   // ** POST a new Vintage
   createVintage: async (req, res) => {
+    const t = await sequelize.transaction();
     try {
       const { vintage, wineIds, stockIds, priceIds } = req.body;
 
       // Crear el registro de Vintage primero
-      const createdVintage = await Vintage.create({ vintage });
+      const createdVintage = await Vintage.create(
+        { vintage },
+        { transaction: t }
+      );
 
       // Validar que los IDs de vinos, stocks y precios están presentes
       if (
@@ -103,22 +109,26 @@ module.exports = {
         priceIds &&
         Array.isArray(priceIds)
       ) {
-        // Iterar sobre los IDs de vinos y asociarlos con stocks y prices
         for (let i = 0; i < wineIds.length; i++) {
-          await VintagesWinesStocks.create({
-            vintageId: createdVintage.id,
-            wineId: wineIds[i],
-            stockId: stockIds[i], // Suponiendo que el orden de los IDs coincide
-            priceId: priceIds[i], // Suponiendo que el orden de los IDs coincide
-          });
+          await WineVintage.create(
+            {
+              vintageId: createdVintage.id,
+              wineId: wineIds[i],
+              stockId: stockIds[i], // Suponiendo que el orden de los IDs coincide
+              priceId: priceIds[i], // Suponiendo que el orden de los IDs coincide
+            },
+            { transaction: t }
+          );
         }
-      } else {
-        // Si no hay stocks o precios, solo asociar los vinos
-        if (wineIds && Array.isArray(wineIds)) {
-          const wines = await Wine.findAll({ where: { id: wineIds } });
-          await createdVintage.addWines(wines);
-        }
+      } else if (wineIds && Array.isArray(wineIds)) {
+        const wines = await Wine.findAll({
+          where: { id: wineIds },
+          transaction: t,
+        });
+        await createdVintage.addWines(wines, { transaction: t });
       }
+
+      await t.commit();
 
       // Recuperar el Vintage con todas las asociaciones
       const vintageWithAssociations = await Vintage.findByPk(
@@ -128,13 +138,13 @@ module.exports = {
             { model: Wine, as: "wines" },
             {
               model: Stock,
-              as: "stocks",
-              through: { model: VintagesWinesStocks },
+              as: "stock",
+              through: { model: WineVintage },
             },
             {
               model: Price,
-              as: "prices",
-              through: { model: VintagesWinesStocks },
+              as: "price",
+              through: { model: WineVintage },
             },
           ],
         }
@@ -145,17 +155,17 @@ module.exports = {
         vintage: vintageWithAssociations,
       });
     } catch (error) {
+      await t.rollback();
       console.error("Error al crear el vintage:", error);
       res.status(500).json({ error: "Error interno del servidor" });
     }
   },
 
-  // DELETE a Vintage by ID
+  // ** DELETE a Vintage by ID
   deleteVintage: async (req, res) => {
     try {
       const { id } = req.params;
 
-      // Buscar el vintage por ID, incluyendo asociaciones con wines y grapes
       const vintage = await Vintage.findByPk(id, {
         include: [
           { model: Wine, as: "wines" },
@@ -180,7 +190,7 @@ module.exports = {
     }
   },
 
-  // PUT update a Vintage by ID
+  // ** PUT update a Vintage by ID
   updateVintage: async (req, res) => {
     try {
       const { id } = req.params;
@@ -191,41 +201,28 @@ module.exports = {
         return res.status(404).json({ error: "Vintage not found" });
       }
 
-      // Update the vintage details
-      await existingVintage.update({
-        vintage,
-      });
+      // Actualizar los detalles del vintage
+      await existingVintage.update({ vintage });
 
-      // Update Wines if provided
+      // Actualizar vinos
       if (wineIds && Array.isArray(wineIds)) {
-        const wines = await Wine.findAll({
-          where: { id: wineIds },
-        });
+        const wines = await Wine.findAll({ where: { id: wineIds } });
         await existingVintage.setWines(wines);
       }
 
-      // Update Grapes if provided
+      // Actualizar uvas
       if (grapeIds && Array.isArray(grapeIds)) {
-        const grapes = await Grape.findAll({
-          where: { id: grapeIds },
-        });
+        const grapes = await Grape.findAll({ where: { id: grapeIds } });
         await existingVintage.setGrapes(grapes);
       } else if (!grapeIds || grapeIds.length === 0) {
-        // If grapeIds is not provided or empty, clear the existing associations
         await existingVintage.setGrapes([]);
       }
 
-      // Retrieve the updated vintage with associations
+      // Recuperar el vintage actualizado con sus asociaciones
       const updatedVintage = await Vintage.findByPk(id, {
         include: [
-          {
-            model: Wine,
-            as: "wines",
-          },
-          {
-            model: Grape,
-            as: "grapes",
-          },
+          { model: Wine, as: "wines" },
+          { model: Grape, as: "grapes" },
         ],
       });
 

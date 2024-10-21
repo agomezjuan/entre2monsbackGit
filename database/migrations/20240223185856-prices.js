@@ -11,18 +11,18 @@ module.exports = {
         primaryKey: true,
       },
       purchasePrice: {
-        type: Sequelize.DECIMAL(10, 2), // Cambiado a DECIMAL para manejar decimales
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
       salePrice: {
-        type: Sequelize.DECIMAL(10, 2), // Cambiado a DECIMAL para manejar decimales
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
       wineVintageId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "wine_vintage",
+          model: "wine_vintages",
           key: "id",
         },
         onDelete: "CASCADE",

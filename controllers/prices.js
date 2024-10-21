@@ -15,21 +15,19 @@ module.exports = {
   // POST
   createPrice: async (req, res) => {
     try {
-      const { costPrice, sellPrice } = req.body;
+      const { purchasePrice, salePrice } = req.body;
 
       // Validación de los campos (sin necesidad de `date`)
-      if (!costPrice || !sellPrice) {
-        return res
-          .status(400)
-          .json({
-            error: "Los campos costPrice y sellPrice son obligatorios.",
-          });
+      if (!purchasePrice || !salePrice) {
+        return res.status(400).json({
+          error: "Los campos purchasePrice y salePrice son obligatorios.",
+        });
       }
 
       // Crear un nuevo registro en la tabla de precios
       const newPrice = await Price.create({
-        costPrice,
-        sellPrice,
+        purchasePrice,
+        salePrice,
         // No necesitas pasar 'date', Sequelize lo asigna automáticamente
       });
 
@@ -61,7 +59,7 @@ module.exports = {
   updatePrice: async (req, res) => {
     try {
       const { id } = req.params;
-      const { costPrice, sellPrice, date } = req.body;
+      const { purchasePrice, salePrice, date } = req.body;
 
       const price = await Price.findByPk(id);
       if (!price) {
@@ -69,8 +67,8 @@ module.exports = {
       }
 
       // Actualizamos los campos
-      price.costPrice = costPrice || price.costPrice;
-      price.sellPrice = sellPrice || price.sellPrice;
+      price.purchasePrice = purchasePrice || price.purchasePrice;
+      price.salePrice = salePrice || price.salePrice;
       price.date = date || price.date;
 
       await price.save();

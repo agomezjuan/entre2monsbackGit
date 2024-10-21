@@ -1,18 +1,17 @@
-'use strict'
+"use strict";
 
-const { Model } = require('sequelize')
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Soil extends Model {
-
     static associate(models) {
       // Cellar have many soils
       Soil.belongsToMany(models.Cellar, {
-        through: 'cellar_soils',
-        foreignKey: 'soilId',
-        otherKey: 'cellarId',
-        as: 'cellars',
-      })
+        through: "cellars_soils",
+        foreignKey: "soilId",
+        otherKey: "cellarId",
+        as: "soils",
+      });
     }
   }
 
@@ -36,14 +35,14 @@ module.exports = (sequelize, DataTypes) => {
       effect: {
         type: DataTypes.TEXT,
         allowNull: true,
-      },      
+      },
     },
     {
       sequelize,
-      modelName: 'Soil',
-      tableName: 'soils',
+      modelName: "Soil",
+      tableName: "soils",
       timestamps: false,
     }
-  )
-  return Soil
-}
+  );
+  return Soil;
+};

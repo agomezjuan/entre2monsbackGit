@@ -49,7 +49,7 @@ module.exports = {
      * Middle table cellar_soils
      */
 
-    await queryInterface.createTable("cellar_soils", {
+    await queryInterface.createTable("cellars_soils", {
       cellarId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -83,7 +83,7 @@ module.exports = {
     /**
      * * Middle table cellar_suppliers
      */
-    await queryInterface.createTable("cellar_suppliers", {
+    await queryInterface.createTable("cellars_suppliers", {
       cellarId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -116,8 +116,8 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("cellar_soils");
-    await queryInterface.dropTable("cellar_suppliers");
+    await queryInterface.dropTable("cellars_soils");
+    await queryInterface.dropTable("cellars_suppliers");
     await queryInterface.dropTable("cellars");
   },
 };

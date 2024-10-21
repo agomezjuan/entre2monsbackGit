@@ -1,4 +1,11 @@
-const { Cellar, Supplier, Soil, Region } = require("../database/models");
+const {
+  Cellar,
+  Supplier,
+  Soil,
+  Region,
+  Country,
+  sequelize,
+} = require("../database/models");
 
 module.exports = {
   // GET all Cellars
@@ -8,15 +15,21 @@ module.exports = {
         include: [
           {
             model: Supplier,
-            as: "suppliers",
+            as: "suppliers", // Verifica que este alias coincida con el del modelo
           },
           {
             model: Soil,
-            as: "soils",
+            as: "soils", // Verifica que este alias coincida con el del modelo
           },
           {
             model: Region,
-            as: "regions",
+            as: "regions", // Verifica que este alias coincida con el del modelo
+            include: [
+              {
+                model: Country,
+                as: "countries", // Verifica que este alias coincida con el del modelo
+              },
+            ],
           },
         ],
       });
@@ -63,40 +76,85 @@ module.exports = {
 
   // POST a new Cellar
   createCellar: async (req, res) => {
+    const t = await sequelize.transaction(); // Iniciar una transacción de Sequelize
     try {
       const { cellar, description, distance, regionId, supplierIds, soilIds } =
         req.body;
 
+      console.log("Datos recibidos en la solicitud:", req.body);
+
       // Validar campos requeridos
       if (!cellar || !distance || !regionId) {
+        await t.rollback(); // Revertir la transacción en caso de error
         return res
           .status(400)
           .json({ error: "Cellar name, distance, and regionId are required" });
       }
 
-      // Crear el nuevo Cellar
-      const createdCellar = await Cellar.create({
-        cellar,
-        description,
-        distance,
-        regionId,
-      });
+      // Crear la bodega (Cellar)
+      const createdCellar = await Cellar.create(
+        {
+          cellar,
+          description,
+          distance,
+          regionId,
+        },
+        { transaction: t }
+      ); // Pasar la transacción
+
+      console.log("Cellar creado:", createdCellar.id);
 
       // Asociar Suppliers si se proporcionan
       if (supplierIds && Array.isArray(supplierIds)) {
-        const suppliers = await Supplier.findAll({
-          where: { id: supplierIds },
-        });
-        await createdCellar.addSuppliers(suppliers); // Asociar suppliers
+        console.log("supplierIds recibidos:", supplierIds);
+
+        const suppliers = await Supplier.findAll(
+          {
+            where: { id: supplierIds },
+          },
+          { transaction: t }
+        );
+
+        console.log("Proveedores encontrados:", suppliers.length);
+
+        // Verificar si se encontraron proveedores válidos
+        if (suppliers.length > 0) {
+          await createdCellar.setSuppliers(suppliers, { transaction: t }); // Reemplazar `addSuppliers` por `setSuppliers`
+          console.log("Proveedores asociados correctamente.");
+        } else {
+          console.log("No se encontraron proveedores válidos.");
+          throw new Error("No valid suppliers found");
+        }
       }
 
       // Asociar Soils si se proporcionan
       if (soilIds && Array.isArray(soilIds)) {
-        const soils = await Soil.findAll({ where: { id: soilIds } });
-        await createdCellar.addSoils(soils); // Asociar soils
+        console.log("soilIds recibidos:", soilIds);
+
+        const soils = await Soil.findAll(
+          {
+            where: { id: soilIds },
+          },
+          { transaction: t }
+        );
+
+        console.log("Suelos encontrados:", soils.length);
+
+        // Verificar si se encontraron suelos válidos
+        if (soils.length > 0) {
+          await createdCellar.setSoils(soils, { transaction: t }); // Reemplazar `addSoils` por `setSoils`
+          console.log("Suelos asociados correctamente.");
+        } else {
+          console.log("No se encontraron suelos válidos.");
+          throw new Error("No valid soils found");
+        }
       }
 
-      // Retornar el Cellar creado con asociaciones
+      await t.commit(); // Confirmar la transacción
+
+      console.log("Transacción confirmada.");
+
+      // Retornar la bodega creada con sus asociaciones
       const cellarWithAssociations = await Cellar.findByPk(createdCellar.id, {
         include: [
           { model: Supplier, as: "suppliers" },
@@ -110,7 +168,8 @@ module.exports = {
         cellar: cellarWithAssociations,
       });
     } catch (error) {
-      console.error("Error creating cellar:", error);
+      await t.rollback(); // Revertir la transacción en caso de error
+      console.error("Error creando el Cellar:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },

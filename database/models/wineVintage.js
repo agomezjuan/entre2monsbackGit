@@ -1,23 +1,36 @@
 "use strict";
-
 const { Model } = require("sequelize");
 
+// Asegúrate de importar correctamente los modelos Wine y Vintage
 module.exports = (sequelize, DataTypes) => {
+  const Wine = sequelize.models.Wine; // Asegúrate de que el modelo Wine esté disponible
+  const Vintage = sequelize.models.Vintage; // Asegúrate de que el modelo Vintage esté disponible
+
   class WineVintage extends Model {
     static associate(models) {
+      // Asociación con Wine
       WineVintage.belongsTo(models.Wine, {
         foreignKey: "wineId",
         as: "wine",
+        onDelete: "CASCADE",
       });
+
+      // Asociación con Vintage
       WineVintage.belongsTo(models.Vintage, {
         foreignKey: "vintageId",
         as: "vintage",
+        onDelete: "CASCADE",
       });
-      WineVintage.belongsToMany(models.Grape, {
-        through: "wine_vintage_grape",
+
+      // Asociación con Stock
+      WineVintage.hasOne(models.Stock, {
         foreignKey: "wineVintageId",
-        otherKey: "grapeId",
-        as: "grapes",
+        as: "stock",
+      });
+
+      WineVintage.hasOne(models.Price, {
+        foreignKey: "wineVintageId",
+        as: "price",
       });
     }
   }
@@ -33,24 +46,16 @@ module.exports = (sequelize, DataTypes) => {
       wineId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-          model: "wines",
-          key: "id",
-        },
       },
       vintageId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-          model: "vintages",
-          key: "id",
-        },
       },
     },
     {
       sequelize,
       modelName: "WineVintage",
-      tableName: "wine_vintage",
+      tableName: "wine_vintages",
       timestamps: true,
     }
   );

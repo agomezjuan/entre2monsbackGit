@@ -1,15 +1,19 @@
 "use strict";
-
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Vintage extends Model {
     static associate(models) {
       Vintage.belongsToMany(models.Wine, {
-        through: models.WineVintage, // Requiere el modelo `WineVintage`
+        through: models.WineVintage,
         foreignKey: "vintageId",
         otherKey: "wineId",
         as: "wines",
+      });
+
+      Vintage.hasMany(models.WineVintage, {
+        foreignKey: "vintageId",
+        as: "wineVintageStocks",
       });
     }
   }
