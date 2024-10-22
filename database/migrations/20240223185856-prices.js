@@ -18,15 +18,7 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
-      wineVintageId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wine_vintages",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-      },
+
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

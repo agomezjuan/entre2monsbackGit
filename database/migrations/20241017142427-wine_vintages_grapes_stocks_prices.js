@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("wine_vintage_grape", {
+    await queryInterface.createTable("wine_vintages_grapes_stocks_prices", {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -27,6 +27,24 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
+      stockId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "stocks",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      },
+      priceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "prices",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -43,6 +61,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("wine_vintage_grape");
+    await queryInterface.dropTable("wine_vintages_grapes_stocks_prices");
   },
 };

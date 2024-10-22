@@ -5,7 +5,8 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Price extends Model {
     static associate(models) {
-      Price.belongsTo(models.WineVintage, {
+      Price.belongsTo(models.WineVintagesGrapesStocksPrices, {
+        trough: "wine_vintages_grapes_stocks_prices",
         foreignKey: "wineVintageId",
         as: "wineVintage",
         onDelete: "CASCADE",
@@ -28,15 +29,6 @@ module.exports = (sequelize, DataTypes) => {
       salePrice: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
-      },
-      wineVintageId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wines_vintages",
-          key: "id",
-        },
-        onDelete: "CASCADE",
       },
     },
     {

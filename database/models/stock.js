@@ -49,15 +49,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      wineVintageId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wines_vintages",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-      },
     },
     {
       sequelize,
