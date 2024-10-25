@@ -1,14 +1,14 @@
-'use strict'
+"use strict";
 
-const { Model } = require('sequelize')
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Country extends Model {
     static associate(models) {
       Country.hasMany(models.Region, {
-        foreignKey: 'countryId',
-        as: 'regions',
-      })
+        foreignKey: "countryId",
+        as: "regions",
+      });
     }
   }
   Country.init(
@@ -31,10 +31,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Country',
-      tableName: 'countries',
-      timestamps: false,
+      modelName: "Country",
+      tableName: "countries",
+      timestamps: true,
     }
-  )
-  return Country
-}
+  );
+  return Country;
+};

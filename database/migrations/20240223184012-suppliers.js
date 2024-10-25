@@ -61,7 +61,7 @@ module.exports = {
         allowNull: false,
       },
       CP: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       businessPhone: {

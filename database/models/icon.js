@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Icon",
       tableName: "icons",
-      timestamps: false,
+      timestamps: true,
     }
   );
   return Icon;
