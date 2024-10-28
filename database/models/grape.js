@@ -1,12 +1,11 @@
-"use strict";
+const { Model, DataTypes } = require("sequelize");
 
-const { Model } = require("sequelize");
-
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Grape extends Model {
     static associate(models) {
-      Grape.belongsToMany(models.WineVintagesGrapesStocksPrices, {
-        through: "wine_vintages_grapes_stocks_prices",
+      // Relación muchos a muchos con WineVintage
+      Grape.belongsToMany(models.WineVintage, {
+        through: "WineVintageGrape",
         foreignKey: "grapeId",
         otherKey: "wineVintageId",
         as: "wineVintages",
@@ -16,20 +15,16 @@ module.exports = (sequelize, DataTypes) => {
 
   Grape.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      grape: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        comment: "Nombre de la uva",
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
+        comment: "Descripción de la uva, características o notas de sabor",
       },
     },
     {
@@ -37,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Grape",
       tableName: "grapes",
       timestamps: true,
+      underscored: true,
     }
   );
 

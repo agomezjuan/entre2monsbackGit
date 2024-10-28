@@ -1,81 +1,95 @@
-"use strict";
+const { Model, DataTypes } = require("sequelize");
 
-const { Model } = require("sequelize");
-
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Supplier extends Model {
-    //supplier has many cellars
     static associate(models) {
-      Supplier.belongsToMany(models.Cellar, {
+      Supplier.belongsTo(models.SupplierAddress, {
+        foreignKey: "addressId",
+        as: "address",
+      });
+
+      Supplier.hasMany(models.SupplierRepresentative, {
         foreignKey: "supplierId",
-        otherKey: "cellarId",
-        as: "suppliers",
-        through: "cellars_suppliers",
+        as: "representatives",
       });
     }
   }
+
   Supplier.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      companyName: {
+      tradeName: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          notEmpty: true,
+        },
       },
-      fiscalName: {
+      legalName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      nif: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          notEmpty: true,
+          isEuropeanTaxId(value) {
+            const europeanVatRegex = /^[A-Z]{2}[A-Z0-9]{8,12}$/;
+            if (!europeanVatRegex.test(value)) {
+              throw new Error("Invalid European VAT number format");
+            }
+          },
+        },
       },
-      NIF: {
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          notEmpty: true,
+          isEmail: true,
+        },
       },
-      country: {
+      phone: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      city: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      CP: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      businessPhone: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      contactName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      contactPhone: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      businessEmail: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      contactEmail: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.TEXT,
         allowNull: true,
+        unique: true,
+        validate: {
+          is: /^\+?[\d\s]+$/, // Matches "+123 456 789"
+        },
+      },
+      web: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true,
+        validate: {
+          isUrl: true,
+        },
+      },
+      addressId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "supplier_addresses",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      representativeId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "representatives",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
     },
     {
@@ -83,7 +97,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Supplier",
       tableName: "suppliers",
       timestamps: true,
+      underscored: true,
     }
   );
+
   return Supplier;
 };

@@ -1,35 +1,29 @@
-"use strict";
-const { Model } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Vintage extends Model {
     static associate(models) {
+      // Relación muchos a muchos con Wine
       Vintage.belongsToMany(models.Wine, {
-        through: models.WineVintage,
+        through: "WineVintage",
         foreignKey: "vintageId",
         otherKey: "wineId",
         as: "wines",
-      });
-
-      Vintage.hasMany(models.WineVintage, {
-        foreignKey: "vintageId",
-        as: "wineVintageStocks",
       });
     }
   }
 
   Vintage.init(
     {
-      id: {
+      year: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      vintage: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,
+        validate: {
+          isInt: true,
+          min: 1800,
+          max: new Date().getFullYear(),
+        },
+        comment: "Año de la cosecha o producción",
       },
     },
     {
@@ -37,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Vintage",
       tableName: "vintages",
       timestamps: true,
+      underscored: true,
     }
   );
 

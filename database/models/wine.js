@@ -1,27 +1,21 @@
-"use strict";
+const { Model, DataTypes } = require("sequelize");
 
-const { Model } = require("sequelize");
-
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Wine extends Model {
     static associate(models) {
+      // Relación uno a muchos con Cellar
       Wine.belongsTo(models.Cellar, {
         foreignKey: "cellarId",
         as: "cellar",
       });
 
-      Wine.belongsToMany(models.Vintage, {
-        through: models.WineVintage,
-        foreignKey: "wineId",
-        otherKey: "vintageId",
-        as: "vintages",
+      // Relación muchos a muchos con WineTypes
+      Wine.belongsTo(models.WineType, {
+        foreignKey: "wine_type_id",
+        as: "wineType",
       });
 
-      Wine.hasMany(models.WineVintage, {
-        foreignKey: "wineId",
-        as: "wineVintageStocks",
-      });
-
+      // Relación muchos a muchos con Icons
       Wine.belongsToMany(models.Icon, {
         through: "wine_icons",
         foreignKey: "wineId",
@@ -29,21 +23,31 @@ module.exports = (sequelize, DataTypes) => {
         as: "icons",
       });
 
-      Wine.belongsToMany(models.Label, {
-        through: "wine_labels",
+      // Relación muchos a muchos con Vintages
+      Wine.belongsToMany(models.Vintage, {
+        through: "wine_vintages",
         foreignKey: "wineId",
-        otherKey: "labelId",
-        as: "labels",
+        otherKey: "vintageId",
+        as: "vintages",
       });
 
-      Wine.belongsTo(models.Sulphite, {
-        foreignKey: "sulphiteId",
-        as: "sulphite",
+      // Relación muchos a muchos con Attributes
+      Wine.belongsToMany(models.Attribute, {
+        through: "wine_attributes",
+        foreignKey: "wineId",
+        otherKey: "attributeId",
+        as: "attributes",
       });
 
-      Wine.belongsTo(models.WineType, {
-        foreignKey: "wineTypeId",
-        as: "wineType",
+      // Relación muchos a muchos con Grapes a través de WineVintageGrape
+      Wine.belongsToMany(models.Grape, {
+        through: {
+          model: models.WineVintageGrape,
+          unique: false,
+        },
+        foreignKey: "wineId",
+        otherKey: "grapeId",
+        as: "grapes",
       });
     }
   }
@@ -54,34 +58,27 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        comment: "Nombre del vino",
+      },
+      vineyardAltitude: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        comment: "Altitud del viñedo en metros",
+      },
+      img: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        comment: "URL o ruta de la imagen del vino",
+      },
+      production: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        comment: "Producción total en unidades",
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
-      },
-      production: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          isInt: true,
-          min: 0,
-        },
-      },
-      vineyardAltitude: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          isInt: true,
-          min: 0,
-        },
-      },
-      img: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      tastingNotes: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+        comment: "Descripción adicional del vino",
       },
       cellarId: {
         type: DataTypes.INTEGER,
@@ -90,22 +87,18 @@ module.exports = (sequelize, DataTypes) => {
           model: "cellars",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       wineTypeId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "wineTypes",
+          model: "wine_types",
           key: "id",
         },
-      },
-      sulphiteId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "sulphites",
-          key: "id",
-        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
     },
     {
@@ -113,6 +106,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Wine",
       tableName: "wines",
       timestamps: true,
+      underscored: true,
     }
   );
 

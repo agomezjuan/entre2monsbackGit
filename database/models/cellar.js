@@ -1,62 +1,67 @@
-"use strict";
+const { Model, DataTypes } = require("sequelize");
 
-const { Model } = require("sequelize");
-
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Cellar extends Model {
     static associate(models) {
-      // Cellar have many suppliers
-      Cellar.belongsToMany(models.Supplier, {
-        foreignKey: "cellarId",
-        otherKey: "supplierId",
-        through: "cellars_suppliers",
-        as: "suppliers",
+      // Relación uno a muchos con DO
+      Cellar.belongsTo(models.DO, {
+        foreignKey: "doId",
+        as: "denomination",
       });
 
-      // Cellar have many wines
-      Cellar.belongsTo(models.Region, {
-        foreignKey: "regionId",
-        as: "regions",
-      });
-
-      // Cellar have many soils
+      // Relación muchos a muchos con Soils
       Cellar.belongsToMany(models.Soil, {
+        through: "cellars_soils",
         foreignKey: "cellarId",
         otherKey: "soilId",
-        through: "cellars_soils",
         as: "soils",
+      });
+
+      // Relación muchos a muchos con Suppliers
+      Cellar.belongsToMany(models.Supplier, {
+        through: "cellars_suppliers",
+        foreignKey: "cellarId",
+        otherKey: "supplierId",
+        as: "suppliers",
       });
     }
   }
 
   Cellar.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      cellar: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      distance: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      distance: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      awards: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
-      regionId: {
+      history: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      doId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "regions",
+          model: "denominations_of_origin",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
     },
     {
@@ -64,7 +69,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Cellar",
       tableName: "cellars",
       timestamps: true,
+      underscored: true,
     }
   );
+
   return Cellar;
 };

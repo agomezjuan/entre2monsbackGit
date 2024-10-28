@@ -1,33 +1,32 @@
 const { Model, DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  class Icon extends Model {
+  class IconSubcategory extends Model {
     static associate(models) {
-      Icon.belongsTo(models.IconSubcategory, {
+      IconSubcategory.belongsTo(models.IconCategory, {
+        foreignKey: "categoryId",
+        as: "category",
+      });
+      IconSubcategory.hasMany(models.Icon, {
         foreignKey: "subcategoryId",
-        as: "subcategory",
+        as: "icons",
       });
     }
   }
 
-  Icon.init(
+  IconSubcategory.init(
     {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        comment: "Nombre descriptivo del ícono",
+        comment: "Nombre de la subcategoría de íconos",
       },
-      icon_path: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        comment: "Ruta o URL del archivo del ícono",
-      },
-      subcategoryId: {
+      categoryId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "icon_subcategories",
+          model: "icon_categories",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -36,12 +35,12 @@ module.exports = (sequelize) => {
     },
     {
       sequelize,
-      modelName: "Icon",
-      tableName: "icons",
+      modelName: "IconSubcategory",
+      tableName: "icon_subcategories",
       timestamps: false,
       underscored: true,
     }
   );
 
-  return Icon;
+  return IconSubcategory;
 };

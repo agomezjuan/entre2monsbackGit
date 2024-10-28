@@ -1,38 +1,37 @@
 const { Model, DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  class WineType extends Model {
+  class IconCategory extends Model {
     static associate(models) {
-      // Relación uno a muchos con Wine
-      WineType.hasMany(models.Wine, {
-        foreignKey: "wine_type_id",
-        as: "wines",
+      IconCategory.hasMany(models.IconSubcategory, {
+        foreignKey: "categoryId",
+        as: "subcategories",
       });
     }
   }
 
-  WineType.init(
+  IconCategory.init(
     {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        comment: "Nombre del tipo de vino (e.g., Tinto, Blanco, Rosado)",
+        comment: "Nombre de la categoría de íconos",
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
-        comment: "Descripción del tipo de vino",
+        comment: "Descripción de la categoría",
       },
     },
     {
       sequelize,
-      modelName: "WineType",
-      tableName: "wine_types",
+      modelName: "IconCategory",
+      tableName: "icon_categories",
       timestamps: false,
       underscored: true,
     }
   );
 
-  return WineType;
+  return IconCategory;
 };

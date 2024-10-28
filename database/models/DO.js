@@ -1,19 +1,18 @@
 const { Model, DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  class Soil extends Model {
+  class DO extends Model {
     static associate(models) {
-      // Relación muchos a muchos con Cellar
-      Soil.belongsToMany(models.Cellar, {
-        through: "cellars_soils",
-        foreignKey: "soilId",
-        otherKey: "cellarId",
-        as: "cellars",
+      DO.belongsToMany(models.Region, {
+        through: "RegionDO",
+        foreignKey: "doId",
+        otherKey: "regionId",
+        as: "regions",
       });
     }
   }
 
-  Soil.init(
+  DO.init(
     {
       name: {
         type: DataTypes.STRING,
@@ -27,19 +26,15 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      effect: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
     },
     {
       sequelize,
-      modelName: "Soil",
-      tableName: "soils",
+      modelName: "DO",
+      tableName: "denominations_of_origin",
       timestamps: true,
       underscored: true,
     }
   );
 
-  return Soil;
+  return DO;
 };

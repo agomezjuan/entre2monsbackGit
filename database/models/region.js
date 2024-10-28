@@ -1,35 +1,36 @@
-"use strict";
+const { Model, DataTypes } = require("sequelize");
 
-const { Model } = require("sequelize");
-
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Region extends Model {
     static associate(models) {
-      // A region belongs to a country
       Region.belongsTo(models.Country, {
         foreignKey: "countryId",
-        as: "countries",
+        as: "country",
       });
 
-      // A region has many cellars
-      Region.hasMany(models.Cellar, {
+      Region.belongsToMany(models.DO, {
+        through: "RegionDO",
         foreignKey: "regionId",
-        as: "cellars",
+        otherKey: "doId",
+        as: "denominations",
+      });
+
+      Region.hasMany(models.SupplierAddress, {
+        foreignKey: "regionId",
+        as: "supplierAddresses",
       });
     }
   }
+
   Region.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      region: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          notEmpty: true,
+        },
       },
       description: {
         type: DataTypes.TEXT,
@@ -37,11 +38,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       countryId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "countries",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
     },
     {
@@ -49,7 +52,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Region",
       tableName: "regions",
       timestamps: true,
+      underscored: true,
     }
   );
+
   return Region;
 };
