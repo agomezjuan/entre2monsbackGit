@@ -3,18 +3,14 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Stock extends Model {
     static associate(models) {
-      // Relaciones con DO, Cellar y WineVintage (tabla intermedia)
+      // Relaciones con DO y Cellar
       Stock.belongsTo(models.DO, {
-        foreignKey: "doId",
+        foreignKey: "do_id",
         as: "denomination",
       });
       Stock.belongsTo(models.Cellar, {
-        foreignKey: "cellarId",
+        foreignKey: "cellar_id",
         as: "cellar",
-      });
-      Stock.belongsTo(models.WineVintage, {
-        foreignKey: "wineVintageId",
-        as: "wineVintage",
       });
     }
   }
@@ -44,7 +40,7 @@ module.exports = (sequelize) => {
         },
         comment: "Nivel mínimo de inventario para reordenar",
       },
-      doId: {
+      do_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -54,7 +50,7 @@ module.exports = (sequelize) => {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      cellarId: {
+      cellar_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -64,15 +60,17 @@ module.exports = (sequelize) => {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      wineVintageId: {
+      wine_vintage_id: {
+        // Relación directa con una entrada de wine_vintages
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "wine_vintages",
+          model: "wine_vintages", // La tabla intermedia que combina Wine y Vintage
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        comment: "Relación directa con wine_vintages",
       },
     },
     {
@@ -86,9 +84,9 @@ module.exports = (sequelize) => {
 
   // Hook para generar SKU basado en DO, Cellar, WineVintage y el nombre del vino
   Stock.beforeCreate(async (stock, options) => {
-    const doId = stock.doId;
-    const cellarId = stock.cellarId;
-    const wineVintageId = stock.wineVintageId;
+    const doId = stock.do_id;
+    const cellarId = stock.cellar_id;
+    const wineVintageId = stock.wine_vintage_id;
 
     // Obtener el nombre del vino desde `Wine` a través de `WineVintage`
     const wineVintage = await sequelize.models.WineVintage.findByPk(

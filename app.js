@@ -12,7 +12,7 @@ const cellarsRouter = require("./routes/cellars");
 const soilsRouter = require("./routes/soils");
 const countriesRouter = require("./routes/countries");
 const wineTypesRouter = require("./routes/wineTypes");
-const winesRouter = require("./routes/wines");
+const winesRouter = require("./routes/winesControllers");
 const grapesRouter = require("./routes/grapes");
 const iconsRouter = require("./routes/icons");
 const stocksRouter = require("./routes/stocks");
@@ -25,7 +25,6 @@ const customersRouter = require("./routes/customers");
 const vintageRouter = require("./routes/vintages");
 const labelsRouter = require("./routes/labels");
 const labelCategoriesRouter = require("./routes/labelsCategories");
-const saleRoutes = require("./routes/saleRoutes");
 
 const app = express();
 
@@ -60,7 +59,6 @@ app.use("/customers", customersRouter);
 app.use("/vintages", vintageRouter);
 app.use("/labels", labelsRouter);
 app.use("/labelCategories", labelCategoriesRouter);
-app.use("/sales", saleRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -2,29 +2,29 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("stocks", {
+    await queryInterface.createTable("attribute_categories", {
+      // Cambiado a "attribute_categories"
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      wine_vintage_id: {
-        type: Sequelize.INTEGER,
+      name: {
+        type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: "wine_vintages", // Verifica el nombre exacto de la tabla intermedia
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-        comment: "Relación directa con una entrada de wine_vintages",
+        unique: true,
+        comment: "Nombre de la categoría del atributo",
       },
-      quantity: {
-        type: Sequelize.INTEGER,
+      description: {
+        type: Sequelize.TEXT,
         allowNull: false,
-        defaultValue: 0,
-        comment: "Cantidad disponible en inventario",
+        comment: "Descripción de la categoría",
+      },
+      color: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        comment: "Color asociado a la categoría",
       },
       created_at: {
         allowNull: false,
@@ -40,6 +40,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("stocks");
+    await queryInterface.dropTable("attribute_categories"); // Cambiado a "attribute_categories"
   },
 };

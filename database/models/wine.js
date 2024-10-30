@@ -9,44 +9,25 @@ module.exports = (sequelize) => {
         as: "cellar",
       });
 
-      // Relación muchos a muchos con WineTypes
+      // Relación uno a muchos con WineType
       Wine.belongsTo(models.WineType, {
         foreignKey: "wine_type_id",
         as: "wineType",
       });
 
-      // Relación muchos a muchos con Icons
-      Wine.belongsToMany(models.Icon, {
-        through: "wine_icons",
-        foreignKey: "wineId",
-        otherKey: "iconId",
-        as: "icons",
-      });
-
-      // Relación muchos a muchos con Vintages
+      // Relación muchos a muchos con Vintage a través de "wine_vintages"
       Wine.belongsToMany(models.Vintage, {
-        through: "wine_vintages",
-        foreignKey: "wineId",
-        otherKey: "vintageId",
+        through: "wine_vintages", // Nombre de la tabla intermedia
+        foreignKey: "wine_id",
+        otherKey: "vintage_id",
         as: "vintages",
       });
 
-      // Relación muchos a muchos con Attributes
-      Wine.belongsToMany(models.Attribute, {
-        through: "wine_attributes",
-        foreignKey: "wineId",
-        otherKey: "attributeId",
-        as: "attributes",
-      });
-
-      // Relación muchos a muchos con Grapes a través de WineVintageGrape
+      // Relación muchos a muchos con Grape a través de "wine_vintage_grapes"
       Wine.belongsToMany(models.Grape, {
-        through: {
-          model: models.WineVintageGrape,
-          unique: false,
-        },
-        foreignKey: "wineId",
-        otherKey: "grapeId",
+        through: "wine_vintage_grapes", // Tabla intermedia que conecta Vino + Añada con Uvas
+        foreignKey: "wine_id",
+        otherKey: "grape_id",
         as: "grapes",
       });
     }

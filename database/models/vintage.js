@@ -3,11 +3,11 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Vintage extends Model {
     static associate(models) {
-      // Relación muchos a muchos con Wine
+      // Relación muchos a muchos con Wine a través de "wine_vintages"
       Vintage.belongsToMany(models.Wine, {
-        through: "WineVintage",
-        foreignKey: "vintageId",
-        otherKey: "wineId",
+        through: "wine_vintages",
+        foreignKey: "vintage_id",
+        otherKey: "wine_id",
         as: "wines",
       });
     }

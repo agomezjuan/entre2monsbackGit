@@ -12,17 +12,24 @@ module.exports = (sequelize) => {
       // Relación muchos a muchos con Soils
       Cellar.belongsToMany(models.Soil, {
         through: "cellars_soils",
-        foreignKey: "cellarId",
-        otherKey: "soilId",
+        foreignKey: "cellar_id",
+        otherKey: "soil_id",
         as: "soils",
       });
 
       // Relación muchos a muchos con Suppliers
       Cellar.belongsToMany(models.Supplier, {
         through: "cellars_suppliers",
-        foreignKey: "cellarId",
-        otherKey: "supplierId",
+        foreignKey: "cellar_id",
+        otherKey: "supplier_id",
         as: "suppliers",
+      });
+
+      Cellar.belongsToMany(models.Stock, {
+        through: "cellars_stocks",
+        foreignKey: "cellar_id",
+        otherKey: "stock_id",
+        as: "stocks",
       });
     }
   }

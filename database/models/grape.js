@@ -3,12 +3,12 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Grape extends Model {
     static associate(models) {
-      // Relación muchos a muchos con WineVintage
-      Grape.belongsToMany(models.WineVintage, {
-        through: "WineVintageGrape",
-        foreignKey: "grapeId",
-        otherKey: "wineVintageId",
-        as: "wineVintages",
+      // Relación muchos a muchos con Wine a través de "wine_vintage_grapes"
+      Grape.belongsToMany(models.Wine, {
+        through: "wine_vintage_grapes", // Tabla intermedia que conecta Vino + Añada con Uvas
+        foreignKey: "grape_id",
+        otherKey: "wine_id",
+        as: "wines",
       });
     }
   }

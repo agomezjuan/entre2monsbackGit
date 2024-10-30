@@ -2,34 +2,35 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("wine_icons", {
+    await queryInterface.createTable("attributes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      wine_id: {
-        type: Sequelize.INTEGER,
+      name: {
+        type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: "wines",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-        comment: "Relación con el modelo Wine",
+        unique: true,
+        comment: "Nombre del atributo",
       },
-      icon_id: {
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+        comment: "Descripción del atributo",
+      },
+      attribute_category_id: {
+        // Cambiado a "attribute_category_id" en lugar de "AttributeCategoryId"
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "icons",
+          model: "attribute_categories", // Cambiado a "attribute_categories"
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        comment: "Relación con el modelo Icon",
+        comment: "Relación con la tabla attribute_categories",
       },
       created_at: {
         allowNull: false,
@@ -45,6 +46,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("wine_icons");
+    await queryInterface.dropTable("attributes");
   },
 };

@@ -10,12 +10,6 @@ module.exports = (sequelize) => {
       });
 
       // Relación muchos a muchos con DeliveryDay
-      SupplierDelivery.belongsToMany(models.DeliveryDay, {
-        through: "supplier_delivery_days",
-        foreignKey: "supplierDeliveryId",
-        otherKey: "deliveryDayId",
-        as: "deliveryDays",
-      });
     }
   }
 
@@ -48,7 +42,7 @@ module.exports = (sequelize) => {
     },
     {
       sequelize,
-      modelName: "SupplierDelivery",
+      modelName: "SupplierDelivery", // Asegúrate de que coincida con el nombre de la clase
       tableName: "supplier_deliveries",
       timestamps: true,
       underscored: true,

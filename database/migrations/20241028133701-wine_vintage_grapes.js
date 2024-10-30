@@ -9,6 +9,26 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      wine_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "wines",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      vintage_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "vintages",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       grape_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -18,18 +38,6 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        comment: "Relación con el modelo Grape",
-      },
-      wine_vintage_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wine_vintages",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-        comment: "Relación con el modelo WineVintage",
       },
     });
   },

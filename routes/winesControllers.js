@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getAllWines, createWine } = require("../controllers/wines");
+const { getAllWines, createWine } = require("../controllers/winesControllers");
 // const verifyToken = require('../middlewares/authMiddleware');
 
 router.get("/", getAllWines);

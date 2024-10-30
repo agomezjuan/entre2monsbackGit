@@ -2,32 +2,34 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("supplier_delivery_days", {
+    await queryInterface.createTable("wine_attributes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      supplier_delivery_detail_id: {
-        // Asegúrate de que coincide con la tabla referenciada
+      wine_id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
-          model: "supplier_delivery_details", // Verifica el nombre exacto de la tabla
+          model: "wines", // Asegúrate de que la tabla "wines" existe
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        comment: "Referencia a la tabla wines",
       },
-      day_id: {
-        // Asegúrate de que coincide con la tabla referenciada
+      attribute_id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
-          model: "days", // Verifica el nombre exacto de la tabla
+          model: "attributes", // Asegúrate de que la tabla "attributes" existe
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        comment: "Referencia a la tabla attributes",
       },
       created_at: {
         allowNull: false,
@@ -43,6 +45,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("supplier_delivery_days");
+    await queryInterface.dropTable("wine_attributes");
   },
 };

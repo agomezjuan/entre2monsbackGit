@@ -17,8 +17,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "CASCADE", // Elimina el registro en wine_vintages si se elimina el wine
-        comment: "Relación con el modelo Wine",
+        onDelete: "CASCADE",
       },
       vintage_id: {
         type: Sequelize.INTEGER,
@@ -28,8 +27,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "NO ACTION", // No hace nada si se elimina el vintage
-        comment: "Relación con el modelo Vintage",
+        onDelete: "CASCADE",
       },
       created_at: {
         allowNull: false,
