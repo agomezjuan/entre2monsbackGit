@@ -1,0 +1,19 @@
+meta {
+  name: create new icon category
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/icons-categories
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Wine Tasting Notes",
+    "description": "Icons to represent various tasting notes such as sweetness, acidity, and tannins."
+  }
+  
+}

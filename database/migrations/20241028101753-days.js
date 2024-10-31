@@ -14,17 +14,7 @@ module.exports = {
         allowNull: false,
         unique: true,
         validate: {
-          isIn: [
-            [
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-              "Sunday",
-            ],
-          ],
+          notEmpty: true,
         },
         comment: 'Día de la semana, ej: "Monday"',
       },

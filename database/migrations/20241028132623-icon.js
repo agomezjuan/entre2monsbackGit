@@ -27,9 +27,20 @@ module.exports = {
           model: "icon_subcategories",
           key: "id",
         },
+
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
         comment: "Relación con la subcategoría",
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },

@@ -6,7 +6,7 @@ const {
   updateCellar,
   createCellar,
   getCellarById,
-} = require("../controllers/cellars");
+} = require("../controllers/cellarsControllers");
 
 router.get("/", getAllCellars);
 router.post("/", createCellar);

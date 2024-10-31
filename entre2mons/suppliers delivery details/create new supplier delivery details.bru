@@ -1,7 +1,7 @@
 meta {
   name: create new supplier delivery details
   type: http
-  seq: 1
+  seq: 2
 }
 
 post {
@@ -14,7 +14,8 @@ body:json {
   {
     "minPurchase": 100.0,
     "deliveryTax": 15.0,
-    "supplierId": 1
+    "supplierId": 1,
+    "dayIds": [1, 2, 3] // IDs de los días asociados
   }
   
 }

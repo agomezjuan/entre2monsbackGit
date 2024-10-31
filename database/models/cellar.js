@@ -24,13 +24,6 @@ module.exports = (sequelize) => {
         otherKey: "supplier_id",
         as: "suppliers",
       });
-
-      Cellar.belongsToMany(models.Stock, {
-        through: "cellars_stocks",
-        foreignKey: "cellar_id",
-        otherKey: "stock_id",
-        as: "stocks",
-      });
     }
   }
 

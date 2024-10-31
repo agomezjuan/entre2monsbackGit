@@ -1,0 +1,19 @@
+meta {
+  name: update icon category
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:3000/icons-categories/2
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Wine Tasting",
+    "description": "Icons to represent various tasting notes such as sweetness, acidity, and tannins."
+  }
+  
+}

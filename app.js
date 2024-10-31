@@ -14,7 +14,7 @@ const countriesRouter = require("./routes/countries");
 const wineTypesRouter = require("./routes/wineTypes");
 const winesRouter = require("./routes/winesControllers");
 const grapesRouter = require("./routes/grapes");
-const iconsRouter = require("./routes/icons");
+const iconsRouter = require("./routes/iconsRoutes");
 const stocksRouter = require("./routes/stocks");
 const pricesRouter = require("./routes/prices");
 const sulphitesRouter = require("./routes/sulphites");
@@ -29,6 +29,8 @@ const suppliersAddressesRoutes = require("./routes/suppliersAddressesRoutes");
 const supplierRepresentativesRoutes = require("./routes/supplierRepresentativesRoutes");
 const daysRoute = require("./routes/daysRoute");
 const supplierDeliveryDetailsRoutes = require("./routes/suppliersDeliveryDetailsRoutes");
+const iconsCategoriesRoutes = require("./routes/iconsCategoriesRoutes");
+const iconsSubCategoriesRoutes = require("./routes/iconsSubCategoriesRoutes");
 
 const app = express();
 
@@ -67,6 +69,8 @@ app.use("/suppliers-addresses", suppliersAddressesRoutes);
 app.use("/suppliers-representatives", supplierRepresentativesRoutes);
 app.use("/days", daysRoute);
 app.use("/supplier-delivery-details", supplierDeliveryDetailsRoutes);
+app.use("/icons-categories", iconsCategoriesRoutes);
+app.use("/icons-subcategories", iconsSubCategoriesRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
