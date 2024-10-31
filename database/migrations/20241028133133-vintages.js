@@ -12,6 +12,7 @@ module.exports = {
       year: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        unique: true,
         validate: {
           isInt: true,
           min: 1800,

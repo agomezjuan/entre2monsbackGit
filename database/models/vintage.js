@@ -18,12 +18,13 @@ module.exports = (sequelize) => {
       year: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        unique: true,
         validate: {
           isInt: true,
           min: 1800,
           max: new Date().getFullYear(),
         },
-        comment: "Año de la cosecha o producción",
+        comment: "Año de la cosecha o producción mayor o igual a 1800",
       },
     },
     {

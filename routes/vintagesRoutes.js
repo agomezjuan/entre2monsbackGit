@@ -6,7 +6,7 @@ const {
   createVintage,
   updateVintage,
   deleteVintage,
-} = require("../controllers/vintages");
+} = require("../controllers/vintagesControllers");
 
 router.get("/", getAllVintages);
 router.get("/:id", getVintageById);
