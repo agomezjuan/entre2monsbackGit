@@ -1,0 +1,20 @@
+meta {
+  name: create new supplier delivery details
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/supplier-delivery-details
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "minPurchase": 100.0,
+    "deliveryTax": 15.0,
+    "supplierId": 1
+  }
+  
+}

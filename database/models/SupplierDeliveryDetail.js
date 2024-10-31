@@ -7,6 +7,13 @@ module.exports = (sequelize) => {
         foreignKey: "supplierId",
         as: "supplier",
       });
+
+      SupplierDeliveryDetail.belongsToMany(models.Day, {
+        through: "supplier_delivery_days",
+        foreignKey: "supplier_delivery_detail_id",
+        otherKey: "day_id",
+        as: "days", // Asegúrate de que el alias sea "days"
+      });
     }
   }
 
@@ -35,6 +42,14 @@ module.exports = (sequelize) => {
         },
         comment:
           "Costo de entrega si no se cumple con el pedido mínimo, 0 si no aplica",
+      },
+      supplierId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        comment: "Relación uno a uno con Supplier",
       },
     },
     {

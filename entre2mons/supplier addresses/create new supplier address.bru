@@ -6,6 +6,17 @@ meta {
 
 post {
   url: http://localhost:3000/suppliers-addresses
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "street": "Calle de los  45",
+    "city": "Madrid",
+    "postalCode": "28013",
+    "region_id": 1,
+    "supplier_id": 1
+  }
+  
 }

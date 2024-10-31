@@ -2,6 +2,8 @@ const {
   Supplier,
   SupplierAddress,
   SupplierRepresentative,
+  SupplierDeliveryDetail,
+  Day,
 } = require("../database/models");
 
 module.exports = {
@@ -11,7 +13,19 @@ module.exports = {
       const suppliers = await Supplier.findAll({
         include: [
           { model: SupplierAddress, as: "addresses" },
-          { model: SupplierRepresentative, as: "representatives" }, // Alias "representatives"
+          { model: SupplierRepresentative, as: "representatives" },
+          {
+            model: SupplierDeliveryDetail,
+            as: "deliveryDetail",
+            include: [
+              {
+                model: Day,
+                as: "days", // Alias para la relación de muchos a muchos con Day
+                attributes: ["id", "name"], // Solo traer campos necesarios
+                through: { attributes: [] }, // Omite los atributos de la tabla intermedia
+              },
+            ],
+          },
         ],
       });
       res.status(200).json(suppliers);

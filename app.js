@@ -26,6 +26,9 @@ const vintageRouter = require("./routes/vintages");
 const attributeCategoriesRouter = require("./routes/attributeCategoriesRoutes");
 const dosRoutes = require("./routes/dosRoutes");
 const suppliersAddressesRoutes = require("./routes/suppliersAddressesRoutes");
+const supplierRepresentativesRoutes = require("./routes/supplierRepresentativesRoutes");
+const daysRoute = require("./routes/daysRoute");
+const supplierDeliveryDetailsRoutes = require("./routes/suppliersDeliveryDetailsRoutes");
 
 const app = express();
 
@@ -61,6 +64,9 @@ app.use("/vintages", vintageRouter);
 app.use("/attributesCategories", attributeCategoriesRouter);
 app.use("/dos", dosRoutes);
 app.use("/suppliers-addresses", suppliersAddressesRoutes);
+app.use("/suppliers-representatives", supplierRepresentativesRoutes);
+app.use("/days", daysRoute);
+app.use("/supplier-delivery-details", supplierDeliveryDetailsRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

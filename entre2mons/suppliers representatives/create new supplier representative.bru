@@ -1,0 +1,21 @@
+meta {
+  name: create new supplier representative
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/suppliers-representatives
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "Carlos",
+    "lastName": "González",
+    "email": "carlos.gonzalez@empresa.com",
+    "phone": "+34 612 345 678",
+    "supplierId": 1
+  }
+}
