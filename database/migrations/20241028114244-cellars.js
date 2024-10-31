@@ -34,7 +34,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true, // Cambiado a true para soportar SET NULL
         references: {
-          model: "denominations_of_origin",
+          model: "dos",
           key: "id",
         },
         onUpdate: "CASCADE",

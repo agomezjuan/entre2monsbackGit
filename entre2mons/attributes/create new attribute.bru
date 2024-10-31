@@ -1,0 +1,19 @@
+meta {
+  name: create new attribute
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/attributes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Intensidad de aroma",
+    "description": "Mide la intensidad del aroma del vino, desde suave hasta potente.",
+    "attribute_category_id": 3
+  }
+}

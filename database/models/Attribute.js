@@ -3,13 +3,11 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Attribute extends Model {
     static associate(models) {
-      // Relación uno a muchos con AttrubuteCategory
       Attribute.belongsTo(models.AttributeCategory, {
-        foreignKey: "attributeCategoryId",
+        foreignKey: "attribute_category_id",
         as: "category",
       });
 
-      // Relación muchos a muchos con Wine a través de la tabla intermedia wines_attributes
       Attribute.belongsToMany(models.Wine, {
         through: "wines_attributes",
         foreignKey: "attributeId",
@@ -33,7 +31,8 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      AttributeCategoryId: {
+      attribute_category_id: {
+        // Este nombre debe coincidir en el controlador y migración
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -42,7 +41,6 @@ module.exports = (sequelize) => {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        comment: "Relación con el modelo AttributeCategory",
       },
     },
     {

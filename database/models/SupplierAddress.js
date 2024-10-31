@@ -3,14 +3,14 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class SupplierAddress extends Model {
     static associate(models) {
+      SupplierAddress.belongsTo(models.Supplier, {
+        foreignKey: "supplierId",
+        as: "supplier",
+      });
+
       SupplierAddress.belongsTo(models.Region, {
         foreignKey: "regionId",
         as: "region",
-      });
-
-      SupplierAddress.hasOne(models.Supplier, {
-        foreignKey: "addressId",
-        as: "supplier",
       });
     }
   }
@@ -43,6 +43,16 @@ module.exports = (sequelize) => {
             }
           },
         },
+      },
+      supplierId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "suppliers",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       regionId: {
         type: DataTypes.INTEGER,

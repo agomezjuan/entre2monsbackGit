@@ -7,9 +7,9 @@ const cors = require("cors");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const regionsRouter = require("./routes/regions");
+const regionsRoutes = require("./routes/regionsRoutes");
 const cellarsRouter = require("./routes/cellars");
-const soilsRouter = require("./routes/soils");
+const soilsRouter = require("./routes/soilsRoutes");
 const countriesRouter = require("./routes/countries");
 const wineTypesRouter = require("./routes/wineTypes");
 const winesRouter = require("./routes/winesControllers");
@@ -19,12 +19,13 @@ const stocksRouter = require("./routes/stocks");
 const pricesRouter = require("./routes/prices");
 const sulphitesRouter = require("./routes/sulphites");
 const authRouter = require("./routes/auth");
-const suppliersRouter = require("./routes/suppliers");
-const labelRouter = require("./routes/labels");
+const suppliersRoutes = require("./routes/suppliersRoutes");
+const attributesRoutes = require("./routes/attributesRoutes");
 const customersRouter = require("./routes/customers");
 const vintageRouter = require("./routes/vintages");
-const labelsRouter = require("./routes/labels");
-const labelCategoriesRouter = require("./routes/labelsCategories");
+const attributeCategoriesRouter = require("./routes/attributeCategoriesRoutes");
+const dosRoutes = require("./routes/dosRoutes");
+const suppliersAddressesRoutes = require("./routes/suppliersAddressesRoutes");
 
 const app = express();
 
@@ -41,7 +42,7 @@ app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/regions", regionsRouter);
+app.use("/regions", regionsRoutes);
 app.use("/cellars", cellarsRouter);
 app.use("/soils", soilsRouter);
 app.use("/countries", countriesRouter);
@@ -53,12 +54,13 @@ app.use("/stocks", stocksRouter);
 app.use("/prices", pricesRouter);
 app.use("/auth", authRouter);
 app.use("/sulphites", sulphitesRouter);
-app.use("/suppliers", suppliersRouter);
-app.use("/labels", labelRouter);
+app.use("/suppliers", suppliersRoutes);
+app.use("/attributes", attributesRoutes);
 app.use("/customers", customersRouter);
 app.use("/vintages", vintageRouter);
-app.use("/labels", labelsRouter);
-app.use("/labelCategories", labelCategoriesRouter);
+app.use("/attributesCategories", attributeCategoriesRouter);
+app.use("/dos", dosRoutes);
+app.use("/suppliers-addresses", suppliersAddressesRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

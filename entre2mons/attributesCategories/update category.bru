@@ -1,0 +1,19 @@
+meta {
+  name: update category
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3000/attributesCategories/2
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "adsdsdfdsf",
+    "description": "dfjsdlksdfsdfkjslfjsdlfjsdlfjkslkfjdsldjfsldjfsdkfjsdlkfsdjf",
+    "color": "23423423"
+  }
+}

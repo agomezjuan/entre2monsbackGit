@@ -21,6 +21,16 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      supplier_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "suppliers",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       region_id: {
         type: Sequelize.INTEGER,
         allowNull: true,

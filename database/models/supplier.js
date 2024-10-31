@@ -3,14 +3,19 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Supplier extends Model {
     static associate(models) {
-      Supplier.belongsTo(models.SupplierAddress, {
-        foreignKey: "addressId",
-        as: "address",
+      Supplier.hasMany(models.SupplierAddress, {
+        foreignKey: "supplierId",
+        as: "addresses",
       });
 
       Supplier.hasMany(models.SupplierRepresentative, {
         foreignKey: "supplierId",
         as: "representatives",
+      });
+
+      Supplier.hasOne(models.SupplierDeliveryDetail, {
+        foreignKey: "supplierId",
+        as: "deliveryDetail",
       });
     }
   }
@@ -60,7 +65,7 @@ module.exports = (sequelize) => {
         allowNull: true,
         unique: true,
         validate: {
-          is: /^\+?[\d\s]+$/, // Matches "+123 456 789"
+          is: /^\+?[\d\s]+$/,
         },
       },
       web: {
@@ -71,25 +76,15 @@ module.exports = (sequelize) => {
           isUrl: true,
         },
       },
-      addressId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: "supplier_addresses",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
-      representativeId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: "representatives",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {

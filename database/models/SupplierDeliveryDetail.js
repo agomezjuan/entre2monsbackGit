@@ -3,15 +3,6 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class SupplierDeliveryDetail extends Model {
     static associate(models) {
-      // Relación muchos a muchos con Day
-      SupplierDeliveryDetail.belongsToMany(models.Day, {
-        through: "supplier_delivery_days",
-        foreignKey: "supplierDeliveryDetailId",
-        otherKey: "dayId",
-        as: "days",
-      });
-
-      // Relación uno a uno con Supplier
       SupplierDeliveryDetail.belongsTo(models.Supplier, {
         foreignKey: "supplierId",
         as: "supplier",

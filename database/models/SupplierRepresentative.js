@@ -44,19 +44,19 @@ module.exports = (sequelize) => {
       },
       supplierId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: "suppliers",
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
       },
     },
     {
       sequelize,
       modelName: "SupplierRepresentative",
-      tableName: "supplier_representatives",
+      tableName: "suppliers_representatives",
       timestamps: true,
       underscored: true,
     }

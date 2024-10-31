@@ -2,14 +2,14 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("RegionDO", {
+    await queryInterface.createTable("regions_dos", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      regionId: {
+      region_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "regions",
@@ -18,10 +18,10 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      doId: {
+      do_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "denominations_of_origin",
+          model: "dos", // Nombre correcto de la tabla en la base de datos
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -41,6 +41,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("RegionDO");
+    await queryInterface.dropTable("regions_dos");
   },
 };

@@ -27,14 +27,15 @@ module.exports = {
         allowNull: true,
       },
       supplier_id: {
+        // Aquí está la clave foránea
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: "suppliers",
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
       },
       created_at: {
         allowNull: false,

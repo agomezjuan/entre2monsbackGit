@@ -4,14 +4,10 @@ module.exports = (sequelize) => {
   class DO extends Model {
     static associate(models) {
       DO.belongsToMany(models.Region, {
-        through: "RegionDO", // Asegúrate de que esta tabla intermedia existe en la base de datos
+        through: "regions_dos", // Ajuste en el nombre de la tabla intermedia
         foreignKey: "do_id",
         otherKey: "region_id",
         as: "regions",
-      });
-      DO.hasMany(models.Stock, {
-        foreignKey: "do_id",
-        as: "stocks",
       });
     }
   }
@@ -34,7 +30,7 @@ module.exports = (sequelize) => {
     {
       sequelize,
       modelName: "DO",
-      tableName: "denominations_of_origin",
+      tableName: "dos",
       timestamps: true,
       underscored: true,
     }

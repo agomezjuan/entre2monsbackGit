@@ -33,6 +33,7 @@ module.exports = {
           key: "id",
         },
         allowNull: false,
+        unique: true, // Clave única para asegurar la relación 1:1
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
         comment: "Relación uno a uno con Supplier",

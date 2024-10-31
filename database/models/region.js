@@ -3,21 +3,15 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Region extends Model {
     static associate(models) {
+      Region.belongsToMany(models.DO, {
+        through: "regions_dos",
+        foreignKey: "region_id",
+        otherKey: "do_id",
+        as: "denominations",
+      });
       Region.belongsTo(models.Country, {
         foreignKey: "countryId",
         as: "country",
-      });
-
-      Region.belongsToMany(models.DO, {
-        through: "RegionDO",
-        foreignKey: "regionId",
-        otherKey: "doId",
-        as: "denominations",
-      });
-
-      Region.hasMany(models.SupplierAddress, {
-        foreignKey: "regionId",
-        as: "supplierAddresses",
       });
     }
   }
@@ -38,13 +32,11 @@ module.exports = (sequelize) => {
       },
       countryId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: "countries",
           key: "id",
         },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
       },
     },
     {

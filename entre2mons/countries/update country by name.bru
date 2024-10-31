@@ -1,0 +1,18 @@
+meta {
+  name: update country by name
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:3000/countries
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "country": "Perú",
+    "description": "Description text 1"
+  }
+}

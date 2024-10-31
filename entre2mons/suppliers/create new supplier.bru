@@ -12,18 +12,44 @@ post {
 
 body:json {
   {
-      "companyName": "Prova 2",
-      "fiscalName": "Prova 2",
-      "NIF": "Prova 2",
-      "country": "Prova 2",
-      "city": "Prova 2",
-      "address": "Prova 2",
-      "CP": 2,
-      "businessPhone": "Prova 2",
-      "contactName": "Prova 2",
-      "contactPhone": "Prova 2",
-      "businessEmail": "Prova 2@Prova 2.com",
-      "contactEmail": "Prova 2@Prova 2.com",
-      "description": "Prova 2"
+    "tradeName": "Vinos del Sol",
+    "legalName": "Vinos del Sol S.A.",
+    "nif": "ESB12345678",
+    "email": "contacto@vinosdelsol.com",
+    "phone": "+34 123 456 789",
+    "web": "https://vinosdelsol.com",
+    "addresses": [
+      {
+        "street": "Calle Falsa 123",
+        "city": "Madrid",
+        "postalCode": "28013",
+        "regionId": 1
+      },
+      {
+        "street": "Avenida Real 456",
+        "city": "Barcelona",
+        "postalCode": "08001",
+        "regionId": 2
+      }
+    ],
+    "representatives": [
+      {
+        "firstName": "Juan",
+        "lastName": "Pérez",
+        "email": "juan.perez@vinosdelsol.com",
+        "phone": "+34 987 654 321"
+      },
+      {
+        "firstName": "Ana",
+        "lastName": "García",
+        "email": "ana.garcia@vinosdelsol.com",
+        "phone": "+34 654 321 987"
+      }
+    ],
+    "deliveryDetail": {
+      "minPurchase": 200.0,
+      "deliveryTax": 15.0
+    }
   }
+  
 }

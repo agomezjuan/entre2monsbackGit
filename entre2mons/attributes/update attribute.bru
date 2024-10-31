@@ -1,0 +1,19 @@
+meta {
+  name: update attribute
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3000/attributes/3
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Intensidad dea",
+    "description": "Mide la intensidad del aroma del vino, desde suave hasta potente.",
+    "attribute_category_id": 3
+  }
+}
