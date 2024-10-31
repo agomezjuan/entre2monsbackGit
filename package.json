@@ -13,7 +13,7 @@
     "db:new:migration": "npx sequelize-cli migration:generate --name",
     "db:rollback": "npx sequelize db:migrate:undo:all",
     "db:seed": "npx sequelize db:seed:all",
-    "db:seed:specific": "npx sequelize db:seed --seed",
+    "db:seed:one": "npx sequelize db:seed --seed",
     "db:new:seed": "npx sequelize-cli seed:generate --name",
     "db:no:seed": "npx sequelize-cli db:seed:undo:all"
   },

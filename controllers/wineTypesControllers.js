@@ -16,17 +16,17 @@ module.exports = {
   // POST
   createWineType: async (req, res) => {
     try {
-      const { wineType, description } = req.body;
+      const { name, description } = req.body;
       console.log(req.body);
 
       // Validación básica para asegurar que el campo wineType está presente
-      if (!wineType) {
+      if (!name) {
         return res.status(400).json({ error: "Wine type is required" });
       }
 
       // Crear un nuevo tipo de vino
       const createdWineType = await WineType.create({
-        wineType,
+        name,
         description,
       });
       console.log("Created wineType:", createdWineType);
@@ -65,7 +65,7 @@ module.exports = {
   // PUT
   updateWineType: async (req, res) => {
     const { id } = req.params;
-    const { wineType, description } = req.body;
+    const { name, description } = req.body;
     try {
       const wineTypeToUpdate = await WineType.findByPk(id);
       if (!wineTypeToUpdate) {
@@ -73,7 +73,7 @@ module.exports = {
       }
 
       await wineTypeToUpdate.update({
-        wineType,
+        name,
         description,
       });
 
