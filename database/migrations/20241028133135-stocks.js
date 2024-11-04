@@ -9,22 +9,41 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      wine_vintage_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wine_vintages", // Verifica el nombre exacto de la tabla intermedia
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-        comment: "Relación directa con una entrada de wine_vintages",
-      },
+
       quantity: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        comment: "Cantidad disponible en inventario",
+        validate: {
+          min: 0,
+        },
+        comment: "Stock quantity",
+      },
+      reorder_level: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        comment: "Reorder level",
+      },
+      sku: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+        comment: "Stock Keeping Unit",
+      },
+
+      wine_vintage_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        unique: true, // Ensures a 1:1 relationship
+        references: {
+          model: "wine_vintages", // The intermediate table
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        comment:
+          "Foreign key referencing wine_vintages for a one-to-one relation",
       },
       created_at: {
         allowNull: false,

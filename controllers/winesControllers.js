@@ -5,6 +5,7 @@ const {
   WineType,
   Vintage,
   Grape,
+  Stock,
 } = require("../database/models");
 
 module.exports = {
@@ -17,11 +18,16 @@ module.exports = {
           { model: WineType, as: "wineType" },
           { model: Vintage, as: "vintages" },
           { model: Grape, as: "grapes" },
+          { model: Stock, as: "stocks" },
         ],
       });
       res.status(200).json(wines);
     } catch (error) {
-      res.status(500).json({ message: "Error al obtener los vinos", error });
+      console.error("Error fetching wines:", error); // Muestra detalles del error en la consola
+      res.status(500).json({
+        message: "Error al obtener los vinos",
+        error: error.message || error,
+      });
     }
   },
 

@@ -18,6 +18,7 @@ if (config.use_env_variable) {
   );
 }
 
+// Leer los modelos del directorio actual e importarlos en `db`
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (

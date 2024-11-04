@@ -30,6 +30,10 @@ module.exports = (sequelize) => {
         otherKey: "grape_id",
         as: "grapes",
       });
+      Wine.hasMany(models.Stock, {
+        foreignKey: "wine_vintage_id",
+        as: "stocks",
+      });
     }
   }
 

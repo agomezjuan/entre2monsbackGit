@@ -1,5 +1,4 @@
-"use strict";
-
+// migration for wine_vintages to add an id column if not present
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("wine_vintages", {
