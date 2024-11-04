@@ -65,6 +65,11 @@ module.exports = (sequelize) => {
         allowNull: true,
         comment: "Descripción adicional del vino",
       },
+      tastingNotes: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        comment: "Notas de cata del vino",
+      },
       cellarId: {
         type: DataTypes.INTEGER,
         allowNull: false,

@@ -30,6 +30,11 @@ module.exports = {
         allowNull: true,
         comment: "Producción total en unidades",
       },
+      tasting_notes: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+        comment: "Notas de cata del vino",
+      },
       description: {
         type: Sequelize.TEXT,
         allowNull: true,

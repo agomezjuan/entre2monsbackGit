@@ -1,4 +1,5 @@
-const db = require("../database/models"); // Importa `db` que contiene todos los modelos y `sequelize`
+const db = require("../database/models");
+const generateSKU = require("../helpers/generateSKU");
 
 module.exports = {
   // Obtener todos los registros de Stock
@@ -38,7 +39,6 @@ module.exports = {
   createStock: async (req, res) => {
     const { quantity, reorderLevel, wine_vintage_id } = req.body;
 
-    // Validación de campos obligatorios sin incluir `sku` y `cellar_id`
     if (
       quantity === undefined ||
       reorderLevel === undefined ||
@@ -54,20 +54,17 @@ module.exports = {
     try {
       // Obtener el vino (Wine) directamente con el wine_vintage_id
       const wine = await db.Wine.findOne({
-        where: { id: wine_vintage_id }, // Ajusta esto según sea necesario para identificar el vino correcto
+        where: { id: wine_vintage_id },
       });
 
-      // Validar que Wine exista
       if (!wine) {
         throw new Error(
           "No se pudo generar el SKU. Verifica los datos de wine."
         );
       }
 
-      // Generar SKU
-      const wineId = wine.id.toString().padStart(4, "0");
-      const wineName = wine.name.substring(0, 4).toUpperCase();
-      const sku = `${wineId}-${wineName}`;
+      // Genera el SKU usando el helper
+      const sku = generateSKU(wine.id, wine.name);
 
       // Crear el nuevo stock con el SKU generado
       const newStock = await db.Stock.create(
@@ -91,6 +88,7 @@ module.exports = {
       res.status(500).json({ error: error.message });
     }
   },
+
   // Actualizar un registro de Stock
   updateStock: async (req, res) => {
     const { id } = req.params;

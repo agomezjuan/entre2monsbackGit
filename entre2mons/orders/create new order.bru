@@ -1,0 +1,21 @@
+meta {
+  name: create new order
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/orders
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "customer_id": 1,
+    "sale_id": 1,
+    "wine_id": 1,
+    "quantity": 2
+  }
+  
+}

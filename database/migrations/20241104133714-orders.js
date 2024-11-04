@@ -1,28 +1,24 @@
+// migrations/XXXX_create_orders.js
 "use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("sale_details", {
+    await queryInterface.createTable("orders", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      quantity: {
+      customer_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        comment: "Cantidad de unidades vendidas en esta transacción",
-      },
-      purchase_price: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        comment: "Precio de compra del producto en esta venta",
-      },
-      sale_price: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        comment: "Precio de venta del producto en esta venta",
+        references: {
+          model: "customers",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       sale_id: {
         type: Sequelize.INTEGER,
@@ -34,15 +30,21 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      stock_id: {
+      wine_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "stocks",
+          model: "wines",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+      },
+      quantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+        comment: "Cantidad de vino consumida en la venta",
       },
       created_at: {
         allowNull: false,
@@ -58,6 +60,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("sale_details");
+    await queryInterface.dropTable("orders");
   },
 };

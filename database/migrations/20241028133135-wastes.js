@@ -2,33 +2,35 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("sales", {
+    await queryInterface.createTable("wastes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      wine_vintage_id: {
+      stock_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "wine_vintages",
+          model: "stocks",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        comment: "Relación directa con wine_vintage",
       },
       quantity: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        comment: "Cantidad de unidades vendidas en esta transacción",
+        validate: {
+          min: 1,
+        },
+        comment: "Cantidad de unidades desperdiciadas o perdidas",
       },
-      sale_price: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        comment: "Precio de venta por unidad en esta transacción",
+      reason: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        comment: "Razón de la pérdida, e.g., rotura, defecto",
       },
       created_at: {
         allowNull: false,
@@ -44,6 +46,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("sales");
+    await queryInterface.dropTable("wastes");
   },
 };

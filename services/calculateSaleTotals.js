@@ -1,12 +1,10 @@
-// Importar sequelize para poder acceder a los modelos
-const { sequelize } = require("../models");
+const { Sale, sequelize } = require("../database/models"); // Asegúrate de que la ruta sea correcta
 
-// Función para calcular los totales de una venta específica
 const calculateSaleTotals = async (saleId) => {
   try {
-    // Realiza la consulta para calcular los totales de la venta
-    const saleTotals = await sequelize.models.SaleDetail.findOne({
-      where: { saleId },
+    // Realiza la consulta para calcular los totales de la venta en la tabla `sales`
+    const saleTotals = await Sale.findOne({
+      where: { id: saleId },
       attributes: [
         [sequelize.fn("SUM", sequelize.col("quantity")), "totalQuantity"],
         [
@@ -18,7 +16,7 @@ const calculateSaleTotals = async (saleId) => {
           "totalCost",
         ],
       ],
-      raw: true, // Devuelve solo los valores de los atributos seleccionados
+      raw: true,
     });
 
     return saleTotals;

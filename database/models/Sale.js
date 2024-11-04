@@ -5,43 +5,43 @@ module.exports = (sequelize) => {
     static associate(models) {
       // Relación con Stock
       Sale.belongsTo(models.Stock, {
-        foreignKey: "stockId",
+        foreignKey: "stock_id",
         as: "stock",
       });
-      // Relación con SaleDetails
-      Sale.hasMany(models.SaleDetail, {
-        foreignKey: "saleId",
-        as: "saleDetails",
+      Sale.belongsToMany(models.Customer, {
+        through: "Order",
+        foreignKey: "sale_id",
+        otherKey: "customer_id",
+        as: "customers",
       });
     }
   }
 
   Sale.init(
     {
-      totalQuantity: {
+      quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0,
+        validate: {
+          min: 1,
+        },
+        comment: "Cantidad de unidades vendidas en esta transacción",
+      },
+      purchase_price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
         validate: {
           min: 0,
         },
-        comment: "Unidades vendidas en esta venta",
+        comment: "Precio de compra del producto en esta venta",
       },
-      saleDate: {
-        type: DataTypes.DATE,
+      sale_price: {
+        type: DataTypes.FLOAT,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
-        comment: "Fecha de la transacción de venta",
-      },
-      stockId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "stocks",
-          key: "id",
+        validate: {
+          min: 0,
         },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        comment: "Precio de venta del producto en esta venta",
       },
     },
     {

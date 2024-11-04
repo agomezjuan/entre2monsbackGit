@@ -1,0 +1,23 @@
+meta {
+  name: create new sale
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/sales
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "stock_id": 1,
+    "quantity": 3,
+    "purchase_price": 20.00,
+    "sale_price": 30.00
+  }
+  
+  
+  
+}
