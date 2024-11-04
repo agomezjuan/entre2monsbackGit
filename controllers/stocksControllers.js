@@ -1,5 +1,6 @@
 const db = require("../database/models");
 const generateSKU = require("../helpers/generateSKU");
+const { adjustStockQuantity } = require("../services/stockService");
 
 module.exports = {
   // Obtener todos los registros de Stock
@@ -131,6 +132,28 @@ module.exports = {
     } catch (error) {
       console.error("Error deleting stock:", error);
       res.status(500).json({ error: "Error deleting stock" });
+    }
+  },
+
+  addStock: async (req, res) => {
+    const { stock_id, additionalQuantity } = req.body;
+
+    if (!stock_id || !additionalQuantity || additionalQuantity <= 0) {
+      return res.status(400).json({
+        error: "Both stock_id and a positive additionalQuantity are required.",
+      });
+    }
+
+    const transaction = await db.sequelize.transaction();
+    try {
+      await adjustStockQuantity(stock_id, additionalQuantity, transaction);
+
+      await transaction.commit();
+      res.status(200).json({ message: "Stock adjusted successfully." });
+    } catch (error) {
+      await transaction.rollback();
+      console.error("Error incrementing stock:", error);
+      res.status(500).json({ error: error.message });
     }
   },
 };
