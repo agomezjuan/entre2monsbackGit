@@ -1,4 +1,3 @@
-// migrations/XXXX_create_orders.js
 "use strict";
 
 module.exports = {
@@ -20,15 +19,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      wine_id: {
+      wine_vintage_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "wines",
+          model: "wine_vintages",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        comment: "Referencia a la tabla wine_vintages",
       },
       quantity: {
         type: Sequelize.INTEGER,

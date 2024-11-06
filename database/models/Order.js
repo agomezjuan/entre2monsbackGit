@@ -9,12 +9,6 @@ module.exports = (sequelize) => {
         foreignKey: "customer_id",
         as: "customer",
       });
-
-      // Relación con Wine
-      Order.belongsTo(models.Wine, {
-        foreignKey: "wine_id",
-        as: "wine",
-      });
     }
   }
 
@@ -30,12 +24,11 @@ module.exports = (sequelize) => {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-
-      wine_id: {
+      wine_vintage_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "wines",
+          model: "wines_vintages", // Referencia directa a la tabla intermedia
           key: "id",
         },
         onUpdate: "CASCADE",
