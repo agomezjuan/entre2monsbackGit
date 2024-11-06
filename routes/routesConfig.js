@@ -25,7 +25,6 @@ const iconsSubCategoriesRoutes = require("./iconsSubCategoriesRoutes");
 const wasteRoutes = require("./wastesRoutes");
 const customersRouter = require("./customersRoutes");
 const ordersRouter = require("./ordersRoutes");
-const salesRouter = require("./salesRoutes");
 
 const configureRoutes = (app) => {
   app.use("/", indexRouter); // Configurar la ruta principal
@@ -55,7 +54,6 @@ const configureRoutes = (app) => {
   app.use("/icons-subcategories", iconsSubCategoriesRoutes);
   app.use("/wastes", wasteRoutes);
   app.use("/orders", ordersRouter);
-  app.use("/sales", salesRouter);
 };
 
 module.exports = configureRoutes;

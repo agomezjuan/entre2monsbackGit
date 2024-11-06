@@ -15,6 +15,13 @@ const calculateSaleTotals = async (saleId) => {
           sequelize.fn("SUM", sequelize.literal("quantity * purchase_price")),
           "totalCost",
         ],
+        [
+          sequelize.fn(
+            "SUM",
+            sequelize.literal("quantity * (sale_price - purchase_price)")
+          ),
+          "totalProfit",
+        ],
       ],
       raw: true,
     });

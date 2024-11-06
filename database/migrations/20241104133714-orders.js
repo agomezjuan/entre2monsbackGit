@@ -20,16 +20,6 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      sale_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "sales",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
       wine_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

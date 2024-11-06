@@ -2,34 +2,37 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("wine_attributes", {
+    await queryInterface.createTable("prices", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      wine_id: {
-        type: Sequelize.INTEGER,
+      purchase_price: {
+        type: Sequelize.FLOAT,
         allowNull: false,
-        references: {
-          model: "wines", // Asegúrate de que la tabla "wines" existe
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-        comment: "Referencia a la tabla wines",
+        comment: "Precio de compra del vino",
       },
-      attribute_id: {
+      sell_price: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+        comment: "Precio de venta del vino",
+      },
+      benefit_margin: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+        comment: "Margen de beneficio calculado en porcentaje",
+      },
+      wine_vintages_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "attributes", // Asegúrate de que la tabla "attributes" existe
+          model: "wine_vintages",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        comment: "Referencia a la tabla attributes",
       },
       created_at: {
         allowNull: false,
@@ -45,6 +48,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("wine_attributes");
+    await queryInterface.dropTable("prices");
   },
 };

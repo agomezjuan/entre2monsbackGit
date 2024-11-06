@@ -10,12 +10,6 @@ module.exports = (sequelize) => {
         as: "customer",
       });
 
-      // Relación con Sale
-      Order.belongsTo(models.Sale, {
-        foreignKey: "sale_id",
-        as: "sale",
-      });
-
       // Relación con Wine
       Order.belongsTo(models.Wine, {
         foreignKey: "wine_id",
@@ -36,16 +30,7 @@ module.exports = (sequelize) => {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      sale_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "sales",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
+
       wine_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

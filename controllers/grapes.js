@@ -14,10 +14,10 @@ module.exports = {
 
   // POST
   createGrape: async (req, res) => {
-    const { grape, description } = req.body; // Actualizado para usar snake_case
+    const { name, description } = req.body; // Actualizado para usar snake_case
     const existingGrape = await Grape.findOne({
       where: {
-        grape,
+        name,
       },
     });
     if (existingGrape) {
@@ -28,7 +28,7 @@ module.exports = {
     }
     try {
       const createdGrape = await Grape.create({
-        grape, // Usando snake_case para coincidir con la definición del modelo
+        name, // Usando snake_case para coincidir con la definición del modelo
         description,
       });
       res

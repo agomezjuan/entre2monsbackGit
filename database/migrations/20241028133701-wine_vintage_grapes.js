@@ -2,34 +2,25 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("wine_vintage_grapes", {
+    await queryInterface.createTable("wine_vintages_grapes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      wine_id: {
+      wine_vintage_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "wines",
+          model: "wine_vintages",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        comment: "Referencia a la tabla wine_vintages",
       },
-      vintage_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "vintages",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-      grape_id: {
+      attribute_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -38,6 +29,7 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        comment: "Referencia a la tabla grapes",
       },
       created_at: {
         allowNull: false,
@@ -53,6 +45,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("wine_vintage_grapes");
+    await queryInterface.dropTable("wine_vintages_grapes");
   },
 };

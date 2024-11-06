@@ -147,7 +147,6 @@ module.exports = {
     const transaction = await db.sequelize.transaction();
     try {
       await adjustStockQuantity(stock_id, additionalQuantity, transaction);
-
       await transaction.commit();
       res.status(200).json({ message: "Stock adjusted successfully." });
     } catch (error) {

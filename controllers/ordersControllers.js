@@ -3,6 +3,7 @@ const { calculateSaleTotals } = require("../services/calculateSaleTotals");
 
 module.exports = {
   // Crear un nuevo registro de consumo
+
   createOrder: async (req, res) => {
     const { customer_id, sale_id, wine_id, quantity } = req.body;
 
@@ -10,31 +11,33 @@ module.exports = {
     if (!customer_id || !sale_id || !wine_id || quantity === undefined) {
       return res.status(400).json({
         error:
-          "All fields are required: customer_id, sale_id, wine_id, and quantity.",
+          "All fields are required: customer_id, sale_id, wine_id, quantity.",
       });
     }
 
+    // Iniciar transacción
     const transaction = await db.sequelize.transaction();
     try {
+      // Crear el nuevo pedido dentro de la transacción
       const newOrder = await db.Order.create(
-        {
-          customer_id,
-          sale_id,
-          wine_id,
-          quantity,
-        },
+        { customer_id, sale_id, wine_id, quantity },
         { transaction }
       );
 
+      // Disminuir el stock del vino utilizando el servicio de ajuste de stock
+      await adjustStockQuantity(wine_id, -quantity, transaction);
+
+      // Confirmar transacción si todo va bien
       await transaction.commit();
       res.status(201).json({
-        message: "Order created successfully",
+        message: "Order created successfully and stock updated.",
         order: newOrder,
       });
     } catch (error) {
+      // Rollback en caso de error
       await transaction.rollback();
       console.error("Error creating order:", error);
-      res.status(500).json({ error: "Error creating order" });
+      res.status(500).json({ error: error.message });
     }
   },
 
@@ -49,6 +52,11 @@ module.exports = {
         {
           where: { customer_id },
           include: [
+            {
+              model: db.Customer,
+              as: "customer",
+              attributes: ["id", "name"],
+            },
             {
               model: db.Sale,
               as: "sale",

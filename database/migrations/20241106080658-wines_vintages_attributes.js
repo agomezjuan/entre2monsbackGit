@@ -2,47 +2,34 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("sales", {
+    await queryInterface.createTable("wine_vintages_attributes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      stock_id: {
+      wine_vintage_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "stocks",
+          model: "wine_vintages",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        comment: "ID de referencia al stock vendido",
+        comment: "Referencia a la tabla wine_vintages",
       },
-      quantity: {
+      attribute_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        validate: {
-          min: 1,
+        references: {
+          model: "attributes",
+          key: "id",
         },
-        comment: "Cantidad de unidades vendidas en esta transacción",
-      },
-      purchase_price: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        validate: {
-          min: 0,
-        },
-        comment: "Precio de compra por unidad del producto",
-      },
-      sale_price: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        validate: {
-          min: 0,
-        },
-        comment: "Precio de venta por unidad del producto",
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        comment: "Referencia a la tabla attributes",
       },
       created_at: {
         allowNull: false,
@@ -58,6 +45,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("sales");
+    await queryInterface.dropTable("wine_vintages_attributes");
   },
 };

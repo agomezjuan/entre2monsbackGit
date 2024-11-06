@@ -9,7 +9,7 @@ module.exports = {
           {
             model: Region,
             as: "regions",
-            through: { attributes: [] },
+            attributes: ["name"],
           },
         ],
       });
