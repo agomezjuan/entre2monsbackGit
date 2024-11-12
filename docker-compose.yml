@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   database:
@@ -6,8 +6,8 @@ services:
     container_name: database
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: entreDosMons
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: SumelAI
+      MYSQL_USER: SumelAI
+      MYSQL_PASSWORD: resLLe07&!
     ports:
-      - '3336:3306'
+      - "3336:3306"

@@ -15,7 +15,8 @@
     "db:seed": "npx sequelize db:seed:all",
     "db:seed:one": "npx sequelize db:seed --seed",
     "db:new:seed": "npx sequelize-cli seed:generate --name",
-    "db:no:seed": "npx sequelize-cli db:seed:undo:all"
+    "db:no:seed": "npx sequelize-cli db:seed:undo:all",
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -32,7 +33,9 @@
     "sequelize": "^6.36.0"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.0.3",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "supertest": "^7.0.0"
   }
 }
