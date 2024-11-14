@@ -1,24 +1,24 @@
 "use strict";
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("wines_icons", {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("wines_vintages_icons", {
       id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
       },
-      wine_id: {
+      wine_vintage_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "wines",
+          model: "wine_vintages", // Asegúrate que coincide con la tabla
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        comment: "Relación con el modelo Wine",
       },
       icon_id: {
         type: Sequelize.INTEGER,
@@ -29,7 +29,6 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        comment: "Relación con el modelo Icon",
       },
       created_at: {
         allowNull: false,
@@ -44,7 +43,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("wines_iconss");
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("wines_vintages_icons");
   },
 };

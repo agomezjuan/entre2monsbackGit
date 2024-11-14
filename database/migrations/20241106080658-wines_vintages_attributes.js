@@ -20,6 +20,7 @@ module.exports = {
         onDelete: "CASCADE",
         comment: "Referencia a la tabla wine_vintages",
       },
+
       attribute_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

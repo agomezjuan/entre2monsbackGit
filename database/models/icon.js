@@ -7,6 +7,13 @@ module.exports = (sequelize) => {
         foreignKey: "subcategoryId",
         as: "subcategory",
       });
+
+      Icon.belongsToMany(models.Wine, {
+        through: "wines_icons",
+        foreignKey: "iconId",
+        otherKey: "wineId",
+        as: "wines",
+      });
     }
   }
 
