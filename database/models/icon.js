@@ -14,6 +14,13 @@ module.exports = (sequelize) => {
         otherKey: "wine_vintage_id",
         as: "wineVintages",
       });
+
+      Icon.belongsToMany(models.Wine, {
+        through: "wines_icons",
+        foreignKey: "iconId",
+        otherKey: "wineId",
+        as: "wines",
+      });
     }
   }
 
