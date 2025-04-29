@@ -1,20 +1,24 @@
 const { Model, DataTypes } = require("sequelize");
 
-module.exports = (sequelize) => {
-  class Region extends Model {
-    static associate(models) {
-      Region.belongsToMany(models.DO, {
-        through: "regions_dos",
-        foreignKey: "region_id",
-        otherKey: "do_id",
-        as: "denominations",
-      });
-      Region.belongsTo(models.Country, {
-        foreignKey: "countryId",
-        as: "country",
-      });
-    }
-  }
+module.exports = (sequelize, DataTypes) => {
+  const Region = sequelize.define("Region", {
+    name: DataTypes.STRING,
+    description: DataTypes.TEXT,
+  });
+
+  Region.associate = (models) => {
+    Region.belongsTo(models.Country, {
+      as: "country", // 👈 importante para el include
+      foreignKey: "countryId",
+    });
+
+    Region.belongsToMany(models.DO, {
+      through: "regions_dos",
+      foreignKey: "region_id",
+      otherKey: "do_id",
+      as: "denominations",
+    });
+  };
 
   Region.init(
     {

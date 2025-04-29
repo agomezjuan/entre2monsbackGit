@@ -44,16 +44,6 @@ module.exports = (sequelize) => {
           },
         },
       },
-      supplierId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "suppliers",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
       regionId: {
         type: DataTypes.INTEGER,
         allowNull: true,

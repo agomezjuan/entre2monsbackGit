@@ -1,13 +1,29 @@
-const { Country, sequelize } = require("../database/models");
+const { Country, Region, DO, sequelize } = require("../database/models");
 
 module.exports = {
   // Obtener todos los países
   getAllCountries: async (req, res) => {
     try {
-      const countries = await Country.findAll();
-      res.status(200).json(countries);
+      const countries = await Country.findAll({
+        include: [
+          {
+            model: Region,
+            as: "regions",
+            include: [
+              {
+                model: DO,
+                as: "denominations",
+              },
+            ],
+          },
+        ],
+        order: [["name", "ASC"]],
+      });
+
+      res.json(countries);
     } catch (error) {
-      res.status(500).json({ message: "Error al obtener los países", error });
+      console.error(error);
+      res.status(500).json({ message: "Error al obtener los países" });
     }
   },
 

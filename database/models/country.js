@@ -1,14 +1,17 @@
 const { Model, DataTypes } = require("sequelize");
 
-module.exports = (sequelize) => {
-  class Country extends Model {
-    static associate(models) {
-      Country.hasMany(models.Region, {
-        foreignKey: "countryId",
-        as: "regions",
-      });
-    }
-  }
+module.exports = (sequelize, DataTypes) => {
+  const Country = sequelize.define("Country", {
+    name: DataTypes.STRING,
+    description: DataTypes.TEXT,
+  });
+
+  Country.associate = (models) => {
+    Country.hasMany(models.Region, {
+      as: "regions",
+      foreignKey: "countryId",
+    });
+  };
 
   Country.init(
     {

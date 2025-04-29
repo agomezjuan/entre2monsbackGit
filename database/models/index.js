@@ -30,7 +30,11 @@ fs.readdirSync(__dirname)
       sequelize,
       Sequelize.DataTypes
     );
-    db[model.name] = model;
+    if (model.name === "DO") {
+      db.DO = model; // fuerza la clave exacta
+    } else {
+      db[model.name] = model;
+    }
   });
 
 Object.keys(db).forEach((modelName) => {

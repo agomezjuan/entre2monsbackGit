@@ -4,7 +4,7 @@ module.exports = (sequelize) => {
   class DO extends Model {
     static associate(models) {
       DO.belongsToMany(models.Region, {
-        through: "regions_dos", // Ajuste en el nombre de la tabla intermedia
+        through: "regions_dos",
         foreignKey: "do_id",
         otherKey: "region_id",
         as: "regions",

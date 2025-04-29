@@ -1,0 +1,30 @@
+meta {
+  name: create ubications all in one, obo
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/ubications/create-pack
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "country": {
+      "name": "Argentina",
+      "description": "Territorio vitivinícola destacado de Sudamérica"
+    },
+    "region": {
+      "name": "Mendoza",
+      "description": "Región andina famosa por su producción de Malbec"
+    },
+    "do": {
+      "name": "Luján de Cuyo",
+      "description": "Primera DOC de Argentina, destacada por su Malbec",
+      "regionIds": []  // Se puede dejar vacío y se asociará automáticamente a 'Mendoza'
+    }
+  }
+  
+}

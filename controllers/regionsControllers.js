@@ -22,25 +22,28 @@ module.exports = {
 
   // Crear una nueva región y devolverla con país incluido
   createRegion: async (req, res) => {
-    const { name, countryId, description } = req.body;
+    const { name, description, countryId } = req.body;
     const transaction = await sequelize.transaction();
+
     try {
       const newRegion = await Region.create(
-        { name, countryId, description },
+        { name, description, countryId },
         { transaction }
       );
+
       await transaction.commit();
 
-      // Recargar región con país asociado
+      // Recargar la región con el país asociado
       const createdRegion = await Region.findOne({
         where: { id: newRegion.id },
-        include: { model: Country, as: "country" }, // Verificar alias
+        include: { model: Country, as: "country" },
       });
+
       res.status(201).json(createdRegion);
     } catch (error) {
       await transaction.rollback();
       console.error("Error creating region:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Error al crear la región" });
     }
   },
 

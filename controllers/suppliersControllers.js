@@ -83,8 +83,7 @@ module.exports = {
 
   // Actualizar un proveedor por ID
   updateSupplier: async (req, res) => {
-    const { tradeName, legalName, nif, email, phone, web, addressId } =
-      req.body;
+    const { tradeName, legalName, nif, email, phone, web } = req.body;
     try {
       const supplier = await Supplier.findByPk(req.params.id);
       if (supplier) {
@@ -95,7 +94,6 @@ module.exports = {
           email,
           phone,
           web,
-          addressId,
         });
         res.status(200).json(supplier);
       } else {
