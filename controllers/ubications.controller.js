@@ -4,8 +4,12 @@ const {
 
 const createUbicationPack = async (req, res) => {
   try {
-    await createUbicationPackService(req.body);
-    return res.status(201).json({ message: "Ubicación creada correctamente." });
+    const result = await createUbicationPackService(req.body);
+
+    return res.status(201).json({
+      message: result.message,
+      created: result.created, // 👈 ahora sí se envía al frontend
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
