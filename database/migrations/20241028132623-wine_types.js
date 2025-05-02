@@ -20,6 +20,11 @@ module.exports = {
         allowNull: true,
         comment: "Descripción del tipo de vino",
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

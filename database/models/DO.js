@@ -9,6 +9,11 @@ module.exports = (sequelize) => {
         otherKey: "region_id",
         as: "regions",
       });
+
+      DO.hasMany(models.Cellar, {
+        foreignKey: "doId",
+        as: "cellars",
+      });
     }
   }
 
@@ -25,6 +30,11 @@ module.exports = (sequelize) => {
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
     },
     {

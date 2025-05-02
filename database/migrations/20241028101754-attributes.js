@@ -1,5 +1,7 @@
 "use strict";
 
+const { BOOLEAN } = require("sequelize");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("attributes", {
@@ -17,6 +19,11 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
         allowNull: false,
+      },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
       attribute_category_id: {
         // Consistente en el backend y la base de datos

@@ -20,6 +20,40 @@ module.exports = {
     }
   },
 
+  getRegionRelations: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const region = await Region.findByPk(id, {
+        include: [
+          {
+            model: DO,
+            as: "denominations",
+          },
+        ],
+      });
+
+      if (!region) {
+        return res.status(404).json({ message: "Región no encontrada" });
+      }
+
+      const doCount = region.denominations?.length || 0;
+
+      res.status(200).json({
+        regionId: region.id,
+        relations: {
+          denominations: doCount,
+        },
+      });
+    } catch (error) {
+      console.error("❌ Error en getRegionRelations:", error);
+      res.status(500).json({
+        message: "Error al obtener relaciones de la región",
+        error: error.message,
+      });
+    }
+  },
+
   // Obtener una DO por ID
   getDOById: async (req, res) => {
     const { id } = req.params;

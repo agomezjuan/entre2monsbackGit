@@ -1,24 +1,22 @@
 "use strict";
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("vintages", {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("attribute_types", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      year: {
-        type: Sequelize.INTEGER,
+      name: {
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          isInt: true,
-          min: 1800,
-          max: new Date().getFullYear(),
-        },
-        comment: "Año de la cosecha o producción",
+      },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
       active: {
         type: Sequelize.BOOLEAN,
@@ -28,17 +26,17 @@ module.exports = {
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("vintages");
+  async down(queryInterface) {
+    await queryInterface.dropTable("attribute_types");
   },
 };

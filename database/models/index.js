@@ -26,12 +26,22 @@ fs.readdirSync(__dirname)
     );
   })
   .forEach((file) => {
-    const model = require(path.join(__dirname, file))(
-      sequelize,
-      Sequelize.DataTypes
-    );
+    const filePath = path.join(__dirname, file);
+    console.log(`📦 Cargando modelo: ${file}`); // 👈 DEBUG VISUAL
+
+    const modelFactory = require(filePath);
+
+    if (typeof modelFactory !== "function") {
+      console.error(
+        `❌ El archivo ${file} no exporta una función. Revisa su estructura.`
+      );
+      return;
+    }
+
+    const model = modelFactory(sequelize, Sequelize.DataTypes);
+
     if (model.name === "DO") {
-      db.DO = model; // fuerza la clave exacta
+      db.DO = model;
     } else {
       db[model.name] = model;
     }

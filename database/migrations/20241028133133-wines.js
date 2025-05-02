@@ -40,6 +40,11 @@ module.exports = {
         allowNull: true,
         comment: "Descripción adicional del vino",
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       cellar_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

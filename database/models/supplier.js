@@ -1,8 +1,16 @@
 const { Model, DataTypes } = require("sequelize");
+const { afterSupplierUpdate } = require("../hooks/supplierHooks");
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, Sequelize) => {
   class Supplier extends Model {
     static associate(models) {
+      Supplier.belongsToMany(models.Cellar, {
+        through: "cellars_suppliers",
+        foreignKey: "supplier_id",
+        otherKey: "cellar_id",
+        as: "cellars",
+      });
+
       Supplier.hasMany(models.SupplierAddress, {
         foreignKey: "supplierId",
         as: "addresses",
@@ -26,16 +34,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          notEmpty: true,
-        },
       },
       legalName: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
       },
       nif: {
         type: DataTypes.STRING,
@@ -44,8 +46,8 @@ module.exports = (sequelize) => {
         validate: {
           notEmpty: true,
           isEuropeanTaxId(value) {
-            const europeanVatRegex = /^[A-Z]{2}[A-Z0-9]{8,12}$/;
-            if (!europeanVatRegex.test(value)) {
+            const regex = /^[A-Z]{2}[A-Z0-9]{8,12}$/;
+            if (!regex.test(value)) {
               throw new Error("Invalid European VAT number format");
             }
           },
@@ -55,10 +57,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          notEmpty: true,
-          isEmail: true,
-        },
+        validate: { isEmail: true },
       },
       phone: {
         type: DataTypes.STRING,
@@ -72,11 +71,8 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
         unique: true,
-        validate: {
-          isUrl: true,
-        },
+        validate: { isUrl: true },
       },
-
       supplierAddressId: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -87,16 +83,10 @@ module.exports = (sequelize) => {
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
-
-      createdAt: {
+      active: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+        defaultValue: true,
       },
     },
     {
@@ -107,6 +97,8 @@ module.exports = (sequelize) => {
       underscored: true,
     }
   );
+
+  Supplier.addHook("afterUpdate", afterSupplierUpdate);
 
   return Supplier;
 };

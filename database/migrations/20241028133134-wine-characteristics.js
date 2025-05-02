@@ -2,44 +2,34 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("supplier_addresses", {
+    await queryInterface.createTable("wine_characteristics", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      street: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      postal_code: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      supplier_id: {
+      wine_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "suppliers",
+          model: "wines",
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "RESTRICT",
+        onDelete: "CASCADE",
       },
-      region_id: {
+      body: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: "regions",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        allowNull: false,
+      },
+      acidity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      sweetness: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       created_at: {
         allowNull: false,
@@ -54,7 +44,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("supplier_addresses");
+  down: async (queryInterface) => {
+    await queryInterface.dropTable("wine_characteristics");
   },
 };

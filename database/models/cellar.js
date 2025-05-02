@@ -1,15 +1,14 @@
 const { Model, DataTypes } = require("sequelize");
+const { afterCellarUpdate } = require("../hooks/cellarHooks");
 
 module.exports = (sequelize) => {
   class Cellar extends Model {
     static associate(models) {
-      // Relación uno a muchos con DO
       Cellar.belongsTo(models.DO, {
         foreignKey: "doId",
         as: "denomination",
       });
 
-      // Relación muchos a muchos con Soils
       Cellar.belongsToMany(models.Soil, {
         through: "cellars_soils",
         foreignKey: "cellar_id",
@@ -17,12 +16,26 @@ module.exports = (sequelize) => {
         as: "soils",
       });
 
-      // Relación muchos a muchos con Suppliers
       Cellar.belongsToMany(models.Supplier, {
         through: "cellars_suppliers",
         foreignKey: "cellar_id",
         otherKey: "supplier_id",
         as: "suppliers",
+      });
+
+      Cellar.hasMany(models.Stock, {
+        foreignKey: "cellarId",
+        as: "stocks",
+      });
+
+      Cellar.hasMany(models.Waste, {
+        foreignKey: "cellarId",
+        as: "wastes",
+      });
+
+      Cellar.hasMany(models.Wine, {
+        foreignKey: "cellarId",
+        as: "wines",
       });
     }
   }
@@ -33,9 +46,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          notEmpty: true,
-        },
+        validate: { notEmpty: true },
       },
       distance: {
         type: DataTypes.FLOAT,
@@ -63,6 +74,11 @@ module.exports = (sequelize) => {
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
     },
     {
       sequelize,
@@ -72,6 +88,8 @@ module.exports = (sequelize) => {
       underscored: true,
     }
   );
+
+  Cellar.addHook("afterUpdate", afterCellarUpdate);
 
   return Cellar;
 };

@@ -8,6 +8,11 @@ module.exports = (sequelize) => {
         foreignKey: "attributeCategoryId",
         as: "attributes",
       });
+
+      AttributeCategory.belongsTo(models.AttributeType, {
+        foreignKey: "attribute_type_id",
+        as: "type",
+      });
     }
   }
 
@@ -28,6 +33,17 @@ module.exports = (sequelize) => {
       color: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+
+      attribute_type_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "attribute_types",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
     },
     {

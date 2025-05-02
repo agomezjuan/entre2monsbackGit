@@ -8,6 +8,7 @@ const {
   getCountryByName,
   getCountryById,
   updateCountryByName,
+  getCountryRelations,
 } = require("../controllers/countriesControllers");
 
 router.get("/", getAllCountries);
@@ -17,5 +18,6 @@ router.post("/", createCountry);
 router.delete("/:id", deleteCountry);
 router.put("/:id", updateCountry);
 router.put("/name/:name", updateCountryByName);
+router.get("/:id/relations", getCountryRelations);
 
 module.exports = router;

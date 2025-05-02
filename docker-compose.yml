@@ -6,8 +6,8 @@ services:
     container_name: database
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: SumelAI
-      MYSQL_USER: SumelAI
-      MYSQL_PASSWORD: resLLe07&!
+      MYSQL_DATABASE: SommelAI
+      MYSQL_USER: SommelAI
+      MYSQL_PASSWORD: SommelAI2025!!!
     ports:
       - "3336:3306"

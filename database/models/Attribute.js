@@ -14,6 +14,13 @@ module.exports = (sequelize) => {
         otherKey: "wineId",
         as: "wines",
       });
+
+      Attribute.belongsToMany(models.WineCharacteristic, {
+        through: models.WineCharacteristicsAttributes,
+        foreignKey: "attribute_id",
+        otherKey: "wine_characteristic_id",
+        as: "wineCharacteristics",
+      });
     }
   }
 

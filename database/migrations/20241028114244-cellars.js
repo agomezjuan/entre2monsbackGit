@@ -30,6 +30,11 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       do_id: {
         type: Sequelize.INTEGER,
         allowNull: true, // Cambiado a true para soportar SET NULL

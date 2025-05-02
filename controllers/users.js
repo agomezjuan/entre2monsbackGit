@@ -1,30 +1,34 @@
-const {Users} = require('../database/models')
+const { User } = require("../database/models");
+const bcrypt = require("bcrypt");
 
-// TODO CRUD 
+const createAdmin = async (req, res) => {
+  const { username, userSurname, email, password } = req.body;
+
+  // Solo puede acceder aquí si `verifyToken + requireRole(['owner'])` se usó antes en la ruta
+  try {
+    const hash = await bcrypt.hash(password, 10);
+    const newAdmin = await User.create({
+      username,
+      userSurname,
+      email,
+      password: hash,
+      role: "admin", // explícito
+    });
+
+    res.status(201).json({
+      message: "Administrador creado correctamente",
+      user: {
+        id: newAdmin.id,
+        email: newAdmin.email,
+        role: newAdmin.role,
+      },
+    });
+  } catch (error) {
+    console.error("Error al crear admin:", error);
+    res.status(500).json({ error: "Error interno al crear admin" });
+  }
+};
+
 module.exports = {
-  
-  // getAllUsers: function (req, res, next) {
-  //   res.send('respond with a resource');
-  // }
-  // GET
-  getAllUsers: async (req, res, next) => {
-    try {
-      const users = await Users.findAll();
-      res.json(users);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'There was a problem trying to get the users' });
-    }
-  },
-
-  // POST
-  createUser: async (req, res, next) => {
-    try {
-      const newUser = await Users.create(req.body);
-      res.json(newUser);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'There was a problem trying to create the user' });
-    }
-  },
-}
+  createAdmin,
+};

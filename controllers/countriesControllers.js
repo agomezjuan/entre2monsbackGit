@@ -57,6 +57,50 @@ module.exports = {
     }
   },
 
+  getCountryRelations: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const country = await Country.findByPk(id, {
+        include: [
+          {
+            model: Region,
+            as: "regions",
+            include: [
+              {
+                model: DO,
+                as: "denominations",
+              },
+            ],
+          },
+        ],
+      });
+
+      if (!country) {
+        return res.status(404).json({ message: "País no encontrado" });
+      }
+
+      const regionCount = country.regions?.length || 0;
+      const doCount = country.regions.reduce((acc, region) => {
+        return acc + (region.denominations?.length || 0);
+      }, 0);
+
+      res.status(200).json({
+        countryId: country.id,
+        relations: {
+          regions: regionCount,
+          denominations: doCount,
+        },
+      });
+    } catch (error) {
+      console.error("❌ Error en getCountryRelations:", error);
+      res.status(500).json({
+        message: "Error al obtener relaciones del país",
+        error: error.message,
+      });
+    }
+  },
+
   // Crear un nuevo país
   createCountry: async (req, res) => {
     const { name, description } = req.body;

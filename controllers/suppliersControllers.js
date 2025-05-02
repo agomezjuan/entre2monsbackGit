@@ -59,6 +59,38 @@ module.exports = {
     }
   },
 
+  getSupplierRelations: async (req, res) => {
+    try {
+      const supplierId = req.params.id;
+
+      const supplier = await Supplier.findByPk(supplierId);
+      if (!supplier) {
+        return res.status(404).json({ message: "Proveedor no encontrado" });
+      }
+
+      const addressCount = await SupplierAddress.count({
+        where: { supplierId },
+      });
+
+      const cellars = await supplier.getCellars(); // muchas a muchas
+
+      res.status(200).json({
+        relaciones: {
+          direcciones: addressCount,
+          bodegas: cellars.map((c) => ({
+            id: c.id,
+            name: c.name,
+          })),
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener las relaciones del proveedor",
+        error: error.message,
+      });
+    }
+  },
+
   // Crear un nuevo proveedor
   createSupplier: async (req, res) => {
     const { tradeName, legalName, nif, email, phone, web, addressId } =
@@ -110,13 +142,34 @@ module.exports = {
   // Eliminar un proveedor por ID
   deleteSupplier: async (req, res) => {
     try {
-      const supplier = await Supplier.findByPk(req.params.id);
-      if (supplier) {
-        await supplier.destroy();
-        res.status(200).json({ message: "Proveedor eliminado correctamente" });
-      } else {
-        res.status(404).json({ message: "Proveedor no encontrado" });
+      const supplierId = req.params.id;
+
+      const supplier = await Supplier.findByPk(supplierId);
+      if (!supplier) {
+        return res.status(404).json({ message: "Proveedor no encontrado" });
       }
+
+      // 🔍 Verificar direcciones vinculadas
+      const addressCount = await SupplierAddress.count({
+        where: { supplierId },
+      });
+
+      // 🔍 Verificar bodegas asociadas (many-to-many)
+      const cellarCount = await supplier.countCellars(); // gracias a belongsToMany
+
+      if (addressCount > 0 || cellarCount > 0) {
+        return res.status(400).json({
+          message:
+            "No se puede eliminar el proveedor porque tiene relaciones activas.",
+          relaciones: {
+            direcciones: addressCount,
+            bodegas: cellarCount,
+          },
+        });
+      }
+
+      await supplier.destroy();
+      res.status(200).json({ message: "Proveedor eliminado correctamente" });
     } catch (error) {
       res.status(500).json({
         message: "Error al eliminar el proveedor",

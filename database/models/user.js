@@ -1,41 +1,27 @@
-"use strct";
-
+// models/User.js
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    static associate(models) {}
+    static associate(models) {
+      // asociaciones si las necesitas
+    }
   }
 
   User.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      userSurname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      username: DataTypes.STRING,
+      userSurname: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
       },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      password: DataTypes.STRING,
       role: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM("admin", "business", "client"),
+        defaultValue: "client",
         allowNull: false,
-        defaultValue: "user",
       },
     },
     {
@@ -45,5 +31,6 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
     }
   );
+
   return User;
 };

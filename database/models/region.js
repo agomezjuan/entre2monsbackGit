@@ -1,24 +1,22 @@
 const { Model, DataTypes } = require("sequelize");
+const { afterRegionUpdate } = require("../hooks/regionHooks");
 
-module.exports = (sequelize, DataTypes) => {
-  const Region = sequelize.define("Region", {
-    name: DataTypes.STRING,
-    description: DataTypes.TEXT,
-  });
+module.exports = (sequelize) => {
+  class Region extends Model {
+    static associate(models) {
+      Region.belongsTo(models.Country, {
+        as: "country",
+        foreignKey: "countryId",
+      });
 
-  Region.associate = (models) => {
-    Region.belongsTo(models.Country, {
-      as: "country", // 👈 importante para el include
-      foreignKey: "countryId",
-    });
-
-    Region.belongsToMany(models.DO, {
-      through: "regions_dos",
-      foreignKey: "region_id",
-      otherKey: "do_id",
-      as: "denominations",
-    });
-  };
+      Region.belongsToMany(models.DO, {
+        through: "regions_dos",
+        foreignKey: "region_id",
+        otherKey: "do_id",
+        as: "denominations",
+      });
+    }
+  }
 
   Region.init(
     {
@@ -26,9 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          notEmpty: true,
-        },
+        validate: { notEmpty: true },
       },
       description: {
         type: DataTypes.TEXT,
@@ -42,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
     },
     {
       sequelize,
@@ -51,6 +52,8 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Region.addHook("afterUpdate", afterRegionUpdate);
 
   return Region;
 };

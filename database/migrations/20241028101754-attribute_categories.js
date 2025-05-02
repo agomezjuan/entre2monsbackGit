@@ -3,7 +3,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("attribute_categories", {
-      // Cambiado a "attribute_categories"
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -26,6 +25,11 @@ module.exports = {
         allowNull: false,
         comment: "Color asociado a la categoría",
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -40,6 +44,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("attribute_categories"); // Cambiado a "attribute_categories"
+    await queryInterface.dropTable("attribute_categories");
   },
 };

@@ -9,12 +9,6 @@ module.exports = (sequelize) => {
         as: "cellar",
       });
 
-      // Relación uno a muchos con WineType
-      Wine.belongsTo(models.WineType, {
-        foreignKey: "wine_type_id",
-        as: "wineType",
-      });
-
       // Relación muchos a muchos con Vintage a través de "wine_vintages"
       Wine.belongsToMany(models.Vintage, {
         through: "wine_vintages", // Nombre de la tabla intermedia
@@ -75,16 +69,6 @@ module.exports = (sequelize) => {
         allowNull: false,
         references: {
           model: "cellars",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-      wineTypeId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "wine_types",
           key: "id",
         },
         onUpdate: "CASCADE",

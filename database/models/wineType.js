@@ -8,6 +8,13 @@ module.exports = (sequelize) => {
         foreignKey: "wine_type_id",
         as: "wines",
       });
+
+      WineType.belongsToMany(models.WineVintage, {
+        through: models.WineVintageType,
+        foreignKey: "wine_type_id",
+        otherKey: "wine_vintage_id",
+        as: "wineVintages",
+      });
     }
   }
 

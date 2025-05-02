@@ -20,6 +20,11 @@ module.exports = {
         allowNull: true,
         comment: "Descripción de la categoría",
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -15,6 +15,11 @@ module.exports = {
         unique: true,
         comment: "Nombre de la subcategoría de íconos",
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       category_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

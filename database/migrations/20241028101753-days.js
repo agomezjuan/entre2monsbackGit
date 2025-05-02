@@ -13,10 +13,22 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          notEmpty: true,
-        },
         comment: 'Día de la semana, ej: "Monday"',
+      },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },

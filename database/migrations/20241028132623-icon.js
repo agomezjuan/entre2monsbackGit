@@ -15,6 +15,11 @@ module.exports = {
         unique: true,
         comment: "Nombre descriptivo del ícono",
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       icon_path: {
         type: Sequelize.STRING,
         allowNull: false,

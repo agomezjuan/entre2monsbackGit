@@ -1,21 +1,28 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-  const bearerHeader = req.headers['authorization'];
-  if (typeof bearerHeader !== 'undefined') {
-    const bearer = bearerHeader.split(' ');
-    const bearerToken = bearer[1];
-    jwt.verify(bearerToken, 'secretKey', (err, authData) => {
-      if (err) {
-        res.sendStatus(403); 
-        req.authData = authData;
-        next();
-      }
-    });
-  } else {
-    // Forbidden
-    res.sendStatus(403);
-  }
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) return res.sendStatus(401); // No token
+
+  const token = authHeader.split(" ")[1];
+  jwt.verify(token, process.env.JWT_SECRET || "secretKey", (err, user) => {
+    if (err) return res.sendStatus(403); // Token inválido
+    req.user = user; // ✅ contiene id, email y role
+    next();
+  });
 };
 
-module.exports = verifyToken
+// Middleware por rol
+const requireRole = (roles = []) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "No autorizado" });
+    }
+    next();
+  };
+};
+
+module.exports = {
+  verifyToken,
+  requireRole,
+};
