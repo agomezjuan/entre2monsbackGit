@@ -73,16 +73,6 @@ module.exports = (sequelize, Sequelize) => {
         unique: true,
         validate: { isUrl: true },
       },
-      supplierAddressId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: "supplier_addresses",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
       active: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

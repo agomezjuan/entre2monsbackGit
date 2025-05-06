@@ -18,22 +18,9 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          isIn: [
-            [
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-              "Sunday",
-            ],
-          ],
-        },
-        comment: 'Día de la semana, ej: "Monday"',
       },
     },
+
     {
       sequelize,
       modelName: "Day",

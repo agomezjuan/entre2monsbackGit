@@ -1,10 +1,9 @@
-// models/User.js
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // asociaciones si las necesitas
+      User.belongsTo(models.Tenant, { foreignKey: "tenantId", as: "tenant" });
     }
   }
 
@@ -23,12 +22,21 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "client",
         allowNull: false,
       },
+      tenantId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
     },
     {
       sequelize,
       modelName: "User",
       tableName: "users",
       timestamps: true,
+      underscored: true,
     }
   );
 

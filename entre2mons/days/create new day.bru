@@ -1,0 +1,17 @@
+meta {
+  name: create new day
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/days
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Dilluns"
+  }
+}

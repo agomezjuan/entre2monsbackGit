@@ -12,22 +12,29 @@ module.exports = {
     try {
       const suppliers = await Supplier.findAll({
         include: [
-          { model: SupplierAddress, as: "addresses" },
-          { model: SupplierRepresentative, as: "representatives" },
+          {
+            model: SupplierAddress,
+            as: "addresses",
+          },
+          {
+            model: SupplierRepresentative,
+            as: "representatives",
+          },
           {
             model: SupplierDeliveryDetail,
             as: "deliveryDetail",
             include: [
               {
                 model: Day,
-                as: "days", // Alias para la relación de muchos a muchos con Day
-                attributes: ["id", "name"], // Solo traer campos necesarios
-                through: { attributes: [] }, // Omite los atributos de la tabla intermedia
+                as: "days",
+                attributes: ["id", "name"],
+                through: { attributes: [] },
               },
             ],
           },
         ],
       });
+
       res.status(200).json(suppliers);
     } catch (error) {
       res.status(500).json({

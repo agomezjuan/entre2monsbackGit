@@ -16,21 +16,12 @@ const createUbicationPack = async (req, res) => {
   }
 };
 
-const toggleUbicationStatus = async (req, res) => {
+const toggleUbicationStatus = async (req, res, type) => {
   try {
-    console.log("📥 Toggle recibido para ID:", req.params.id);
-
-    const result = await toggleUbicationStatusService(req.params.id);
-
-    console.log("✅ Actualizado:", result.updated);
-
-    return res.status(200).json({
-      message: result.message,
-      updated: result.updated,
-    });
+    const result = await toggleUbicationStatusService(req.params.id, type);
+    res.json(result);
   } catch (error) {
-    console.error("❌ Error toggleUbicationStatus (controller):", error);
-    return res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 

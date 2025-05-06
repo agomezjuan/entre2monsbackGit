@@ -121,7 +121,7 @@ module.exports = {
   // Actualizar un país existente por ID
   updateCountry: async (req, res) => {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { country: name, description } = req.body;
     const transaction = await sequelize.transaction();
     try {
       const country = await Country.findByPk(id, { transaction });

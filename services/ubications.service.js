@@ -88,52 +88,52 @@ const createUbicationPackService = async (payload) => {
   }
 };
 
-const toggleUbicationStatusService = async (id) => {
+async function toggleUbicationStatusService(id, type) {
   const t = await sequelize.transaction();
 
   try {
-    let entity = await Country.findByPk(id, { transaction: t });
-    let type = "country";
+    let model;
+    if (type === "country") model = Country;
+    else if (type === "region") model = Region;
+    else if (type === "do") model = DO;
+    else throw new Error("Tipo no válido");
 
-    if (!entity) {
-      entity = await Region.findByPk(id, { transaction: t });
-      type = "region";
+    const item = await model.findByPk(id, { transaction: t });
+    if (!item) throw new Error(`${type} con ID ${id} no encontrado`);
+
+    const newState = !item.active;
+    await item.update({ active: newState }, { transaction: t });
+
+    // Cascade: desactivar hijos si se desactiva un padre
+    if (type === "country" && newState === false) {
+      const regions = await Region.findAll({
+        where: { countryId: id },
+        transaction: t,
+      });
+      for (const region of regions) {
+        await region.update({ active: false }, { transaction: t });
+
+        const dos = await region.getDenominations({ transaction: t });
+        for (const d of dos) {
+          await d.update({ active: false }, { transaction: t });
+        }
+      }
     }
 
-    if (!entity) {
-      entity = await DO.findByPk(id, { transaction: t });
-      type = "do";
+    if (type === "region" && newState === false) {
+      const dos = await item.getDenominations({ transaction: t });
+      for (const d of dos) {
+        await d.update({ active: false }, { transaction: t });
+      }
     }
-
-    if (!entity) throw new Error("Ubicación no encontrada.");
-
-    // Cambia el estado
-    const newStatus = !entity.active;
-    entity.active = newStatus;
-
-    await entity.save({ transaction: t });
-
-    // 👇 Aquí se ejecutarán tus hooks afterUpdate si están en el modelo
-    await entity.reload({ transaction: t });
 
     await t.commit();
-
-    return {
-      message: `${type.charAt(0).toUpperCase() + type.slice(1)} ${
-        newStatus ? "activado" : "desactivado"
-      } correctamente.`,
-      updated: {
-        id: entity.id,
-        name: entity.name,
-        active: entity.active,
-        type,
-      },
-    };
-  } catch (error) {
+    return { id: item.id, active: newState, type };
+  } catch (err) {
     await t.rollback();
-    throw error;
+    throw err;
   }
-};
+}
 
 module.exports = {
   createUbicationPackService,

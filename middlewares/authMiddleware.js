@@ -7,7 +7,10 @@ const verifyToken = (req, res, next) => {
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.JWT_SECRET || "secretKey", (err, user) => {
     if (err) return res.sendStatus(403); // Token inválido
-    req.user = user; // ✅ contiene id, email y role
+
+    req.user = user; // ✅ contiene id, email, role, tenantId
+    req.context = { tenantId: user.tenantId }; // 🧩 ahora multitenancy
+
     next();
   });
 };
