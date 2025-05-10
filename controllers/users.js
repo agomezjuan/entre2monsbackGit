@@ -1,6 +1,12 @@
 const { User } = require("../database/models");
 const bcrypt = require("bcrypt");
 
+// controllers/users.js
+
+const getAllUsers = async (req, res) => {
+  res.json({ message: "Listado de usuarios (placeholder)" });
+};
+
 const createAdmin = async (req, res) => {
   const { username, userSurname, email, password } = req.body;
 
@@ -31,4 +37,5 @@ const createAdmin = async (req, res) => {
 
 module.exports = {
   createAdmin,
+  getAllUsers,
 };

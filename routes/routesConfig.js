@@ -26,6 +26,7 @@ const wasteRoutes = require("./wastesRoutes");
 const customersRouter = require("./customersRoutes");
 const ordersRouter = require("./ordersRoutes");
 const ubicationsRoutes = require("./ubicationsRoutes");
+const supplierPackRoutes = require("./supplierPack.routes");
 
 const configureRoutes = (app) => {
   app.use("/", indexRouter); // Configurar la ruta principal
@@ -56,6 +57,7 @@ const configureRoutes = (app) => {
   app.use("/wastes", wasteRoutes);
   app.use("/orders", ordersRouter);
   app.use("/ubications", ubicationsRoutes);
+  app.use("/supplier-pack", supplierPackRoutes);
 };
 
 module.exports = configureRoutes;

@@ -24,7 +24,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       tenantId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
+        references: {
+          model: "tenants",
+          key: "id",
+        },
       },
       active: {
         type: DataTypes.BOOLEAN,

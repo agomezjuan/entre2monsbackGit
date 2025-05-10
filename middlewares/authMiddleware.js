@@ -8,8 +8,12 @@ const verifyToken = (req, res, next) => {
   jwt.verify(token, process.env.JWT_SECRET || "secretKey", (err, user) => {
     if (err) return res.sendStatus(403); // Token inválido
 
-    req.user = user; // ✅ contiene id, email, role, tenantId
-    req.context = { tenantId: user.tenantId }; // 🧩 ahora multitenancy
+    req.user = user; // contiene id, email, role, tenantId, type
+    req.context = {
+      tenantId: user.tenantId || null,
+      type: user.type, // 💥 ahora siempre disponible
+      role: user.role,
+    };
 
     next();
   });

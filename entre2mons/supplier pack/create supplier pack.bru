@@ -1,0 +1,45 @@
+meta {
+  name: create supplier pack
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/supplier-pack/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "supplier": {
+      "tradeName": "Vins del Nord",
+      "legalName": "Vins del Nord S.L.",
+     "nif": "ESB12345678",
+      "email": "info@nord.com",
+      "phone": "666555444",
+      "web": "https://vinsnord.com"
+    },
+    "addresses": [
+      {
+        "street": "Calle Vi Blanc, 22",
+        "city": "Girona",
+        "postalCode": "17001"
+      }
+    ],
+    "representatives": [
+      {
+        "firstName": "Laura",
+        "lastName": "Garnatxa",
+        "email": "laura@nord.com",
+        "phone": "600123123"
+      }
+    ],
+    "deliveryDetail": {
+      "minPurchase": 100,
+      "deliveryTax": 10,
+      "dayIds": [1, 3]
+    }
+  }
+  
+}
