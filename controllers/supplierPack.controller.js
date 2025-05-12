@@ -4,7 +4,7 @@ const createSupplierPack = async (req, res) => {
   try {
     const result = await createSupplierPackService(req.body);
     res.status(201).json({
-      message: "Proveedor creado correctamente ✅",
+      message: "Proveedor creado correctamente.",
       created: result,
     });
   } catch (error) {

@@ -19,6 +19,7 @@ module.exports = {
         ],
         order: [["name", "ASC"]],
       });
+      console.dir(countries, { depth: null });
 
       res.json(countries);
     } catch (error) {
