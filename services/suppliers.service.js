@@ -7,9 +7,9 @@ const {
   sequelize,
 } = require("../database/models");
 
+// 🔹 CREATE
 async function createSupplierPackService(payload) {
   const transaction = await sequelize.transaction();
-
   try {
     const {
       supplier,
@@ -22,7 +22,6 @@ async function createSupplierPackService(payload) {
       throw new Error("Datos del proveedor incompletos");
     }
 
-    // 1️⃣ Buscar o crear el proveedor por NIF
     let supplierInstance = await Supplier.findOne({
       where: { nif: supplier.nif.trim() },
       transaction,
@@ -44,48 +43,34 @@ async function createSupplierPackService(payload) {
 
     const supplierId = supplierInstance.id;
 
-    // 2️⃣ Crear direcciones asociadas
     const createdAddresses = await Promise.all(
       addresses.map((addr) =>
         SupplierAddress.create({ ...addr, supplierId }, { transaction })
       )
     );
 
-    // 3️⃣ Crear representantes asociados
     const createdRepresentatives = await Promise.all(
       representatives.map((rep) =>
         SupplierRepresentative.create({ ...rep, supplierId }, { transaction })
       )
     );
 
-    // 4️⃣ Crear detalle de entrega y asociar días
     let createdDeliveryDetail = null;
 
     if (deliveryDetail) {
       const { dayIds = [], ...rest } = deliveryDetail;
+
+      createdDeliveryDetail = await SupplierDeliveryDetail.create(
+        { ...rest, supplierId },
+        { transaction }
+      );
 
       if (dayIds.length > 0) {
         const days = await Day.findAll({
           where: { id: dayIds },
           transaction,
         });
-
-        if (days.length !== dayIds.length) {
-          throw new Error("Algunos días de reparto no existen");
-        }
-
-        createdDeliveryDetail = await SupplierDeliveryDetail.create(
-          { ...rest, supplierId },
-          { transaction }
-        );
-
         await createdDeliveryDetail.setDays(days, { transaction });
-      } else {
-        // Sin días, pero con datos de delivery
-        createdDeliveryDetail = await SupplierDeliveryDetail.create(
-          { ...rest, supplierId },
-          { transaction }
-        );
       }
     }
 
@@ -95,7 +80,7 @@ async function createSupplierPackService(payload) {
       supplier: {
         id: supplierInstance.id,
         tradeName: supplierInstance.tradeName,
-        created: !payload.supplierId, // indica si fue nuevo o ya existía
+        created: !payload.supplierId,
       },
       addresses: createdAddresses.map((a) => ({
         id: a.id,
@@ -118,6 +103,151 @@ async function createSupplierPackService(payload) {
   }
 }
 
+// 🔹 UPDATE
+async function updateSupplierPackService(payload) {
+  const transaction = await sequelize.transaction();
+
+  try {
+    const { supplier, address, representative, deliveryDetail } = payload;
+
+    if (!supplier?.nif) {
+      throw new Error("NIF requerido para identificar el proveedor");
+    }
+
+    // 1️⃣ Buscar proveedor por NIF
+    const supplierInstance = await Supplier.findOne({
+      where: { nif: supplier.nif.trim() },
+      transaction,
+    });
+
+    if (!supplierInstance) {
+      throw new Error("Proveedor no encontrado");
+    }
+
+    // 2️⃣ Actualizar campos del proveedor si han cambiado
+    await supplierInstance.update(
+      {
+        tradeName: supplier.tradeName ?? supplierInstance.tradeName,
+        legalName: supplier.legalName ?? supplierInstance.legalName,
+        email: supplier.email ?? supplierInstance.email,
+        phone: supplier.phone ?? supplierInstance.phone,
+        web: supplier.web ?? supplierInstance.web,
+      },
+      { transaction }
+    );
+
+    // 3️⃣ Actualizar dirección si hay ID
+    if (address?.id) {
+      const addressInstance = await SupplierAddress.findByPk(address.id, {
+        transaction,
+      });
+
+      if (addressInstance) {
+        await addressInstance.update(
+          {
+            street: address.street ?? addressInstance.street,
+            city: address.city ?? addressInstance.city,
+            postalCode: address.postalCode ?? addressInstance.postalCode,
+            regionId: address.regionId ?? addressInstance.regionId,
+          },
+          { transaction }
+        );
+      }
+    }
+
+    // 4️⃣ Actualizar representante si hay ID
+    if (representative?.id) {
+      const repInstance = await SupplierRepresentative.findByPk(
+        representative.id,
+        { transaction }
+      );
+
+      if (repInstance) {
+        const updates = {};
+
+        if (
+          representative.firstName &&
+          representative.firstName !== repInstance.firstName
+        ) {
+          updates.firstName = representative.firstName;
+        }
+
+        if (
+          representative.lastName &&
+          representative.lastName !== repInstance.lastName
+        ) {
+          updates.lastName = representative.lastName;
+        }
+
+        if (
+          representative.email &&
+          representative.email !== repInstance.email
+        ) {
+          // 💥 Verificar duplicado antes de aplicar
+          const emailExists = await SupplierRepresentative.findOne({
+            where: { email: representative.email },
+            transaction,
+          });
+
+          if (emailExists && emailExists.id !== repInstance.id) {
+            throw new Error(
+              `El email "${representative.email}" ya está en uso.`
+            );
+          }
+
+          updates.email = representative.email;
+        }
+
+        if (
+          representative.phone &&
+          representative.phone !== repInstance.phone
+        ) {
+          updates.phone = representative.phone;
+        }
+
+        if (Object.keys(updates).length > 0) {
+          await repInstance.update(updates, { transaction });
+        }
+      }
+    }
+
+    // 5️⃣ Actualizar detalle de entrega
+    if (deliveryDetail?.id) {
+      const detail = await SupplierDeliveryDetail.findByPk(deliveryDetail.id, {
+        include: ["days"],
+        transaction,
+      });
+
+      if (detail) {
+        await detail.update(
+          {
+            minPurchase: deliveryDetail.minPurchase,
+            deliveryTax: deliveryDetail.deliveryTax,
+          },
+          { transaction }
+        );
+
+        if (deliveryDetail.dayIds) {
+          await detail.setDays(deliveryDetail.dayIds, { transaction });
+        }
+      }
+    }
+
+    await transaction.commit();
+
+    return {
+      supplierId: supplierInstance.id,
+      updated: true,
+    };
+  } catch (error) {
+    await transaction.rollback();
+    console.error("❌ Error al actualizar el proveedor:", error);
+    throw new Error(`Error al actualizar el proveedor: ${error.message}`);
+  }
+}
+
+// 🔚 Exporta ambos
 module.exports = {
   createSupplierPackService,
+  updateSupplierPackService,
 };
