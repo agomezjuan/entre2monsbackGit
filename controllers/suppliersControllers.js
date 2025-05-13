@@ -10,6 +10,8 @@ module.exports = {
   // Obtener todos los proveedores
   getAllSuppliers: async (req, res) => {
     try {
+      console.log("➡️ Iniciando fetch de suppliers...");
+
       const suppliers = await Supplier.findAll({
         include: [
           {
@@ -35,8 +37,12 @@ module.exports = {
         ],
       });
 
-      res.status(200).json(suppliers);
+      console.log("✅ Suppliers obtenidos:", suppliers.length);
+
+      const plainSuppliers = suppliers.map((s) => s.get({ plain: true }));
+      res.status(200).json(plainSuppliers);
     } catch (error) {
+      console.error("❌ Error en getAllSuppliers:", error);
       res.status(500).json({
         message: "Error al obtener los proveedores",
         error: error.message,

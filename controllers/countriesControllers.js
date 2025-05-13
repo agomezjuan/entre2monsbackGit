@@ -13,18 +13,29 @@ module.exports = {
               {
                 model: DO,
                 as: "denominations",
+                through: { attributes: [] }, // Evita incluir datos de la tabla intermedia
               },
             ],
           },
         ],
         order: [["name", "ASC"]],
       });
-      console.dir(countries, { depth: null });
 
-      res.json(countries);
+      // ✅ Aplanamos todos los resultados para evitar referencias circulares
+      const plainCountries = countries.map((country) =>
+        country.get({ plain: true })
+      );
+
+      // ✅ Log limpio y sin loops infinitos
+      console.log("✅ Países cargados:", plainCountries.length);
+
+      res.status(200).json(plainCountries);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error al obtener los países" });
+      console.error("❌ Error en getAllCountries:", error);
+      res.status(500).json({
+        message: "Error al obtener los países",
+        error: error.message,
+      });
     }
   },
 
