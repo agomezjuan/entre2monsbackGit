@@ -68,9 +68,11 @@ module.exports = {
           },
         ],
       });
+
       if (!doItem) {
         return res.status(404).json({ message: "DO no encontrada" });
       }
+
       res.status(200).json(doItem);
     } catch (error) {
       console.error("Error al obtener la DO:", error);
@@ -132,10 +134,12 @@ module.exports = {
   // Actualizar una DO existente
   updateDO: async (req, res) => {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { name, description, regionIds } = req.body;
     const transaction = await sequelize.transaction();
+
     try {
       const doItem = await DO.findByPk(id, { transaction });
+
       if (!doItem) {
         await transaction.rollback();
         return res.status(404).json({ message: "DO no encontrada" });
@@ -145,6 +149,16 @@ module.exports = {
       doItem.description = description || doItem.description;
       await doItem.save({ transaction });
 
+      // ✅ Aquí actualizamos las regiones si se pasaron
+      if (Array.isArray(regionIds)) {
+        const newRegions = await Region.findAll({
+          where: { id: regionIds },
+          transaction,
+        });
+
+        await doItem.setRegions(newRegions, { transaction });
+      }
+
       const updatedDO = await DO.findByPk(doItem.id, {
         include: [
           {
@@ -153,6 +167,7 @@ module.exports = {
             attributes: ["name", "description"],
           },
         ],
+        transaction,
       });
 
       await transaction.commit();
