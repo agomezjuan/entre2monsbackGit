@@ -44,6 +44,12 @@ module.exports = (sequelize) => {
           },
         },
       },
+
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       regionId: {
         type: DataTypes.INTEGER,
         allowNull: true,

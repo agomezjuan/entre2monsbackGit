@@ -39,7 +39,13 @@ module.exports = (sequelize) => {
         comment:
           "Costo de entrega si no se cumple con el pedido mínimo, 0 si no aplica",
       },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
     },
+
     {
       sequelize,
       modelName: "SupplierDelivery", // Asegúrate de que coincida con el nombre de la clase

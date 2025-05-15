@@ -26,6 +26,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       supplier_id: {
         // Aquí está la clave foránea
         type: Sequelize.INTEGER,

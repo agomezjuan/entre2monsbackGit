@@ -42,6 +42,11 @@ module.exports = (sequelize) => {
           is: /^\+?[\d\s]+$/,
         },
       },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       supplierId: {
         type: DataTypes.INTEGER,
         allowNull: false,

@@ -26,6 +26,11 @@ module.exports = {
         comment:
           "Costo de entrega si no se cumple con el pedido mínimo, 0 si no aplica",
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       supplier_id: {
         type: Sequelize.INTEGER,
         references: {

@@ -246,8 +246,61 @@ async function updateSupplierPackService(payload) {
   }
 }
 
+async function toggleSupplierStatusService(id) {
+  const t = await sequelize.transaction();
+
+  try {
+    const supplier = await Supplier.findByPk(id, {
+      transaction: t,
+      include: [
+        { model: SupplierAddress, as: "addresses" },
+        { model: SupplierRepresentative, as: "representatives" },
+        {
+          model: SupplierDeliveryDetail,
+          as: "deliveryDetail",
+          include: ["days"],
+        },
+      ],
+    });
+
+    if (!supplier) throw new Error(`Proveedor con ID ${id} no encontrado`);
+
+    const newState = !supplier.active;
+
+    await supplier.update({ active: newState }, { transaction: t });
+
+    for (const address of supplier.addresses || []) {
+      await address.update({ active: newState }, { transaction: t });
+    }
+
+    for (const rep of supplier.representatives || []) {
+      await rep.update({ active: newState }, { transaction: t });
+    }
+
+    if (supplier.deliveryDetail) {
+      await supplier.deliveryDetail.update(
+        { active: newState },
+        { transaction: t }
+      );
+    } else {
+      console.warn(
+        `⚠️ El proveedor ${supplier.id} no tiene deliveryDetail asociado`
+      );
+    }
+
+    await t.commit();
+
+    return { id: supplier.id, active: newState };
+  } catch (err) {
+    await t.rollback();
+    console.error("❌ Error en toggleSupplierStatusService:", err);
+    throw err;
+  }
+}
+
 // 🔚 Exporta ambos
 module.exports = {
   createSupplierPackService,
   updateSupplierPackService,
+  toggleSupplierStatusService,
 };

@@ -1,6 +1,7 @@
 const {
   createSupplierPackService,
   updateSupplierPackService,
+  toggleSupplierStatusService,
 } = require("../services/suppliers.service");
 
 module.exports = {
@@ -36,7 +37,22 @@ const updateSupplierPack = async (req, res) => {
   }
 };
 
+const toggleSupplierStatus = async (req, res) => {
+  try {
+    const result = await toggleSupplierStatusService(req.params.id);
+    res.status(200).json({
+      message: `Proveedor ${
+        result.active ? "activado" : "desactivado"
+      } correctamente.`,
+      updated: result,
+    });
+  } catch (error) {
+    console.error("❌ Error al cambiar estado del proveedor:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
 module.exports = {
   createSupplierPack,
   updateSupplierPack,
+  toggleSupplierStatus,
 };

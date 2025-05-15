@@ -1,25 +1,28 @@
 module.exports = {
   async afterSupplierUpdate(supplier, options) {
     if (supplier.changed("active") && supplier.active === false) {
-      const {
-        SupplierAddress,
-        SupplierRepresentative,
-        SupplierDeliveryDetail,
-        SupplierDeliveryDay,
-        CellarsSuppliers,
-      } = supplier.sequelize.models;
+      const models = supplier.sequelize.models;
 
-      await SupplierAddress.update(
+      // Desactivar direcciones
+      await models.SupplierAddress.update(
         { active: false },
-        { where: { supplierId: supplier.id }, transaction: options.transaction }
+        {
+          where: { supplierId: supplier.id },
+          transaction: options.transaction,
+        }
       );
 
-      await SupplierRepresentative.update(
+      // Desactivar representantes
+      await models.SupplierRepresentative.update(
         { active: false },
-        { where: { supplierId: supplier.id }, transaction: options.transaction }
+        {
+          where: { supplierId: supplier.id },
+          transaction: options.transaction,
+        }
       );
 
-      const deliveryDetail = await SupplierDeliveryDetail.findOne({
+      // Desactivar detalle de entrega si existe
+      const deliveryDetail = await models.SupplierDeliveryDetail.findOne({
         where: { supplierId: supplier.id },
         transaction: options.transaction,
       });
@@ -30,22 +33,41 @@ module.exports = {
           { transaction: options.transaction }
         );
 
-        await SupplierDeliveryDay.update(
-          { active: false },
-          {
-            where: { supplier_delivery_detail_id: deliveryDetail.id },
-            transaction: options.transaction,
-          }
+        if (models.SupplierDeliveryDay) {
+          await models.SupplierDeliveryDay.update(
+            { active: false },
+            {
+              where: {
+                supplier_delivery_detail_id: deliveryDetail.id,
+              },
+              transaction: options.transaction,
+            }
+          );
+        } else {
+          console.warn(
+            "⚠️ SupplierDeliveryDay no está definido en sequelize.models"
+          );
+        }
+      } else {
+        console.warn(
+          `⚠️ No se encontró deliveryDetail para supplier ${supplier.id}`
         );
       }
 
-      await CellarsSuppliers.update(
-        { active: false },
-        {
-          where: { supplier_id: supplier.id },
-          transaction: options.transaction,
-        }
-      );
+      // Desactivar vinculación con cellars
+      if (models.CellarsSuppliers) {
+        await models.CellarsSuppliers.update(
+          { active: false },
+          {
+            where: { supplier_id: supplier.id },
+            transaction: options.transaction,
+          }
+        );
+      } else {
+        console.warn(
+          "⚠️ CellarsSuppliers no está definido en sequelize.models"
+        );
+      }
     }
   },
 };
